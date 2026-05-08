@@ -14,7 +14,126 @@ export type Database = {
   }
   public: {
     Tables: {
-      [_ in never]: never
+      agendamentos: {
+        Row: {
+          cliente_nome: string
+          cliente_whatsapp: string
+          created_at: string
+          data: string
+          hora: string
+          id: string
+          servico_id: string | null
+          servico_ids: string[]
+          status: string
+        }
+        Insert: {
+          cliente_nome: string
+          cliente_whatsapp: string
+          created_at?: string
+          data: string
+          hora: string
+          id?: string
+          servico_id?: string | null
+          servico_ids?: string[]
+          status?: string
+        }
+        Update: {
+          cliente_nome?: string
+          cliente_whatsapp?: string
+          created_at?: string
+          data?: string
+          hora?: string
+          id?: string
+          servico_id?: string | null
+          servico_ids?: string[]
+          status?: string
+        }
+        Relationships: []
+      }
+      config: {
+        Row: {
+          created_at: string
+          dia_semana: number
+          hora_abre: string
+          hora_fecha: string
+          id: string
+          instagram: string | null
+          intervalo_min: number
+          senha_admin: string
+          whatsapp_contato: string | null
+        }
+        Insert: {
+          created_at?: string
+          dia_semana?: number
+          hora_abre?: string
+          hora_fecha?: string
+          id?: string
+          instagram?: string | null
+          intervalo_min?: number
+          senha_admin?: string
+          whatsapp_contato?: string | null
+        }
+        Update: {
+          created_at?: string
+          dia_semana?: number
+          hora_abre?: string
+          hora_fecha?: string
+          id?: string
+          instagram?: string | null
+          intervalo_min?: number
+          senha_admin?: string
+          whatsapp_contato?: string | null
+        }
+        Relationships: []
+      }
+      horarios_bloqueados: {
+        Row: {
+          created_at: string
+          data: string
+          hora: string | null
+          id: string
+        }
+        Insert: {
+          created_at?: string
+          data: string
+          hora?: string | null
+          id?: string
+        }
+        Update: {
+          created_at?: string
+          data?: string
+          hora?: string | null
+          id?: string
+        }
+        Relationships: []
+      }
+      servicos: {
+        Row: {
+          ativo: boolean
+          created_at: string
+          id: string
+          nome: string
+          preco: number | null
+          tempo_minutos: number
+        }
+        Insert: {
+          ativo?: boolean
+          created_at?: string
+          id?: string
+          nome: string
+          preco?: number | null
+          tempo_minutos?: number
+        }
+        Update: {
+          ativo?: boolean
+          created_at?: string
+          id?: string
+          nome?: string
+          preco?: number | null
+          tempo_minutos?: number
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
