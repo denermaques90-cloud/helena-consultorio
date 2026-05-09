@@ -29,7 +29,7 @@ function ProfissionalLoginPage() {
         const { data, error } = await supabase
           .from("profissionais")
           .select("*")
-          .eq("nome", formData.nome)
+          .ilike("nome", formData.nome.trim())
           .eq("senha", formData.senha)
           .eq("ativo", true)
           .maybeSingle();
@@ -42,7 +42,12 @@ function ProfissionalLoginPage() {
         sessionStorage.setItem("profissional_id", data.id);
         sessionStorage.setItem("profissional_nome", data.nome);
         toast.success(`Bem-vindo(a), ${data.nome}`);
-        navigate({ to: "/painel-profissional" });
+        if ((data as { role?: string }).role === "owner") {
+          sessionStorage.setItem("master_auth", "true");
+          navigate({ to: "/admin-master" });
+        } else {
+          navigate({ to: "/painel-profissional" });
+        }
       } else {
         // Simple registration for demo
         const { data, error } = await supabase
