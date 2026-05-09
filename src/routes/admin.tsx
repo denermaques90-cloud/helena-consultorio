@@ -29,13 +29,18 @@ function AdminPage() {
     supabase.from("config").select("*").limit(1).maybeSingle().then(({ data }) => data && setConfig(data as Config));
   }, []);
 
-  function handleLogin(e: React.FormEvent) {
+  async function handleLogin(e: React.FormEvent) {
     e.preventDefault();
-    const valid = config?.senha_admin || "admin123";
-    if (pass === valid) {
-      sessionStorage.setItem("admin_auth", "true");
+    const { data: prof, error } = await supabase
+      .from("profissionais")
+      .select("*")
+      .eq("senha", pass)
+      .maybeSingle();
+
+    if (prof) {
+      sessionStorage.setItem("admin_auth", JSON.stringify(prof));
       setLogged(true);
-      toast.success("Bem-vinda, Dra. Helena");
+      toast.success(`Bem-vinda, ${prof.nome}`);
     } else {
       toast.error("Senha incorreta");
     }
