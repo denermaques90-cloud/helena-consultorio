@@ -250,7 +250,7 @@ function ServicosTab() {
   async function add(e: React.FormEvent) {
     e.preventDefault();
     if (!formData.nome) return;
-    const { error } = await supabase.from("servicos").insert(formData);
+    const { error } = await supabase.from("servicos").insert(formData as any);
     if (error) return toast.error("Erro ao adicionar");
     setFormData({ nome: "", tempo_minutos: 50, preco: 0, ativo: true });
     load();
