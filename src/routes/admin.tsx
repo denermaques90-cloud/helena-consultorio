@@ -60,6 +60,7 @@ function AdminPage() {
   function handleLogout() {
     sessionStorage.removeItem("admin_auth");
     setLogged(false);
+    setUser(null);
     setPass("");
   }
 
@@ -70,13 +71,13 @@ function AdminPage() {
           <div className="text-center mb-6">
             <Lock className="text-gold mx-auto" size={28} />
             <h1 className="mt-3 font-serif text-2xl text-foreground">Painel Profissional</h1>
-            <p className="text-xs text-muted-foreground mt-1">Dra. Helena Martins</p>
+            <p className="text-xs text-muted-foreground mt-1">Acesso Restrito</p>
           </div>
           <input
             type="password"
             value={pass}
             onChange={e => setPass(e.target.value)}
-            placeholder="Senha"
+            placeholder="Senha de Acesso"
             className="w-full bg-input border border-border rounded-md px-4 py-3 text-foreground outline-none focus:border-gold"
           />
           <button className="mt-4 w-full rounded-md bg-primary py-3 text-sm font-medium text-primary-foreground">
