@@ -10,21 +10,32 @@ export const Route = createFileRoute("/admin")({
 });
 
 type Servico = { id: string; nome: string; tempo_minutos: number; preco: number | null; ativo: boolean };
-type Agendamento = { id: string; cliente_nome: string; cliente_whatsapp: string; data: string; hora: string; servico_ids: string[]; status: string };
-type Bloqueio = { id: string; data: string; hora: string | null };
+type Agendamento = { id: string; cliente_nome: string; cliente_whatsapp: string; data: string; hora: string; servico_ids: string[]; status: string; profissional_id: string; profissional_nome: string };
+type Bloqueio = { id: string; data: string; hora: string | null; profissional_id: string };
+type Profissional = { id: string; nome: string; especialidade: string; role: string; senha?: string; ativo: boolean };
 type Config = { id: string; hora_abre: string; hora_fecha: string; intervalo_min: number; senha_admin: string; whatsapp_contato: string | null; instagram: string | null };
 
 function fmtDateBR(iso: string) { const [y,m,d] = iso.split("-"); return `${d}/${m}/${y}`; }
 
 function AdminPage() {
   const [logged, setLogged] = useState(false);
+  const [user, setUser] = useState<Profissional | null>(null);
   const [pass, setPass] = useState("");
   const [config, setConfig] = useState<Config | null>(null);
-  const [tab, setTab] = useState<"agenda" | "bloqueios" | "servicos" | "config">("agenda");
+  const [tab, setTab] = useState<"agenda" | "bloqueios" | "servicos" | "profissionais" | "config">("agenda");
 
   useEffect(() => {
-    if (typeof window !== "undefined" && sessionStorage.getItem("admin_auth") === "true") {
-      setLogged(true);
+    if (typeof window !== "undefined") {
+      const auth = sessionStorage.getItem("admin_auth");
+      if (auth) {
+        try {
+          const u = JSON.parse(auth);
+          setUser(u);
+          setLogged(true);
+        } catch (e) {
+          sessionStorage.removeItem("admin_auth");
+        }
+      }
     }
     supabase.from("config").select("*").limit(1).maybeSingle().then(({ data }) => data && setConfig(data as Config));
   }, []);
