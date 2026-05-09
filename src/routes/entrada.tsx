@@ -32,9 +32,9 @@ function EntradaPage() {
         </div>
 
         <div className="grid gap-4 w-full">
-          <Link
-            to="/"
-            className="premium-card p-6 flex items-center gap-5 hover:border-gold transition group text-left"
+          <button
+            onClick={handleClientClick}
+            className="premium-card p-6 flex items-center gap-5 hover:border-gold transition group text-left w-full"
           >
             <div className="h-12 w-12 rounded-full bg-gold/10 flex items-center justify-center text-gold group-hover:bg-gold group-hover:text-primary-foreground transition-colors">
               <User size={24} />
