@@ -286,7 +286,7 @@ function ServicosTab() {
         </div>
         <div className="md:col-span-1">
            <label className="text-[10px] text-gold uppercase tracking-wider block mb-1">Valor Sugerido (R$)</label>
-           <input type="number" step="0.01" value={formData.preco} onChange={e => setFormData({...formData, preco: +e.target.value})} className="w-full bg-input border border-border rounded p-3 text-sm outline-none focus:border-gold" />
+           <input type="number" step="0.01" value={formData.preco ?? ""} onChange={e => setFormData({...formData, preco: +e.target.value})} className="w-full bg-input border border-border rounded p-3 text-sm outline-none focus:border-gold" />
         </div>
         <button className="bg-primary text-primary-foreground h-[46px] rounded font-bold text-sm flex items-center justify-center gap-2 hover:bg-primary/90 transition-all">
           <Plus size={18} /> Adicionar
