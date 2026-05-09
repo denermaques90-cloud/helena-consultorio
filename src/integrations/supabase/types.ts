@@ -22,6 +22,8 @@ export type Database = {
           data: string
           hora: string
           id: string
+          profissional_id: string | null
+          profissional_nome: string | null
           servico_id: string | null
           servico_ids: string[]
           status: string
@@ -33,6 +35,8 @@ export type Database = {
           data: string
           hora: string
           id?: string
+          profissional_id?: string | null
+          profissional_nome?: string | null
           servico_id?: string | null
           servico_ids?: string[]
           status?: string
@@ -44,11 +48,21 @@ export type Database = {
           data?: string
           hora?: string
           id?: string
+          profissional_id?: string | null
+          profissional_nome?: string | null
           servico_id?: string | null
           servico_ids?: string[]
           status?: string
         }
-        Relationships: []
+        Relationships: [
+          {
+            foreignKeyName: "agendamentos_profissional_id_fkey"
+            columns: ["profissional_id"]
+            isOneToOne: false
+            referencedRelation: "profissionais"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       config: {
         Row: {
@@ -92,18 +106,62 @@ export type Database = {
           data: string
           hora: string | null
           id: string
+          profissional_id: string | null
+          profissional_nome: string | null
         }
         Insert: {
           created_at?: string
           data: string
           hora?: string | null
           id?: string
+          profissional_id?: string | null
+          profissional_nome?: string | null
         }
         Update: {
           created_at?: string
           data?: string
           hora?: string | null
           id?: string
+          profissional_id?: string | null
+          profissional_nome?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "horarios_bloqueados_profissional_id_fkey"
+            columns: ["profissional_id"]
+            isOneToOne: false
+            referencedRelation: "profissionais"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      profissionais: {
+        Row: {
+          ativo: boolean
+          created_at: string
+          especialidade: string | null
+          id: string
+          nome: string
+          senha: string
+          whatsapp: string | null
+        }
+        Insert: {
+          ativo?: boolean
+          created_at?: string
+          especialidade?: string | null
+          id?: string
+          nome: string
+          senha: string
+          whatsapp?: string | null
+        }
+        Update: {
+          ativo?: boolean
+          created_at?: string
+          especialidade?: string | null
+          id?: string
+          nome?: string
+          senha?: string
+          whatsapp?: string | null
         }
         Relationships: []
       }
