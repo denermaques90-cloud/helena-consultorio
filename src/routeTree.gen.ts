@@ -10,6 +10,7 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as ProfissionalRouteImport } from './routes/profissional'
+import { Route as PainelProfissionalRouteImport } from './routes/painel-profissional'
 import { Route as EntradaRouteImport } from './routes/entrada'
 import { Route as AgendarRouteImport } from './routes/agendar'
 import { Route as AdminRouteImport } from './routes/admin'
@@ -18,6 +19,11 @@ import { Route as IndexRouteImport } from './routes/index'
 const ProfissionalRoute = ProfissionalRouteImport.update({
   id: '/profissional',
   path: '/profissional',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const PainelProfissionalRoute = PainelProfissionalRouteImport.update({
+  id: '/painel-profissional',
+  path: '/painel-profissional',
   getParentRoute: () => rootRouteImport,
 } as any)
 const EntradaRoute = EntradaRouteImport.update({
@@ -46,6 +52,7 @@ export interface FileRoutesByFullPath {
   '/admin': typeof AdminRoute
   '/agendar': typeof AgendarRoute
   '/entrada': typeof EntradaRoute
+  '/painel-profissional': typeof PainelProfissionalRoute
   '/profissional': typeof ProfissionalRoute
 }
 export interface FileRoutesByTo {
@@ -53,6 +60,7 @@ export interface FileRoutesByTo {
   '/admin': typeof AdminRoute
   '/agendar': typeof AgendarRoute
   '/entrada': typeof EntradaRoute
+  '/painel-profissional': typeof PainelProfissionalRoute
   '/profissional': typeof ProfissionalRoute
 }
 export interface FileRoutesById {
@@ -61,14 +69,34 @@ export interface FileRoutesById {
   '/admin': typeof AdminRoute
   '/agendar': typeof AgendarRoute
   '/entrada': typeof EntradaRoute
+  '/painel-profissional': typeof PainelProfissionalRoute
   '/profissional': typeof ProfissionalRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/admin' | '/agendar' | '/entrada' | '/profissional'
+  fullPaths:
+    | '/'
+    | '/admin'
+    | '/agendar'
+    | '/entrada'
+    | '/painel-profissional'
+    | '/profissional'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/admin' | '/agendar' | '/entrada' | '/profissional'
-  id: '__root__' | '/' | '/admin' | '/agendar' | '/entrada' | '/profissional'
+  to:
+    | '/'
+    | '/admin'
+    | '/agendar'
+    | '/entrada'
+    | '/painel-profissional'
+    | '/profissional'
+  id:
+    | '__root__'
+    | '/'
+    | '/admin'
+    | '/agendar'
+    | '/entrada'
+    | '/painel-profissional'
+    | '/profissional'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -76,6 +104,7 @@ export interface RootRouteChildren {
   AdminRoute: typeof AdminRoute
   AgendarRoute: typeof AgendarRoute
   EntradaRoute: typeof EntradaRoute
+  PainelProfissionalRoute: typeof PainelProfissionalRoute
   ProfissionalRoute: typeof ProfissionalRoute
 }
 
@@ -86,6 +115,13 @@ declare module '@tanstack/react-router' {
       path: '/profissional'
       fullPath: '/profissional'
       preLoaderRoute: typeof ProfissionalRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/painel-profissional': {
+      id: '/painel-profissional'
+      path: '/painel-profissional'
+      fullPath: '/painel-profissional'
+      preLoaderRoute: typeof PainelProfissionalRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/entrada': {
@@ -124,6 +160,7 @@ const rootRouteChildren: RootRouteChildren = {
   AdminRoute: AdminRoute,
   AgendarRoute: AgendarRoute,
   EntradaRoute: EntradaRoute,
+  PainelProfissionalRoute: PainelProfissionalRoute,
   ProfissionalRoute: ProfissionalRoute,
 }
 export const routeTree = rootRouteImport
