@@ -9,10 +9,16 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
+import { Route as EntradaRouteImport } from './routes/entrada'
 import { Route as AgendarRouteImport } from './routes/agendar'
 import { Route as AdminRouteImport } from './routes/admin'
 import { Route as IndexRouteImport } from './routes/index'
 
+const EntradaRoute = EntradaRouteImport.update({
+  id: '/entrada',
+  path: '/entrada',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const AgendarRoute = AgendarRouteImport.update({
   id: '/agendar',
   path: '/agendar',
@@ -33,34 +39,45 @@ export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/admin': typeof AdminRoute
   '/agendar': typeof AgendarRoute
+  '/entrada': typeof EntradaRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/admin': typeof AdminRoute
   '/agendar': typeof AgendarRoute
+  '/entrada': typeof EntradaRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/admin': typeof AdminRoute
   '/agendar': typeof AgendarRoute
+  '/entrada': typeof EntradaRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/admin' | '/agendar'
+  fullPaths: '/' | '/admin' | '/agendar' | '/entrada'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/admin' | '/agendar'
-  id: '__root__' | '/' | '/admin' | '/agendar'
+  to: '/' | '/admin' | '/agendar' | '/entrada'
+  id: '__root__' | '/' | '/admin' | '/agendar' | '/entrada'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   AdminRoute: typeof AdminRoute
   AgendarRoute: typeof AgendarRoute
+  EntradaRoute: typeof EntradaRoute
 }
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
+    '/entrada': {
+      id: '/entrada'
+      path: '/entrada'
+      fullPath: '/entrada'
+      preLoaderRoute: typeof EntradaRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/agendar': {
       id: '/agendar'
       path: '/agendar'
@@ -89,7 +106,18 @@ const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AdminRoute: AdminRoute,
   AgendarRoute: AgendarRoute,
+  EntradaRoute: EntradaRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
+
+import type { getRouter } from './router.tsx'
+import type { startInstance } from './start.ts'
+declare module '@tanstack/react-start' {
+  interface Register {
+    ssr: true
+    router: Awaited<ReturnType<typeof getRouter>>
+    config: Awaited<ReturnType<typeof startInstance.getOptions>>
+  }
+}
