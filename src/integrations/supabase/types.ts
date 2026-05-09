@@ -142,6 +142,7 @@ export type Database = {
           especialidade: string | null
           id: string
           nome: string
+          role: string | null
           senha: string
           whatsapp: string | null
         }
@@ -151,6 +152,7 @@ export type Database = {
           especialidade?: string | null
           id?: string
           nome: string
+          role?: string | null
           senha: string
           whatsapp?: string | null
         }
@@ -160,6 +162,7 @@ export type Database = {
           especialidade?: string | null
           id?: string
           nome?: string
+          role?: string | null
           senha?: string
           whatsapp?: string | null
         }
