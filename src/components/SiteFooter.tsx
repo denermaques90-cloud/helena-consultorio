@@ -36,8 +36,10 @@ export function SiteFooter() {
           <p className="text-sm text-muted-foreground mt-1">Segunda a Sábado</p>
         </div>
       </div>
-      <div className="border-t border-border py-5 text-center text-xs text-muted-foreground">
-        © {new Date().getFullYear()} Dra. Helena Martins · Todos os direitos reservados
+      <div className="border-t border-border py-5 text-center text-[10px] text-muted-foreground flex flex-col md:flex-row items-center justify-center gap-2 md:gap-4">
+        <span>© {new Date().getFullYear()} Dra. Helena Martins · Todos os direitos reservados</span>
+        <span className="hidden md:inline text-border">|</span>
+        <a href="/entrada" className="hover:text-gold transition-colors">Acesso Profissional</a>
       </div>
     </footer>
   );
