@@ -2,7 +2,7 @@ import { createFileRoute, Link } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
-import { LogOut, Calendar, Ban, Settings, Briefcase, Trash2, Plus, MessageCircle, Lock, Home } from "lucide-react";
+import { LogOut, Calendar, Ban, Settings, Briefcase, Trash2, Plus, MessageCircle, Lock, Home, User } from "lucide-react";
 
 export const Route = createFileRoute("/admin")({
   head: () => ({ meta: [{ title: "Painel Profissional — Dra. Helena Martins" }] }),
@@ -10,32 +10,48 @@ export const Route = createFileRoute("/admin")({
 });
 
 type Servico = { id: string; nome: string; tempo_minutos: number; preco: number | null; ativo: boolean };
-type Agendamento = { id: string; cliente_nome: string; cliente_whatsapp: string; data: string; hora: string; servico_ids: string[]; status: string };
-type Bloqueio = { id: string; data: string; hora: string | null };
+type Agendamento = { id: string; cliente_nome: string; cliente_whatsapp: string; data: string; hora: string; servico_ids: string[]; status: string; profissional_id: string; profissional_nome: string };
+type Bloqueio = { id: string; data: string; hora: string | null; profissional_id: string };
+type Profissional = { id: string; nome: string; especialidade: string; role: string; senha?: string; ativo: boolean; whatsapp?: string };
 type Config = { id: string; hora_abre: string; hora_fecha: string; intervalo_min: number; senha_admin: string; whatsapp_contato: string | null; instagram: string | null };
 
 function fmtDateBR(iso: string) { const [y,m,d] = iso.split("-"); return `${d}/${m}/${y}`; }
 
 function AdminPage() {
   const [logged, setLogged] = useState(false);
+  const [user, setUser] = useState<Profissional | null>(null);
   const [pass, setPass] = useState("");
   const [config, setConfig] = useState<Config | null>(null);
-  const [tab, setTab] = useState<"agenda" | "bloqueios" | "servicos" | "config">("agenda");
+  const [tab, setTab] = useState<"agenda" | "bloqueios" | "servicos" | "profissionais" | "config">("agenda");
 
   useEffect(() => {
-    if (typeof window !== "undefined" && sessionStorage.getItem("admin_auth") === "true") {
-      setLogged(true);
+    if (typeof window !== "undefined") {
+      const auth = sessionStorage.getItem("admin_auth");
+      if (auth) {
+        try {
+          const u = JSON.parse(auth);
+          setUser(u);
+          setLogged(true);
+        } catch (e) {
+          sessionStorage.removeItem("admin_auth");
+        }
+      }
     }
     supabase.from("config").select("*").limit(1).maybeSingle().then(({ data }) => data && setConfig(data as Config));
   }, []);
 
-  function handleLogin(e: React.FormEvent) {
+  async function handleLogin(e: React.FormEvent) {
     e.preventDefault();
-    const valid = config?.senha_admin || "admin123";
-    if (pass === valid) {
-      sessionStorage.setItem("admin_auth", "true");
+    const { data: prof, error } = await supabase
+      .from("profissionais")
+      .select("*")
+      .eq("senha", pass)
+      .maybeSingle();
+
+    if (prof) {
+      sessionStorage.setItem("admin_auth", JSON.stringify(prof));
       setLogged(true);
-      toast.success("Bem-vinda, Dra. Helena");
+      toast.success(`Bem-vinda, ${prof.nome}`);
     } else {
       toast.error("Senha incorreta");
     }
@@ -44,6 +60,7 @@ function AdminPage() {
   function handleLogout() {
     sessionStorage.removeItem("admin_auth");
     setLogged(false);
+    setUser(null);
     setPass("");
   }
 
@@ -54,13 +71,13 @@ function AdminPage() {
           <div className="text-center mb-6">
             <Lock className="text-gold mx-auto" size={28} />
             <h1 className="mt-3 font-serif text-2xl text-foreground">Painel Profissional</h1>
-            <p className="text-xs text-muted-foreground mt-1">Dra. Helena Martins</p>
+            <p className="text-xs text-muted-foreground mt-1">Acesso Restrito</p>
           </div>
           <input
             type="password"
             value={pass}
             onChange={e => setPass(e.target.value)}
-            placeholder="Senha"
+            placeholder="Senha de Acesso"
             className="w-full bg-input border border-border rounded-md px-4 py-3 text-foreground outline-none focus:border-gold"
           />
           <button className="mt-4 w-full rounded-md bg-primary py-3 text-sm font-medium text-primary-foreground">
@@ -78,7 +95,7 @@ function AdminPage() {
         <div className="mx-auto max-w-6xl px-5 py-4 flex items-center justify-between">
           <div>
             <h1 className="font-serif text-lg text-foreground">Painel Profissional</h1>
-            <p className="text-xs text-gold tracking-wider">Dra. Helena Martins</p>
+            <p className="text-xs text-gold tracking-wider">{user?.nome}</p>
           </div>
           <div className="flex items-center gap-2">
             <Link to="/" className="p-2 text-muted-foreground hover:text-gold" title="Site"><Home size={18} /></Link>
@@ -90,6 +107,7 @@ function AdminPage() {
             { id: "agenda", label: "Agenda", icon: Calendar },
             { id: "bloqueios", label: "Bloqueios", icon: Ban },
             { id: "servicos", label: "Modalidades", icon: Briefcase },
+            ...(user?.role === "owner" ? [{ id: "profissionais", label: "Profissionais", icon: User }] : []),
             { id: "config", label: "Configurações", icon: Settings },
           ].map(t => (
             <button
@@ -105,31 +123,39 @@ function AdminPage() {
         </nav>
       </header>
       <main className="mx-auto max-w-6xl px-5 py-8">
-        {tab === "agenda" && <AgendaTab />}
-        {tab === "bloqueios" && <BloqueiosTab />}
+        {tab === "agenda" && <AgendaTab user={user} />}
+        {tab === "bloqueios" && <BloqueiosTab user={user} />}
         {tab === "servicos" && <ServicosTab />}
+        {tab === "profissionais" && user?.role === "owner" && <ProfissionaisTab />}
         {tab === "config" && <ConfigTab config={config} onUpdate={setConfig} />}
       </main>
     </div>
   );
 }
 
-function AgendaTab() {
+function AgendaTab({ user }: { user: Profissional | null }) {
   const [items, setItems] = useState<Agendamento[]>([]);
   const [servicos, setServicos] = useState<Record<string, string>>({});
   const [loading, setLoading] = useState(true);
 
   async function load() {
     setLoading(true);
+    let query = supabase.from("agendamentos").select("*");
+    
+    // If not owner, filter by professional_id
+    if (user && user.role !== "owner") {
+      query = query.eq("profissional_id", user.id);
+    }
+
     const [{ data: ags }, { data: svc }] = await Promise.all([
-      supabase.from("agendamentos").select("*").order("data", { ascending: true }).order("hora", { ascending: true }),
+      query.order("data", { ascending: true }).order("hora", { ascending: true }),
       supabase.from("servicos").select("id, nome"),
     ]);
     if (ags) setItems(ags as Agendamento[]);
     if (svc) setServicos(Object.fromEntries((svc as any[]).map(s => [s.id, s.nome])));
     setLoading(false);
   }
-  useEffect(() => { load(); }, []);
+  useEffect(() => { load(); }, [user]);
 
   async function setStatus(id: string, status: string) {
     const { error } = await supabase.from("agendamentos").update({ status }).eq("id", id);
@@ -184,6 +210,9 @@ function Section({ title, items, servicos, setStatus, remove, muted }: any) {
                     a.status === "cancelado" ? "bg-destructive/20 text-destructive" :
                     "bg-accent text-accent-foreground"
                   }`}>{a.status}</span>
+                  {a.profissional_nome && (
+                    <span className="text-[10px] text-gold/60 uppercase tracking-tighter">Prof: {a.profissional_nome}</span>
+                  )}
                 </div>
                 <div className="text-sm text-muted-foreground mt-1">
                   {fmtDateBR(a.data)} às {a.hora.slice(0,5)} · {(a.servico_ids || []).map(id => servicos[id]).filter(Boolean).join(", ") || "—"}
@@ -212,24 +241,30 @@ function Section({ title, items, servicos, setStatus, remove, muted }: any) {
   );
 }
 
-function BloqueiosTab() {
+function BloqueiosTab({ user }: { user: Profissional | null }) {
   const [items, setItems] = useState<Bloqueio[]>([]);
   const [data, setData] = useState("");
   const [hora, setHora] = useState("");
   const [diaInteiro, setDiaInteiro] = useState(false);
 
   async function load() {
-    const { data: rows } = await supabase.from("horarios_bloqueados").select("*").order("data");
+    let query = supabase.from("horarios_bloqueados").select("*");
+    if (user && user.role !== "owner") {
+      query = query.eq("profissional_id", user.id);
+    }
+    const { data: rows } = await query.order("data");
     if (rows) setItems(rows as Bloqueio[]);
   }
-  useEffect(() => { load(); }, []);
+  useEffect(() => { load(); }, [user]);
 
   async function add(e: React.FormEvent) {
     e.preventDefault();
-    if (!data) return;
+    if (!data || !user) return;
     if (!diaInteiro && !hora) return toast.error("Informe o horário ou marque dia inteiro");
     const { error } = await supabase.from("horarios_bloqueados").insert({
-      data, hora: diaInteiro ? null : hora,
+      data, 
+      hora: diaInteiro ? null : hora,
+      profissional_id: user.id
     });
     if (error) return toast.error("Erro");
     toast.success("Bloqueio adicionado");
@@ -328,6 +363,70 @@ function ServicosTab() {
               </label>
               <button onClick={() => remove(s.id)} className="text-destructive hover:opacity-70"><Trash2 size={14}/></button>
             </div>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+}
+
+function ProfissionaisTab() {
+  const [items, setItems] = useState<Profissional[]>([]);
+  const [nome, setNome] = useState("");
+  const [esp, setEsp] = useState("");
+  const [whatsapp, setWhatsapp] = useState("");
+  const [senha, setSenha] = useState("");
+
+  async function load() {
+    const { data } = await supabase.from("profissionais").select("*").order("nome");
+    if (data) setItems(data as Profissional[]);
+  }
+  useEffect(() => { load(); }, []);
+
+  async function add(e: React.FormEvent) {
+    e.preventDefault();
+    if (!nome || !senha) return;
+    const { error } = await supabase.from("profissionais").insert({ 
+      nome, 
+      especialidade: esp, 
+      whatsapp, 
+      senha,
+      role: "funcionario",
+      ativo: true 
+    });
+    if (error) return toast.error("Erro ao cadastrar");
+    toast.success("Profissional cadastrado");
+    setNome(""); setEsp(""); setWhatsapp(""); setSenha("");
+    load();
+  }
+
+  async function remove(id: string) {
+    if (!confirm("Excluir este profissional? Isso também removerá seus agendamentos e bloqueios.")) return;
+    await supabase.from("profissionais").delete().eq("id", id);
+    load();
+  }
+
+  return (
+    <div>
+      <h2 className="font-serif text-2xl text-foreground mb-1">Profissionais</h2>
+      <p className="text-sm text-muted-foreground mb-6">Gerencie a equipe da clínica.</p>
+      <form onSubmit={add} className="premium-card p-5 mb-6 grid gap-4 md:grid-cols-4">
+        <input value={nome} onChange={e => setNome(e.target.value)} placeholder="Nome" className="bg-input border border-border rounded-md px-3 py-2 text-foreground" />
+        <input value={esp} onChange={e => setEsp(e.target.value)} placeholder="Especialidade" className="bg-input border border-border rounded-md px-3 py-2 text-foreground" />
+        <input value={whatsapp} onChange={e => setWhatsapp(e.target.value)} placeholder="WhatsApp" className="bg-input border border-border rounded-md px-3 py-2 text-foreground" />
+        <input value={senha} onChange={e => setSenha(e.target.value)} placeholder="Senha" className="bg-input border border-border rounded-md px-3 py-2 text-foreground" />
+        <button className="md:col-span-4 rounded-md bg-primary py-2 text-sm text-primary-foreground inline-flex items-center justify-center gap-2"><Plus size={14}/> Adicionar Profissional</button>
+      </form>
+      <div className="space-y-2">
+        {items.map(p => (
+          <div key={p.id} className="premium-card p-4 flex items-center justify-between">
+            <div>
+              <div className="text-foreground font-medium">{p.nome} {p.role === 'owner' && <span className="text-[10px] bg-gold/20 text-gold px-1.5 py-0.5 rounded ml-2">PROPRIETÁRIA</span>}</div>
+              <div className="text-xs text-muted-foreground">{p.especialidade} · {p.whatsapp}</div>
+            </div>
+            {p.role !== 'owner' && (
+              <button onClick={() => remove(p.id)} className="text-destructive hover:opacity-70"><Trash2 size={14}/></button>
+            )}
           </div>
         ))}
       </div>
