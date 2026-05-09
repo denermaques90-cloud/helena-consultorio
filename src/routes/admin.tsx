@@ -210,6 +210,9 @@ function Section({ title, items, servicos, setStatus, remove, muted }: any) {
                     a.status === "cancelado" ? "bg-destructive/20 text-destructive" :
                     "bg-accent text-accent-foreground"
                   }`}>{a.status}</span>
+                  {a.profissional_nome && (
+                    <span className="text-[10px] text-gold/60 uppercase tracking-tighter">Prof: {a.profissional_nome}</span>
+                  )}
                 </div>
                 <div className="text-sm text-muted-foreground mt-1">
                   {fmtDateBR(a.data)} às {a.hora.slice(0,5)} · {(a.servico_ids || []).map(id => servicos[id]).filter(Boolean).join(", ") || "—"}
