@@ -12,7 +12,7 @@ export const Route = createFileRoute("/admin")({
 type Servico = { id: string; nome: string; tempo_minutos: number; preco: number | null; ativo: boolean };
 type Agendamento = { id: string; cliente_nome: string; cliente_whatsapp: string; data: string; hora: string; servico_ids: string[]; status: string; profissional_id: string; profissional_nome: string };
 type Bloqueio = { id: string; data: string; hora: string | null; profissional_id: string };
-type Profissional = { id: string; nome: string; especialidade: string; role: string; senha?: string; ativo: boolean };
+type Profissional = { id: string; nome: string; especialidade: string; role: string; senha?: string; ativo: boolean; whatsapp?: string };
 type Config = { id: string; hora_abre: string; hora_fecha: string; intervalo_min: number; senha_admin: string; whatsapp_contato: string | null; instagram: string | null };
 
 function fmtDateBR(iso: string) { const [y,m,d] = iso.split("-"); return `${d}/${m}/${y}`; }
