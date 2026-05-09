@@ -3,7 +3,7 @@ import { useEffect, useMemo, useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { SiteNav } from "@/components/SiteNav";
 import { SiteFooter } from "@/components/SiteFooter";
-import { Calendar, Clock, ChevronLeft, ChevronRight, MessageCircle, CheckCircle2, ArrowLeft } from "lucide-react";
+import { Calendar, Clock, ChevronLeft, ChevronRight, MessageCircle, CheckCircle2, ArrowLeft, User } from "lucide-react";
 import { toast } from "sonner";
 
 export const Route = createFileRoute("/agendar")({
@@ -12,6 +12,7 @@ export const Route = createFileRoute("/agendar")({
 });
 
 type Servico = { id: string; nome: string; tempo_minutos: number; ativo: boolean };
+type Profissional = { id: string; nome: string; especialidade: string; whatsapp: string; ativo: boolean };
 type Config = { hora_abre: string; hora_fecha: string; intervalo_min: number; whatsapp_contato: string | null };
 
 function pad(n: number) { return n.toString().padStart(2, "0"); }
@@ -26,40 +27,55 @@ function isoDate(d: Date) {
 }
 
 function AgendarPage() {
-  const [step, setStep] = useState<1 | 2 | 3 | 4>(1);
+  const [step, setStep] = useState<1 | 2 | 3 | 4 | 5>(1);
   const [servicos, setServicos] = useState<Servico[]>([]);
+  const [profissionais, setProfissionais] = useState<Profissional[]>([]);
   const [config, setConfig] = useState<Config | null>(null);
+  
   const [selectedSvcs, setSelectedSvcs] = useState<string[]>([]);
+  const [selectedProf, setSelectedProf] = useState<Profissional | null>(null);
+  
   const [monthDate, setMonthDate] = useState<Date>(() => { const d = new Date(); d.setDate(1); return d; });
   const [selectedDate, setSelectedDate] = useState<string>("");
   const [selectedTime, setSelectedTime] = useState<string>("");
+  
   const [busyTimes, setBusyTimes] = useState<{ hora: string; duracao: number }[]>([]);
   const [blockedTimes, setBlockedTimes] = useState<string[]>([]);
   const [blockedDay, setBlockedDay] = useState(false);
+  
   const [nome, setNome] = useState("");
   const [whatsapp, setWhatsapp] = useState("");
   const [submitting, setSubmitting] = useState(false);
-  const [confirmed, setConfirmed] = useState<{ data: string; hora: string; nome: string; servicoNomes: string } | null>(null);
+  const [confirmed, setConfirmed] = useState<{ data: string; hora: string; nome: string; servicoNomes: string; profNome: string } | null>(null);
 
-  // Load servicos + config
+  // Load initial data
   useEffect(() => {
     (async () => {
-      const [{ data: svc }, { data: cfg }] = await Promise.all([
+      const [{ data: svc }, { data: prfs }, { data: cfg }] = await Promise.all([
         supabase.from("servicos").select("*").eq("ativo", true).order("nome"),
+        supabase.from("profissionais").select("*").eq("ativo", true).order("nome"),
         supabase.from("config").select("*").limit(1).maybeSingle(),
       ]);
       if (svc) setServicos(svc as Servico[]);
+      if (prfs) setProfissionais(prfs as Profissional[]);
       if (cfg) setConfig(cfg as Config);
     })();
   }, []);
 
-  // Load busy + blocked when date selected
+  // Load busy + blocked when date + professional selected
   useEffect(() => {
-    if (!selectedDate) return;
+    if (!selectedDate || !selectedProf) return;
     (async () => {
       const [{ data: ags }, { data: blk }] = await Promise.all([
-        supabase.from("agendamentos").select("hora, servico_ids").eq("data", selectedDate).neq("status", "cancelado"),
-        supabase.from("horarios_bloqueados").select("hora").eq("data", selectedDate),
+        supabase.from("agendamentos")
+          .select("hora, servico_ids")
+          .eq("data", selectedDate)
+          .eq("profissional_id", selectedProf.id)
+          .neq("status", "cancelado"),
+        supabase.from("horarios_bloqueados")
+          .select("hora")
+          .eq("data", selectedDate)
+          .eq("profissional_id", selectedProf.id),
       ]);
       const svcMap = new Map(servicos.map(s => [s.id, s.tempo_minutos]));
       const busy = (ags || []).map((a: any) => {
@@ -72,7 +88,7 @@ function AgendarPage() {
       setBlockedTimes(blocks.filter(b => b.hora).map(b => b.hora!.slice(0, 5)));
       setSelectedTime("");
     })();
-  }, [selectedDate, servicos]);
+  }, [selectedDate, selectedProf, servicos]);
 
   const totalDuracao = useMemo(() => {
     return selectedSvcs.reduce((acc, id) => acc + (servicos.find(s => s.id === id)?.tempo_minutos || 0), 0);
@@ -125,7 +141,7 @@ function AgendarPage() {
   }
 
   async function handleSubmit() {
-    if (!nome || !whatsapp || !selectedDate || !selectedTime || selectedSvcs.length === 0) return;
+    if (!nome || !whatsapp || !selectedDate || !selectedTime || !selectedProf || selectedSvcs.length === 0) return;
     setSubmitting(true);
     const { error } = await supabase.from("agendamentos").insert({
       cliente_nome: nome,
@@ -134,6 +150,8 @@ function AgendarPage() {
       hora: selectedTime,
       servico_ids: selectedSvcs,
       status: "confirmado",
+      profissional_id: selectedProf.id,
+      profissional_nome: selectedProf.nome,
     });
     setSubmitting(false);
     if (error) {
@@ -141,10 +159,11 @@ function AgendarPage() {
       return;
     }
     const svcNomes = selectedSvcs.map(id => servicos.find(s => s.id === id)?.nome).filter(Boolean).join(", ");
-    setConfirmed({ data: selectedDate, hora: selectedTime, nome, servicoNomes: svcNomes });
-    // open WhatsApp
-    const wa = config?.whatsapp_contato || "5511999999999";
-    const msg = `Olá, Dra. Helena Martins. Gostaria de confirmar minha solicitação de agendamento:\n\nNome: ${nome}\nServiço: ${svcNomes}\nData: ${fmtDateBR(selectedDate)}\nHorário: ${selectedTime}\n\nAguardo confirmação.`;
+    setConfirmed({ data: selectedDate, hora: selectedTime, nome, servicoNomes: svcNomes, profNome: selectedProf.nome });
+    
+    // open WhatsApp to specific professional
+    const wa = selectedProf.whatsapp || config?.whatsapp_contato || "5511999999999";
+    const msg = `Olá, ${selectedProf.nome}. Gostaria de confirmar minha solicitação de agendamento:\n\nNome: ${nome}\nModalidade: ${svcNomes}\nData: ${fmtDateBR(selectedDate)}\nHorário: ${selectedTime}\n\nAguardo confirmação.`;
     setTimeout(() => {
       window.open(`https://wa.me/${wa}?text=${encodeURIComponent(msg)}`, "_blank");
     }, 600);
@@ -159,13 +178,16 @@ function AgendarPage() {
             <CheckCircle2 className="text-gold mx-auto" size={48} />
             <h1 className="mt-5 font-serif text-3xl text-foreground">Solicitação enviada</h1>
             <p className="mt-3 text-muted-foreground">
-              Sua solicitação foi registrada. A confirmação será feita pelo WhatsApp.
+              Sua solicitação para <strong>{confirmed.profNome}</strong> foi registrada.
             </p>
-            <div className="mt-6 text-left bg-background/40 rounded-md p-5 text-sm space-y-2">
-              <div><span className="text-gold">Nome:</span> {confirmed.nome}</div>
-              <div><span className="text-gold">Modalidade:</span> {confirmed.servicoNomes}</div>
-              <div><span className="text-gold">Data:</span> {fmtDateBR(confirmed.data)}</div>
-              <div><span className="text-gold">Horário:</span> {confirmed.hora}</div>
+            <div className="mt-6 text-left bg-background/40 rounded-md p-5 text-sm space-y-2 border border-border/50">
+              <div><span className="text-gold uppercase text-[10px] tracking-widest block mb-0.5">Nome</span> {confirmed.nome}</div>
+              <div><span className="text-gold uppercase text-[10px] tracking-widest block mb-0.5">Profissional</span> {confirmed.profNome}</div>
+              <div><span className="text-gold uppercase text-[10px] tracking-widest block mb-0.5">Modalidade</span> {confirmed.servicoNomes}</div>
+              <div className="flex gap-4">
+                <div><span className="text-gold uppercase text-[10px] tracking-widest block mb-0.5">Data</span> {fmtDateBR(confirmed.data)}</div>
+                <div><span className="text-gold uppercase text-[10px] tracking-widest block mb-0.5">Horário</span> {confirmed.hora}</div>
+              </div>
             </div>
             <Link to="/" className="mt-8 inline-flex items-center gap-2 text-sm text-gold hover:underline">
               <ArrowLeft size={14} /> Voltar ao início
@@ -192,33 +214,35 @@ function AgendarPage() {
 
           {/* Steps */}
           <div className="flex items-center justify-center gap-2 mb-10">
-            {[1, 2, 3, 4].map(n => (
+            {[1, 2, 3, 4, 5].map(n => (
               <div key={n} className={`h-1.5 w-12 rounded-full ${step >= n ? "bg-gold" : "bg-border"}`} />
             ))}
           </div>
 
           {/* Step 1: services */}
           {step === 1 && (
-            <div className="premium-card p-7">
-              <h2 className="font-serif text-xl text-foreground mb-1">1. Escolha a modalidade</h2>
-              <p className="text-sm text-muted-foreground mb-5">Selecione um ou mais tipos de atendimento.</p>
+            <div className="premium-card p-8 animate-in fade-in duration-500">
+              <h2 className="font-serif text-2xl text-foreground mb-1">1. Escolha a modalidade</h2>
+              <p className="text-sm text-muted-foreground mb-6">Selecione o tipo de atendimento desejado.</p>
               <div className="space-y-3">
-                {servicos.length === 0 && <p className="text-sm text-muted-foreground">Carregando modalidades...</p>}
+                {servicos.length === 0 && <div className="flex justify-center py-6"><Loader2 className="animate-spin text-gold" /></div>}
                 {servicos.map(s => {
                   const active = selectedSvcs.includes(s.id);
                   return (
                     <button
                       key={s.id}
                       onClick={() => toggleSvc(s.id)}
-                      className={`w-full text-left flex items-center justify-between p-4 rounded-md border transition ${
-                        active ? "border-gold bg-gold/5" : "border-border hover:border-gold/40"
+                      className={`w-full text-left flex items-center justify-between p-4 rounded-md border transition-all duration-300 ${
+                        active ? "border-gold bg-gold/10 shadow-[0_0_15px_rgba(197,165,114,0.1)]" : "border-border hover:border-gold/40"
                       }`}
                     >
                       <div>
                         <div className="text-foreground font-medium">{s.nome}</div>
-                        <div className="text-xs text-muted-foreground mt-0.5">{s.tempo_minutos} minutos</div>
+                        <div className="text-xs text-muted-foreground mt-0.5">{s.tempo_minutos} minutos de sessão</div>
                       </div>
-                      <div className={`h-5 w-5 rounded-full border ${active ? "border-gold bg-gold" : "border-border"}`} />
+                      <div className={`h-6 w-6 rounded-full border flex items-center justify-center ${active ? "border-gold bg-gold text-primary-foreground" : "border-border"}`}>
+                        {active && <CheckCircle2 size={14} />}
+                      </div>
                     </button>
                   );
                 })}
@@ -226,127 +250,181 @@ function AgendarPage() {
               <button
                 disabled={selectedSvcs.length === 0}
                 onClick={() => setStep(2)}
-                className="mt-6 w-full rounded-md bg-primary py-3 text-sm font-medium text-primary-foreground disabled:opacity-40"
+                className="mt-8 w-full rounded-md bg-primary py-4 text-sm font-bold text-primary-foreground disabled:opacity-30 hover:bg-primary/90 transition-all shadow-lg"
               >
-                Continuar
+                Próximo Passo
               </button>
             </div>
           )}
 
-          {/* Step 2: date */}
+          {/* Step 2: professional */}
           {step === 2 && (
-            <div className="premium-card p-7">
-              <h2 className="font-serif text-xl text-foreground mb-1">2. Escolha a data</h2>
-              <p className="text-sm text-muted-foreground mb-5">Domingos não disponíveis.</p>
-              <div className="flex items-center justify-between mb-4">
+            <div className="premium-card p-8 animate-in fade-in duration-500">
+              <h2 className="font-serif text-2xl text-foreground mb-1">2. Escolha o profissional</h2>
+              <p className="text-sm text-muted-foreground mb-6">Com quem você deseja realizar o atendimento?</p>
+              <div className="grid gap-3">
+                {profissionais.map(p => {
+                  const active = selectedProf?.id === p.id;
+                  return (
+                    <button
+                      key={p.id}
+                      onClick={() => setSelectedProf(p)}
+                      className={`w-full text-left flex items-center gap-4 p-4 rounded-md border transition-all duration-300 ${
+                        active ? "border-gold bg-gold/10 shadow-[0_0_15px_rgba(197,165,114,0.1)]" : "border-border hover:border-gold/40"
+                      }`}
+                    >
+                      <div className={`h-12 w-12 rounded-full flex items-center justify-center border transition-colors ${active ? "bg-gold text-primary-foreground border-gold" : "bg-muted text-gold border-border"}`}>
+                        <User size={24} />
+                      </div>
+                      <div className="flex-1">
+                        <div className="text-foreground font-medium">{p.nome}</div>
+                        <div className="text-xs text-gold uppercase tracking-wider">{p.especialidade}</div>
+                      </div>
+                      <div className={`h-5 w-5 rounded-full border ${active ? "border-gold bg-gold" : "border-border"}`} />
+                    </button>
+                  );
+                })}
+              </div>
+              <div className="mt-8 flex gap-3">
+                <button onClick={() => setStep(1)} className="flex-1 rounded-md border border-border py-4 text-sm font-medium text-muted-foreground hover:text-foreground transition-colors">Voltar</button>
+                <button disabled={!selectedProf} onClick={() => setStep(3)} className="flex-2 w-full rounded-md bg-primary py-4 text-sm font-bold text-primary-foreground disabled:opacity-30 hover:bg-primary/90 transition-all shadow-lg">
+                  Continuar
+                </button>
+              </div>
+            </div>
+          )}
+
+          {/* Step 3: date */}
+          {step === 3 && (
+            <div className="premium-card p-8 animate-in fade-in duration-500">
+              <h2 className="font-serif text-2xl text-foreground mb-1">3. Escolha a data</h2>
+              <p className="text-sm text-muted-foreground mb-6">Disponibilidade de {selectedProf?.nome}.</p>
+              <div className="flex items-center justify-between mb-6">
                 <button
                   onClick={() => { const d = new Date(monthDate); d.setMonth(d.getMonth() - 1); setMonthDate(d); }}
-                  className="p-2 hover:text-gold text-muted-foreground"
-                ><ChevronLeft size={18} /></button>
-                <span className="font-serif text-lg capitalize">{monthLabel}</span>
+                  className="p-2 hover:text-gold text-muted-foreground transition-colors"
+                ><ChevronLeft size={20} /></button>
+                <span className="font-serif text-xl capitalize text-foreground">{monthLabel}</span>
                 <button
                   onClick={() => { const d = new Date(monthDate); d.setMonth(d.getMonth() + 1); setMonthDate(d); }}
-                  className="p-2 hover:text-gold text-muted-foreground"
-                ><ChevronRight size={18} /></button>
+                  className="p-2 hover:text-gold text-muted-foreground transition-colors"
+                ><ChevronRight size={20} /></button>
               </div>
-              <div className="grid grid-cols-7 gap-1 text-center text-xs text-muted-foreground mb-2">
-                {["D","S","T","Q","Q","S","S"].map((d,i) => <div key={i} className="py-1">{d}</div>)}
+              <div className="grid grid-cols-7 gap-1 text-center text-[10px] uppercase tracking-widest text-gold mb-3">
+                {["Dom","Seg","Ter","Qua","Qui","Sex","Sáb"].map((d,i) => <div key={i} className="py-1">{d}</div>)}
               </div>
-              <div className="grid grid-cols-7 gap-1">
+              <div className="grid grid-cols-7 gap-2">
                 {calDays.map((d, i) => (
                   <button
                     key={i}
                     disabled={!d.day || d.disabled}
                     onClick={() => d.date && setSelectedDate(d.date)}
-                    className={`aspect-square rounded-md text-sm transition ${
+                    className={`aspect-square rounded-md text-sm transition-all duration-300 flex items-center justify-center ${
                       !d.day ? "" :
-                      d.disabled ? "text-muted-foreground/30 cursor-not-allowed" :
-                      selectedDate === d.date ? "bg-gold text-primary-foreground font-medium" :
-                      "hover:bg-gold/10 text-foreground"
+                      d.disabled ? "text-muted-foreground/20 cursor-not-allowed" :
+                      selectedDate === d.date ? "bg-gold text-primary-foreground font-bold shadow-md shadow-gold/20" :
+                      "hover:bg-gold/10 text-foreground border border-transparent hover:border-gold/30"
                     }`}
                   >{d.day}</button>
                 ))}
               </div>
-              <div className="mt-6 flex gap-2">
-                <button onClick={() => setStep(1)} className="flex-1 rounded-md border border-border py-3 text-sm text-muted-foreground">Voltar</button>
-                <button disabled={!selectedDate} onClick={() => setStep(3)} className="flex-1 rounded-md bg-primary py-3 text-sm font-medium text-primary-foreground disabled:opacity-40">
+              <div className="mt-8 flex gap-3">
+                <button onClick={() => setStep(2)} className="flex-1 rounded-md border border-border py-4 text-sm font-medium text-muted-foreground">Voltar</button>
+                <button disabled={!selectedDate} onClick={() => setStep(4)} className="flex-2 w-full rounded-md bg-primary py-4 text-sm font-bold text-primary-foreground disabled:opacity-30">
                   Continuar
                 </button>
               </div>
             </div>
           )}
 
-          {/* Step 3: time */}
-          {step === 3 && (
-            <div className="premium-card p-7">
-              <h2 className="font-serif text-xl text-foreground mb-1">3. Escolha o horário</h2>
-              <p className="text-sm text-muted-foreground mb-5 flex items-center gap-2">
-                <Calendar size={14} className="text-gold" /> {fmtDateBR(selectedDate)}
-              </p>
+          {/* Step 4: time */}
+          {step === 4 && (
+            <div className="premium-card p-8 animate-in fade-in duration-500">
+              <h2 className="font-serif text-2xl text-foreground mb-1">4. Escolha o horário</h2>
+              <div className="text-sm text-muted-foreground mb-6 flex items-center gap-2">
+                <Calendar size={14} className="text-gold" /> {fmtDateBR(selectedDate)} · <User size={14} className="text-gold ml-2" /> {selectedProf?.nome}
+              </div>
               {blockedDay ? (
-                <p className="text-sm text-muted-foreground py-8 text-center">Esta data está indisponível. Por favor, escolha outra.</p>
+                <div className="py-12 text-center">
+                   <p className="text-muted-foreground italic">Esta data foi bloqueada pelo profissional.</p>
+                   <button onClick={() => setStep(3)} className="mt-4 text-gold text-sm underline">Escolher outro dia</button>
+                </div>
               ) : slots.length === 0 ? (
-                <p className="text-sm text-muted-foreground py-8 text-center">Nenhum horário configurado.</p>
+                <div className="py-12 text-center">
+                   <p className="text-muted-foreground italic">Sem horários disponíveis para este dia.</p>
+                   <button onClick={() => setStep(3)} className="mt-4 text-gold text-sm underline">Escolher outro dia</button>
+                </div>
               ) : (
-                <div className="grid grid-cols-3 sm:grid-cols-4 gap-2">
+                <div className="grid grid-cols-3 sm:grid-cols-4 gap-3">
                   {slots.map(s => (
                     <button
                       key={s.time}
                       disabled={!s.available}
                       onClick={() => setSelectedTime(s.time)}
-                      className={`py-2.5 rounded-md text-sm transition border ${
-                        !s.available ? "border-border/50 text-muted-foreground/40 cursor-not-allowed line-through" :
-                        selectedTime === s.time ? "border-gold bg-gold text-primary-foreground" :
-                        "border-border text-foreground hover:border-gold/50"
+                      className={`py-3 rounded-md text-sm font-medium transition-all border ${
+                        !s.available ? "border-border/30 text-muted-foreground/30 cursor-not-allowed line-through" :
+                        selectedTime === s.time ? "border-gold bg-gold text-primary-foreground shadow-md shadow-gold/10" :
+                        "border-border text-foreground hover:border-gold/50 hover:bg-gold/5"
                       }`}
                     >{s.time}</button>
                   ))}
                 </div>
               )}
-              <div className="mt-6 flex gap-2">
-                <button onClick={() => setStep(2)} className="flex-1 rounded-md border border-border py-3 text-sm text-muted-foreground">Voltar</button>
-                <button disabled={!selectedTime} onClick={() => setStep(4)} className="flex-1 rounded-md bg-primary py-3 text-sm font-medium text-primary-foreground disabled:opacity-40">
+              <div className="mt-8 flex gap-3">
+                <button onClick={() => setStep(3)} className="flex-1 rounded-md border border-border py-4 text-sm font-medium text-muted-foreground">Voltar</button>
+                <button disabled={!selectedTime} onClick={() => setStep(5)} className="flex-2 w-full rounded-md bg-primary py-4 text-sm font-bold text-primary-foreground disabled:opacity-30">
                   Continuar
                 </button>
               </div>
             </div>
           )}
 
-          {/* Step 4: contact */}
-          {step === 4 && (
-            <div className="premium-card p-7">
-              <h2 className="font-serif text-xl text-foreground mb-5">4. Seus dados</h2>
-              <div className="space-y-4">
+          {/* Step 5: contact */}
+          {step === 5 && (
+            <div className="premium-card p-8 animate-in fade-in duration-500">
+              <h2 className="font-serif text-2xl text-foreground mb-6">5. Confirmação de Dados</h2>
+              <div className="space-y-5">
                 <div>
-                  <label className="text-xs text-gold uppercase tracking-wider">Nome completo</label>
+                  <label className="text-[10px] text-gold uppercase tracking-[0.2em] block mb-1.5">Nome completo</label>
                   <input
                     value={nome} onChange={e => setNome(e.target.value)}
-                    className="mt-1 w-full bg-input border border-border rounded-md px-4 py-3 text-foreground outline-none focus:border-gold"
+                    className="w-full bg-input border border-border rounded-md px-4 py-3.5 text-foreground outline-none focus:border-gold transition-colors"
                     placeholder="Seu nome"
                   />
                 </div>
                 <div>
-                  <label className="text-xs text-gold uppercase tracking-wider">WhatsApp (com DDD)</label>
+                  <label className="text-[10px] text-gold uppercase tracking-[0.2em] block mb-1.5">WhatsApp (com DDD)</label>
                   <input
                     value={whatsapp} onChange={e => setWhatsapp(e.target.value.replace(/\D/g, ""))}
-                    className="mt-1 w-full bg-input border border-border rounded-md px-4 py-3 text-foreground outline-none focus:border-gold"
+                    className="w-full bg-input border border-border rounded-md px-4 py-3.5 text-foreground outline-none focus:border-gold transition-colors"
                     placeholder="11999999999"
                   />
                 </div>
-                <div className="bg-background/40 rounded-md p-4 text-sm space-y-1">
-                  <div className="text-gold text-xs uppercase tracking-wider mb-2">Resumo</div>
-                  <div><Clock size={12} className="inline text-gold mr-1" /> {fmtDateBR(selectedDate)} às {selectedTime}</div>
-                  <div className="text-muted-foreground">{selectedSvcs.map(id => servicos.find(s => s.id === id)?.nome).join(", ")}</div>
+                <div className="bg-card/50 border border-border/50 rounded-lg p-5 space-y-3 mt-8">
+                  <div className="text-gold text-[10px] uppercase tracking-[0.2em] font-bold mb-2">Resumo do Agendamento</div>
+                  <div className="flex items-center gap-3 text-sm">
+                    <User size={16} className="text-gold" />
+                    <span className="text-foreground">{selectedProf?.nome}</span>
+                  </div>
+                  <div className="flex items-center gap-3 text-sm">
+                    <Calendar size={16} className="text-gold" />
+                    <span className="text-foreground">{fmtDateBR(selectedDate)} às {selectedTime}</span>
+                  </div>
+                  <div className="flex items-center gap-3 text-sm">
+                    <CheckCircle2 size={16} className="text-gold" />
+                    <span className="text-foreground">{selectedSvcs.map(id => servicos.find(s => s.id === id)?.nome).join(", ")}</span>
+                  </div>
                 </div>
               </div>
-              <div className="mt-6 flex gap-2">
-                <button onClick={() => setStep(3)} className="flex-1 rounded-md border border-border py-3 text-sm text-muted-foreground">Voltar</button>
+              <div className="mt-8 flex gap-3">
+                <button onClick={() => setStep(4)} className="flex-1 rounded-md border border-border py-4 text-sm font-medium text-muted-foreground">Voltar</button>
                 <button
                   disabled={submitting || !nome || whatsapp.length < 10}
                   onClick={handleSubmit}
-                  className="flex-1 rounded-md bg-primary py-3 text-sm font-medium text-primary-foreground disabled:opacity-40 inline-flex items-center justify-center gap-2"
+                  className="flex-2 w-full rounded-md bg-gold py-4 text-sm font-bold text-primary-foreground disabled:opacity-30 hover:bg-gold/90 transition-all shadow-lg flex items-center justify-center gap-2"
                 >
-                  <MessageCircle size={14} /> {submitting ? "Enviando..." : "Enviar solicitação"}
+                  {submitting ? <Loader2 size={18} className="animate-spin" /> : <MessageCircle size={18} />}
+                  {submitting ? "Enviando..." : "Confirmar e Enviar"}
                 </button>
               </div>
             </div>
@@ -356,4 +434,8 @@ function AgendarPage() {
       <SiteFooter />
     </div>
   );
+}
+
+function Loader2({ className, size }: { className?: string, size?: number }) {
+  return <svg xmlns="http://www.w3.org/2000/svg" width={size || 24} height={size || 24} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}><path d="M21 12a9 9 0 1 1-6.219-8.56"/></svg>;
 }

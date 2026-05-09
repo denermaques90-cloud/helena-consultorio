@@ -9,13 +9,37 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
+import { Route as ProfissionalRouteImport } from './routes/profissional'
+import { Route as PainelProfissionalRouteImport } from './routes/painel-profissional'
+import { Route as EntradaRouteImport } from './routes/entrada'
 import { Route as AgendarRouteImport } from './routes/agendar'
+import { Route as AdminMasterRouteImport } from './routes/admin-master'
 import { Route as AdminRouteImport } from './routes/admin'
 import { Route as IndexRouteImport } from './routes/index'
 
+const ProfissionalRoute = ProfissionalRouteImport.update({
+  id: '/profissional',
+  path: '/profissional',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const PainelProfissionalRoute = PainelProfissionalRouteImport.update({
+  id: '/painel-profissional',
+  path: '/painel-profissional',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const EntradaRoute = EntradaRouteImport.update({
+  id: '/entrada',
+  path: '/entrada',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const AgendarRoute = AgendarRouteImport.update({
   id: '/agendar',
   path: '/agendar',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AdminMasterRoute = AdminMasterRouteImport.update({
+  id: '/admin-master',
+  path: '/admin-master',
   getParentRoute: () => rootRouteImport,
 } as any)
 const AdminRoute = AdminRouteImport.update({
@@ -32,40 +56,106 @@ const IndexRoute = IndexRouteImport.update({
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/admin': typeof AdminRoute
+  '/admin-master': typeof AdminMasterRoute
   '/agendar': typeof AgendarRoute
+  '/entrada': typeof EntradaRoute
+  '/painel-profissional': typeof PainelProfissionalRoute
+  '/profissional': typeof ProfissionalRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/admin': typeof AdminRoute
+  '/admin-master': typeof AdminMasterRoute
   '/agendar': typeof AgendarRoute
+  '/entrada': typeof EntradaRoute
+  '/painel-profissional': typeof PainelProfissionalRoute
+  '/profissional': typeof ProfissionalRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/admin': typeof AdminRoute
+  '/admin-master': typeof AdminMasterRoute
   '/agendar': typeof AgendarRoute
+  '/entrada': typeof EntradaRoute
+  '/painel-profissional': typeof PainelProfissionalRoute
+  '/profissional': typeof ProfissionalRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/admin' | '/agendar'
+  fullPaths:
+    | '/'
+    | '/admin'
+    | '/admin-master'
+    | '/agendar'
+    | '/entrada'
+    | '/painel-profissional'
+    | '/profissional'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/admin' | '/agendar'
-  id: '__root__' | '/' | '/admin' | '/agendar'
+  to:
+    | '/'
+    | '/admin'
+    | '/admin-master'
+    | '/agendar'
+    | '/entrada'
+    | '/painel-profissional'
+    | '/profissional'
+  id:
+    | '__root__'
+    | '/'
+    | '/admin'
+    | '/admin-master'
+    | '/agendar'
+    | '/entrada'
+    | '/painel-profissional'
+    | '/profissional'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   AdminRoute: typeof AdminRoute
+  AdminMasterRoute: typeof AdminMasterRoute
   AgendarRoute: typeof AgendarRoute
+  EntradaRoute: typeof EntradaRoute
+  PainelProfissionalRoute: typeof PainelProfissionalRoute
+  ProfissionalRoute: typeof ProfissionalRoute
 }
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
+    '/profissional': {
+      id: '/profissional'
+      path: '/profissional'
+      fullPath: '/profissional'
+      preLoaderRoute: typeof ProfissionalRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/painel-profissional': {
+      id: '/painel-profissional'
+      path: '/painel-profissional'
+      fullPath: '/painel-profissional'
+      preLoaderRoute: typeof PainelProfissionalRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/entrada': {
+      id: '/entrada'
+      path: '/entrada'
+      fullPath: '/entrada'
+      preLoaderRoute: typeof EntradaRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/agendar': {
       id: '/agendar'
       path: '/agendar'
       fullPath: '/agendar'
       preLoaderRoute: typeof AgendarRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/admin-master': {
+      id: '/admin-master'
+      path: '/admin-master'
+      fullPath: '/admin-master'
+      preLoaderRoute: typeof AdminMasterRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/admin': {
@@ -88,7 +178,11 @@ declare module '@tanstack/react-router' {
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AdminRoute: AdminRoute,
+  AdminMasterRoute: AdminMasterRoute,
   AgendarRoute: AgendarRoute,
+  EntradaRoute: EntradaRoute,
+  PainelProfissionalRoute: PainelProfissionalRoute,
+  ProfissionalRoute: ProfissionalRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)

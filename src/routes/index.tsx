@@ -1,4 +1,4 @@
-import { createFileRoute, Link } from "@tanstack/react-router";
+import { createFileRoute, Link, Navigate } from "@tanstack/react-router";
 import { SiteNav } from "@/components/SiteNav";
 import { SiteFooter } from "@/components/SiteFooter";
 import heroCollage from "@/assets/hero-collage.png";
@@ -63,6 +63,12 @@ const faqs = [
 ];
 
 function HomePage() {
+  const hasSeenEntrada = typeof window !== "undefined" && (sessionStorage.getItem("seen_entrada") === "true" || sessionStorage.getItem("profissional_id"));
+  
+  if (!hasSeenEntrada) {
+    return <Navigate to="/entrada" />;
+  }
+
   return (
     <div className="min-h-screen bg-background">
       <SiteNav />
