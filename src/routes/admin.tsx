@@ -107,6 +107,7 @@ function AdminPage() {
             { id: "agenda", label: "Agenda", icon: Calendar },
             { id: "bloqueios", label: "Bloqueios", icon: Ban },
             { id: "servicos", label: "Modalidades", icon: Briefcase },
+            ...(user?.role === "owner" ? [{ id: "profissionais", label: "Profissionais", icon: User }] : []),
             { id: "config", label: "Configurações", icon: Settings },
           ].map(t => (
             <button
