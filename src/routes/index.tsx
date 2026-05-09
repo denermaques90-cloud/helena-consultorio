@@ -63,6 +63,12 @@ const faqs = [
 ];
 
 function HomePage() {
+  const hasSeenEntrada = typeof window !== "undefined" && (sessionStorage.getItem("seen_entrada") === "true" || sessionStorage.getItem("profissional_id"));
+  
+  if (!hasSeenEntrada) {
+    return <Navigate to="/entrada" />;
+  }
+
   return (
     <div className="min-h-screen bg-background">
       <SiteNav />
