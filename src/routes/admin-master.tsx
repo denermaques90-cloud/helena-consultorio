@@ -11,7 +11,7 @@ export const Route = createFileRoute("/admin-master")({
 
 type Profissional = { id: string; nome: string; especialidade: string; whatsapp: string; senha: string; ativo: boolean };
 type Servico = { id: string; nome: string; tempo_minutos: number; preco: number | null; ativo: boolean };
-type Agendamento = { id: string; cliente_nome: string; cliente_whatsapp: string; data: string; hora: string; servico_ids: string[]; status: string; profissional_nome: string };
+type Agendamento = { id: string; cliente_nome: string; cliente_whatsapp: string; data: string; hora: string; servico_ids: string[]; status: string; profissional_id: string | null; profissional_nome: string | null };
 
 function fmtDateBR(iso: string) { const [y, m, d] = iso.split("-"); return `${d}/${m}/${y}`; }
 
