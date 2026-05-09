@@ -133,22 +133,29 @@ function AdminPage() {
   );
 }
 
-function AgendaTab() {
+function AgendaTab({ user }: { user: Profissional | null }) {
   const [items, setItems] = useState<Agendamento[]>([]);
   const [servicos, setServicos] = useState<Record<string, string>>({});
   const [loading, setLoading] = useState(true);
 
   async function load() {
     setLoading(true);
+    let query = supabase.from("agendamentos").select("*");
+    
+    // If not owner, filter by professional_id
+    if (user && user.role !== "owner") {
+      query = query.eq("profissional_id", user.id);
+    }
+
     const [{ data: ags }, { data: svc }] = await Promise.all([
-      supabase.from("agendamentos").select("*").order("data", { ascending: true }).order("hora", { ascending: true }),
+      query.order("data", { ascending: true }).order("hora", { ascending: true }),
       supabase.from("servicos").select("id, nome"),
     ]);
     if (ags) setItems(ags as Agendamento[]);
     if (svc) setServicos(Object.fromEntries((svc as any[]).map(s => [s.id, s.nome])));
     setLoading(false);
   }
-  useEffect(() => { load(); }, []);
+  useEffect(() => { load(); }, [user]);
 
   async function setStatus(id: string, status: string) {
     const { error } = await supabase.from("agendamentos").update({ status }).eq("id", id);
