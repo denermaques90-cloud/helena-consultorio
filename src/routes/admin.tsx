@@ -370,6 +370,70 @@ function ServicosTab() {
   );
 }
 
+function ProfissionaisTab() {
+  const [items, setItems] = useState<Profissional[]>([]);
+  const [nome, setNome] = useState("");
+  const [esp, setEsp] = useState("");
+  const [whatsapp, setWhatsapp] = useState("");
+  const [senha, setSenha] = useState("");
+
+  async function load() {
+    const { data } = await supabase.from("profissionais").select("*").order("nome");
+    if (data) setItems(data as Profissional[]);
+  }
+  useEffect(() => { load(); }, []);
+
+  async function add(e: React.FormEvent) {
+    e.preventDefault();
+    if (!nome || !senha) return;
+    const { error } = await supabase.from("profissionais").insert({ 
+      nome, 
+      especialidade: esp, 
+      whatsapp, 
+      senha,
+      role: "funcionario",
+      ativo: true 
+    });
+    if (error) return toast.error("Erro ao cadastrar");
+    toast.success("Profissional cadastrado");
+    setNome(""); setEsp(""); setWhatsapp(""); setSenha("");
+    load();
+  }
+
+  async function remove(id: string) {
+    if (!confirm("Excluir este profissional? Isso também removerá seus agendamentos e bloqueios.")) return;
+    await supabase.from("profissionais").delete().eq("id", id);
+    load();
+  }
+
+  return (
+    <div>
+      <h2 className="font-serif text-2xl text-foreground mb-1">Profissionais</h2>
+      <p className="text-sm text-muted-foreground mb-6">Gerencie a equipe da clínica.</p>
+      <form onSubmit={add} className="premium-card p-5 mb-6 grid gap-4 md:grid-cols-4">
+        <input value={nome} onChange={e => setNome(e.target.value)} placeholder="Nome" className="bg-input border border-border rounded-md px-3 py-2 text-foreground" />
+        <input value={esp} onChange={e => setEsp(e.target.value)} placeholder="Especialidade" className="bg-input border border-border rounded-md px-3 py-2 text-foreground" />
+        <input value={whatsapp} onChange={e => setWhatsapp(e.target.value)} placeholder="WhatsApp" className="bg-input border border-border rounded-md px-3 py-2 text-foreground" />
+        <input value={senha} onChange={e => setSenha(e.target.value)} placeholder="Senha" className="bg-input border border-border rounded-md px-3 py-2 text-foreground" />
+        <button className="md:col-span-4 rounded-md bg-primary py-2 text-sm text-primary-foreground inline-flex items-center justify-center gap-2"><Plus size={14}/> Adicionar Profissional</button>
+      </form>
+      <div className="space-y-2">
+        {items.map(p => (
+          <div key={p.id} className="premium-card p-4 flex items-center justify-between">
+            <div>
+              <div className="text-foreground font-medium">{p.nome} {p.role === 'owner' && <span className="text-[10px] bg-gold/20 text-gold px-1.5 py-0.5 rounded ml-2">PROPRIETÁRIA</span>}</div>
+              <div className="text-xs text-muted-foreground">{p.especialidade} · {p.whatsapp}</div>
+            </div>
+            {p.role !== 'owner' && (
+              <button onClick={() => remove(p.id)} className="text-destructive hover:opacity-70"><Trash2 size={14}/></button>
+            )}
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+}
+
 function ConfigTab({ config, onUpdate }: { config: Config | null; onUpdate: (c: Config) => void }) {
   const [form, setForm] = useState<Config | null>(config);
   useEffect(() => { setForm(config); }, [config]);
