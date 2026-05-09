@@ -1,4 +1,4 @@
-import { createFileRoute, Link } from "@tanstack/react-router";
+import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { User, ShieldCheck } from "lucide-react";
 
 export const Route = createFileRoute("/entrada")({
@@ -7,6 +7,13 @@ export const Route = createFileRoute("/entrada")({
 });
 
 function EntradaPage() {
+  const navigate = useNavigate();
+
+  const handleClientClick = (e: React.MouseEvent) => {
+    e.preventDefault();
+    sessionStorage.setItem("seen_entrada", "true");
+    navigate({ to: "/" });
+  };
   return (
     <div className="min-h-screen bg-background flex flex-col items-center justify-center p-5 relative overflow-hidden">
       {/* Background Decor */}
