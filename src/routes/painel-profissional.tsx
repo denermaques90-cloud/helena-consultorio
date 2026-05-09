@@ -2,7 +2,7 @@ import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
-import { LogOut, Calendar, Ban, Settings, Trash2, Plus, MessageCircle, Home, User, Loader2 } from "lucide-react";
+import { LogOut, Calendar, Ban, Settings, Trash2, Plus, MessageCircle, Home, User, Loader2, Lock } from "lucide-react";
 
 export const Route = createFileRoute("/painel-profissional")({
   head: () => ({ meta: [{ title: "Meu Painel — Dra. Helena Martins" }] }),
