@@ -95,7 +95,7 @@ function AdminPage() {
         <div className="mx-auto max-w-6xl px-5 py-4 flex items-center justify-between">
           <div>
             <h1 className="font-serif text-lg text-foreground">Painel Profissional</h1>
-            <p className="text-xs text-gold tracking-wider">Dra. Helena Martins</p>
+            <p className="text-xs text-gold tracking-wider">{user?.nome}</p>
           </div>
           <div className="flex items-center gap-2">
             <Link to="/" className="p-2 text-muted-foreground hover:text-gold" title="Site"><Home size={18} /></Link>
