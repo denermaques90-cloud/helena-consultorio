@@ -438,7 +438,7 @@ function AgendaTab({ agendamentos, servicos, reload }: any) {
             Histórico ({past.length})
           </summary>
           <div className="divide-y divide-border/20">
-            {past.map(a => (
+            {past.map((a: Agendamento) => (
               <div key={a.id} className="p-4 flex items-center gap-4 opacity-70">
                 <div className="text-xs text-muted-foreground w-24">{fmtDateBR(a.data)}</div>
                 <div className="text-xs text-muted-foreground w-14">{a.hora.slice(0,5)}</div>
