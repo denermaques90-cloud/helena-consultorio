@@ -123,9 +123,10 @@ function AdminPage() {
         </nav>
       </header>
       <main className="mx-auto max-w-6xl px-5 py-8">
-        {tab === "agenda" && <AgendaTab />}
-        {tab === "bloqueios" && <BloqueiosTab />}
+        {tab === "agenda" && <AgendaTab user={user} />}
+        {tab === "bloqueios" && <BloqueiosTab user={user} />}
         {tab === "servicos" && <ServicosTab />}
+        {tab === "profissionais" && user?.role === "owner" && <ProfissionaisTab />}
         {tab === "config" && <ConfigTab config={config} onUpdate={setConfig} />}
       </main>
     </div>
