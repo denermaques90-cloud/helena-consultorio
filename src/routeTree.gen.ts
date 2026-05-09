@@ -9,11 +9,17 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
+import { Route as ProfissionalRouteImport } from './routes/profissional'
 import { Route as EntradaRouteImport } from './routes/entrada'
 import { Route as AgendarRouteImport } from './routes/agendar'
 import { Route as AdminRouteImport } from './routes/admin'
 import { Route as IndexRouteImport } from './routes/index'
 
+const ProfissionalRoute = ProfissionalRouteImport.update({
+  id: '/profissional',
+  path: '/profissional',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const EntradaRoute = EntradaRouteImport.update({
   id: '/entrada',
   path: '/entrada',
@@ -40,12 +46,14 @@ export interface FileRoutesByFullPath {
   '/admin': typeof AdminRoute
   '/agendar': typeof AgendarRoute
   '/entrada': typeof EntradaRoute
+  '/profissional': typeof ProfissionalRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/admin': typeof AdminRoute
   '/agendar': typeof AgendarRoute
   '/entrada': typeof EntradaRoute
+  '/profissional': typeof ProfissionalRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -53,13 +61,14 @@ export interface FileRoutesById {
   '/admin': typeof AdminRoute
   '/agendar': typeof AgendarRoute
   '/entrada': typeof EntradaRoute
+  '/profissional': typeof ProfissionalRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/admin' | '/agendar' | '/entrada'
+  fullPaths: '/' | '/admin' | '/agendar' | '/entrada' | '/profissional'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/admin' | '/agendar' | '/entrada'
-  id: '__root__' | '/' | '/admin' | '/agendar' | '/entrada'
+  to: '/' | '/admin' | '/agendar' | '/entrada' | '/profissional'
+  id: '__root__' | '/' | '/admin' | '/agendar' | '/entrada' | '/profissional'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -67,10 +76,18 @@ export interface RootRouteChildren {
   AdminRoute: typeof AdminRoute
   AgendarRoute: typeof AgendarRoute
   EntradaRoute: typeof EntradaRoute
+  ProfissionalRoute: typeof ProfissionalRoute
 }
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
+    '/profissional': {
+      id: '/profissional'
+      path: '/profissional'
+      fullPath: '/profissional'
+      preLoaderRoute: typeof ProfissionalRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/entrada': {
       id: '/entrada'
       path: '/entrada'
@@ -107,6 +124,7 @@ const rootRouteChildren: RootRouteChildren = {
   AdminRoute: AdminRoute,
   AgendarRoute: AgendarRoute,
   EntradaRoute: EntradaRoute,
+  ProfissionalRoute: ProfissionalRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
