@@ -136,9 +136,9 @@ function ProfissionaisTab() {
     let res;
     
     if (isNew) {
-      res = await supabase.from("profissionais").insert(editing);
+      res = await supabase.from("profissionais").insert(editing as any);
     } else {
-      res = await supabase.from("profissionais").update(editing).eq("id", editing.id!);
+      res = await supabase.from("profissionais").update(editing as any).eq("id", editing.id!);
     }
     
     if (res.error) return toast.error("Erro ao salvar");
