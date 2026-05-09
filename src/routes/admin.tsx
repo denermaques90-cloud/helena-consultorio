@@ -241,24 +241,30 @@ function Section({ title, items, servicos, setStatus, remove, muted }: any) {
   );
 }
 
-function BloqueiosTab() {
+function BloqueiosTab({ user }: { user: Profissional | null }) {
   const [items, setItems] = useState<Bloqueio[]>([]);
   const [data, setData] = useState("");
   const [hora, setHora] = useState("");
   const [diaInteiro, setDiaInteiro] = useState(false);
 
   async function load() {
-    const { data: rows } = await supabase.from("horarios_bloqueados").select("*").order("data");
+    let query = supabase.from("horarios_bloqueados").select("*");
+    if (user && user.role !== "owner") {
+      query = query.eq("profissional_id", user.id);
+    }
+    const { data: rows } = await query.order("data");
     if (rows) setItems(rows as Bloqueio[]);
   }
-  useEffect(() => { load(); }, []);
+  useEffect(() => { load(); }, [user]);
 
   async function add(e: React.FormEvent) {
     e.preventDefault();
-    if (!data) return;
+    if (!data || !user) return;
     if (!diaInteiro && !hora) return toast.error("Informe o horário ou marque dia inteiro");
     const { error } = await supabase.from("horarios_bloqueados").insert({
-      data, hora: diaInteiro ? null : hora,
+      data, 
+      hora: diaInteiro ? null : hora,
+      profissional_id: user.id
     });
     if (error) return toast.error("Erro");
     toast.success("Bloqueio adicionado");
