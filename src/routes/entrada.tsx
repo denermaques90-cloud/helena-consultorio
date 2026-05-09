@@ -43,7 +43,7 @@ function EntradaPage() {
               <h2 className="text-lg font-medium text-foreground">Sou cliente</h2>
               <p className="text-xs text-muted-foreground mt-0.5">Quero conhecer a clínica ou agendar uma consulta</p>
             </div>
-          </Link>
+          </button>
 
           <Link
             to="/profissional"
