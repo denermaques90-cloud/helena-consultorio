@@ -182,13 +182,13 @@ function AgendarPage() {
         <SiteNav />
         <div className="pt-32 pb-20 px-5">
           <div className="mx-auto max-w-xl premium-card p-10 text-center">
-            <CheckCircle2 className="text-gold mx-auto" size={48} />
+            <CheckCircle2 className="text-primary mx-auto" size={48} />
             <h1 className="mt-5 font-serif text-3xl text-foreground">Solicitação enviada</h1>
             <p className="mt-3 text-muted-foreground">
               Sua solicitação para <strong>{confirmed.profNome}</strong> foi registrada.
             </p>
             <div className="mt-6 text-left bg-background/40 rounded-md p-5 text-sm space-y-2 border border-border/50">
-              <div><span className="text-gold uppercase text-[10px] tracking-widest block mb-0.5">Nome</span> {confirmed.nome}</div>
+              <div><span className="text-primary uppercase text-[10px] tracking-widest block mb-0.5 font-bold">Nome</span> {confirmed.nome}</div>
               <div><span className="text-gold uppercase text-[10px] tracking-widest block mb-0.5">Profissional</span> {confirmed.profNome}</div>
               <div><span className="text-gold uppercase text-[10px] tracking-widest block mb-0.5">Modalidade</span> {confirmed.servicoNomes}</div>
               <div className="flex gap-4">
@@ -196,7 +196,7 @@ function AgendarPage() {
                 <div><span className="text-gold uppercase text-[10px] tracking-widest block mb-0.5">Horário</span> {confirmed.hora}</div>
               </div>
             </div>
-            <Link to="/" className="mt-8 inline-flex items-center gap-2 text-sm text-gold hover:underline">
+            <Link to="/" className="mt-8 inline-flex items-center gap-2 text-sm text-primary hover:underline font-semibold">
               <ArrowLeft size={14} /> Voltar ao início
             </Link>
           </div>
@@ -349,7 +349,7 @@ function AgendarPage() {
             <div className="premium-card p-8 animate-in fade-in duration-500">
               <h2 className="font-serif text-2xl text-foreground mb-1">4. Escolha o horário</h2>
               <div className="text-sm text-muted-foreground mb-6 flex items-center gap-2">
-                <Calendar size={14} className="text-gold" /> {fmtDateBR(selectedDate)} · <User size={14} className="text-gold ml-2" /> {selectedProf?.nome}
+                <Calendar size={14} className="text-primary" /> {fmtDateBR(selectedDate)} · <User size={14} className="text-primary ml-2" /> {selectedProf?.nome}
               </div>
               {blockedDay ? (
                 <div className="py-12 text-center">
