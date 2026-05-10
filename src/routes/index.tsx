@@ -70,22 +70,22 @@ function HomePage() {
   }
 
   return (
-    <div className="min-h-screen bg-background">
+    <div className="min-h-screen bg-background text-foreground">
       <SiteNav />
 
       {/* HERO */}
-      <section className="relative min-h-screen flex items-center">
-        <div className="absolute inset-0">
-          <img src={heroCollage} alt="" className="h-full w-full object-cover" />
-          <div className="absolute inset-0 hero-overlay" />
+      <section className="relative min-h-[90vh] flex items-center overflow-hidden">
+        <div className="absolute inset-0 bg-[#F4F1EA]/50">
+          <div className="absolute inset-0 bg-gradient-to-r from-[#F7F5F0] via-[#F7F5F0]/80 to-transparent z-10" />
+          <img src={heroCollage} alt="" className="h-full w-full object-cover opacity-30 mix-blend-multiply" />
         </div>
         <div className="relative mx-auto max-w-6xl px-5 pt-32 pb-20 w-full">
           <div className="max-w-2xl">
-            <p className="text-xs uppercase tracking-[0.3em] text-gold mb-5">Psicologia Clínica · CRP 06/123456</p>
-            <h1 className="font-serif text-4xl sm:text-5xl md:text-6xl text-foreground leading-[1.05]">
-              Cuidado psicológico com<br />
-              <span className="text-gold italic">acolhimento</span>, escuta<br />
-              e profissionalismo
+            <p className="text-xs uppercase tracking-[0.3em] text-primary mb-5 font-semibold">Psicologia Clínica · CRP 06/123456</p>
+            <h1 className="font-serif text-4xl sm:text-5xl md:text-7xl text-foreground leading-[1.1] mb-6">
+              Cuidado com<br />
+              <span className="text-primary italic">acolhimento</span> e<br />
+              profissionalismo
             </h1>
             <p className="mt-6 text-base sm:text-lg text-muted-foreground max-w-xl leading-relaxed">
               Atendimento psicológico para adultos em um espaço seguro, ético e acolhedor.
@@ -102,7 +102,7 @@ function HomePage() {
               </Link>
               <a
                 href="#sobre"
-                className="inline-flex items-center gap-2 rounded-md border border-gold/40 px-6 py-3.5 text-sm font-medium text-foreground transition hover:bg-gold/10"
+                className="inline-flex items-center gap-2 rounded-md border border-primary/20 px-6 py-3.5 text-sm font-medium text-foreground transition hover:bg-primary/5"
               >
                 Conhecer atendimento <ArrowRight size={14} />
               </a>
@@ -116,17 +116,17 @@ function HomePage() {
         <div className="mx-auto max-w-6xl grid gap-12 md:grid-cols-2 items-center">
           <div className="relative">
             <img src={portrait} alt="Dra. Helena Martins, psicóloga clínica" className="rounded-lg w-full object-cover aspect-[4/3]" />
-            <div className="absolute -bottom-4 -right-4 hidden md:block bg-card border border-gold/30 px-5 py-3 rounded-md">
-              <p className="text-xs uppercase tracking-[0.2em] text-gold">+10 anos</p>
-              <p className="text-sm text-foreground">de experiência clínica</p>
+            <div className="absolute -bottom-4 -right-4 hidden md:block bg-white border border-primary/10 px-6 py-4 rounded shadow-xl">
+              <p className="text-xs uppercase tracking-[0.2em] text-primary font-bold">+10 anos</p>
+              <p className="text-sm text-foreground/80">de experiência clínica</p>
             </div>
           </div>
           <div>
-            <p className="text-xs uppercase tracking-[0.3em] text-gold">Sobre mim</p>
-            <h2 className="mt-3 font-serif text-3xl md:text-4xl text-foreground">
+            <p className="text-xs uppercase tracking-[0.3em] text-primary font-bold">Sobre mim</p>
+            <h2 className="mt-3 font-serif text-3xl md:text-5xl text-foreground">
               Escuta cuidadosa, ética e individualizada
             </h2>
-            <div className="gold-rule w-24 mt-4" />
+            <div className="h-1 w-20 bg-primary/20 mt-6" />
             <p className="mt-6 text-muted-foreground leading-relaxed">
               Sou a Dra. Helena Martins, psicóloga clínica com mais de 10 anos de experiência no
               atendimento de adultos. Meu trabalho é voltado para uma escuta acolhedora, ética e
@@ -136,8 +136,8 @@ function HomePage() {
             <div className="mt-8 grid grid-cols-2 gap-3">
               {valores.map((v) => (
                 <div key={v.title} className="premium-card p-4 flex items-center gap-3">
-                  <v.icon size={18} className="text-gold flex-shrink-0" />
-                  <span className="text-sm text-foreground">{v.title}</span>
+                  <v.icon size={18} className="text-primary flex-shrink-0" />
+                  <span className="text-sm text-foreground/80 font-medium">{v.title}</span>
                 </div>
               ))}
             </div>
@@ -149,16 +149,16 @@ function HomePage() {
       <section id="especialidades" className="py-24 px-5 bg-card/30">
         <div className="mx-auto max-w-6xl">
           <div className="text-center mb-14">
-            <p className="text-xs uppercase tracking-[0.3em] text-gold">Áreas de atuação</p>
+            <p className="text-xs uppercase tracking-[0.3em] text-primary font-bold">Áreas de atuação</p>
             <h2 className="mt-3 font-serif text-3xl md:text-4xl text-foreground">Especialidades</h2>
-            <div className="gold-rule w-24 mt-4 mx-auto" />
+            <div className="h-1 w-20 bg-primary/20 mt-4 mx-auto" />
           </div>
           <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
             {especialidades.map((e) => (
-              <div key={e.title} className="premium-card p-7 transition hover:border-gold/40 hover:-translate-y-1 duration-300">
-                <e.icon size={26} className="text-gold mb-4" />
-                <h3 className="font-serif text-xl text-foreground">{e.title}</h3>
-                <p className="mt-2 text-sm text-muted-foreground leading-relaxed">{e.desc}</p>
+              <div key={e.title} className="premium-card p-8 transition-all hover:shadow-xl hover:shadow-primary/5 hover:-translate-y-1 duration-300">
+                <e.icon size={32} className="text-primary mb-6" />
+                <h3 className="font-serif text-2xl text-foreground mb-3">{e.title}</h3>
+                <p className="text-sm text-muted-foreground leading-relaxed">{e.desc}</p>
               </div>
             ))}
           </div>
@@ -169,15 +169,15 @@ function HomePage() {
       <section id="ambiente" className="py-24 px-5">
         <div className="mx-auto max-w-6xl grid gap-12 md:grid-cols-2 items-center">
           <div>
-            <p className="text-xs uppercase tracking-[0.3em] text-gold">Ambiente</p>
-            <h2 className="mt-3 font-serif text-3xl md:text-4xl text-foreground">
-              Um espaço pensado para o seu cuidado
+            <p className="text-xs uppercase tracking-[0.3em] text-primary font-bold">Ambiente</p>
+            <h2 className="mt-3 font-serif text-3xl md:text-4xl text-foreground leading-tight">
+              Um espaço pensado para o seu cuidado e privacidade
             </h2>
-            <div className="gold-rule w-24 mt-4" />
-            <p className="mt-6 text-muted-foreground leading-relaxed">
-              Um espaço preparado para proporcionar conforto, privacidade e tranquilidade durante o atendimento.
+            <div className="h-1 w-20 bg-primary/20 mt-6" />
+            <p className="mt-8 text-muted-foreground leading-relaxed text-lg">
+              Um consultório preparado para proporcionar o máximo de conforto, segurança e sigilo durante cada sessão.
             </p>
-            <p className="mt-4 text-sm italic text-gold-soft">Recepção acolhedora e reservada.</p>
+            <p className="mt-6 text-sm italic text-primary/70 font-medium">— Recepção acolhedora e reservada.</p>
           </div>
           <img src={recepcao} alt="Recepção do consultório" className="rounded-lg w-full object-cover aspect-[4/3]" />
         </div>
