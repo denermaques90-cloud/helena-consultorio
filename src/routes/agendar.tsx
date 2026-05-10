@@ -214,15 +214,15 @@ function AgendarPage() {
       <div className="pt-32 pb-20 px-5">
         <div className="mx-auto max-w-3xl">
           <div className="text-center mb-10">
-            <p className="text-xs uppercase tracking-[0.3em] text-gold">Agendamento online</p>
-            <h1 className="mt-3 font-serif text-3xl md:text-4xl text-foreground">Reserve seu horário</h1>
-            <div className="gold-rule w-24 mt-4 mx-auto" />
+            <p className="text-xs uppercase tracking-[0.3em] text-primary font-bold">Agendamento online</p>
+            <h1 className="mt-3 font-serif text-3xl md:text-5xl text-foreground">Reserve seu horário</h1>
+            <div className="h-1 w-20 bg-primary/20 mt-4 mx-auto" />
           </div>
 
           {/* Steps */}
           <div className="flex items-center justify-center gap-2 mb-10">
             {[1, 2, 3, 4, 5].map(n => (
-              <div key={n} className={`h-1.5 w-12 rounded-full ${step >= n ? "bg-gold" : "bg-border"}`} />
+              <div key={n} className={`h-1.5 w-12 rounded-full ${step >= n ? "bg-primary" : "bg-border"}`} />
             ))}
           </div>
 
@@ -240,14 +240,14 @@ function AgendarPage() {
                       key={s.id}
                       onClick={() => toggleSvc(s.id)}
                       className={`w-full text-left flex items-center justify-between p-4 rounded-md border transition-all duration-300 ${
-                        active ? "border-gold bg-gold/10 shadow-[0_0_15px_rgba(197,165,114,0.1)]" : "border-border hover:border-gold/40"
+                        active ? "border-primary bg-primary/5 shadow-sm" : "border-border hover:border-primary/40"
                       }`}
                     >
                       <div>
                         <div className="text-foreground font-medium">{s.nome}</div>
                         <div className="text-xs text-muted-foreground mt-0.5">{s.tempo_minutos} minutos de sessão</div>
                       </div>
-                      <div className={`h-6 w-6 rounded-full border flex items-center justify-center ${active ? "border-gold bg-gold text-primary-foreground" : "border-border"}`}>
+                      <div className={`h-6 w-6 rounded-full border flex items-center justify-center ${active ? "border-primary bg-primary text-primary-foreground" : "border-border"}`}>
                         {active && <CheckCircle2 size={14} />}
                       </div>
                     </button>
@@ -277,10 +277,10 @@ function AgendarPage() {
                       key={p.id}
                       onClick={() => setSelectedProf(p)}
                       className={`w-full text-left flex items-center gap-4 p-4 rounded-md border transition-all duration-300 ${
-                        active ? "border-gold bg-gold/10 shadow-[0_0_15px_rgba(197,165,114,0.1)]" : "border-border hover:border-gold/40"
+                        active ? "border-primary bg-primary/5 shadow-sm" : "border-border hover:border-primary/40"
                       }`}
                     >
-                      <div className={`h-12 w-12 rounded-full flex items-center justify-center border transition-colors ${active ? "bg-gold text-primary-foreground border-gold" : "bg-muted text-gold border-border"}`}>
+                      <div className={`h-12 w-12 rounded-full flex items-center justify-center border transition-colors ${active ? "bg-primary text-primary-foreground border-primary" : "bg-muted text-primary border-border"}`}>
                         <User size={24} />
                       </div>
                       <div className="flex-1">
@@ -309,15 +309,15 @@ function AgendarPage() {
               <div className="flex items-center justify-between mb-6">
                 <button
                   onClick={() => { const d = new Date(monthDate); d.setMonth(d.getMonth() - 1); setMonthDate(d); }}
-                  className="p-2 hover:text-gold text-muted-foreground transition-colors"
+                  className="p-2 hover:text-primary text-muted-foreground transition-colors"
                 ><ChevronLeft size={20} /></button>
                 <span className="font-serif text-xl capitalize text-foreground">{monthLabel}</span>
                 <button
                   onClick={() => { const d = new Date(monthDate); d.setMonth(d.getMonth() + 1); setMonthDate(d); }}
-                  className="p-2 hover:text-gold text-muted-foreground transition-colors"
+                  className="p-2 hover:text-primary text-muted-foreground transition-colors"
                 ><ChevronRight size={20} /></button>
               </div>
-              <div className="grid grid-cols-7 gap-1 text-center text-[10px] uppercase tracking-widest text-gold mb-3">
+              <div className="grid grid-cols-7 gap-1 text-center text-[10px] uppercase tracking-widest text-primary/60 font-bold mb-3">
                 {["Dom","Seg","Ter","Qua","Qui","Sex","Sáb"].map((d,i) => <div key={i} className="py-1">{d}</div>)}
               </div>
               <div className="grid grid-cols-7 gap-2">
@@ -329,8 +329,8 @@ function AgendarPage() {
                     className={`aspect-square rounded-md text-sm transition-all duration-300 flex items-center justify-center ${
                       !d.day ? "" :
                       d.disabled ? "text-muted-foreground/20 cursor-not-allowed" :
-                      selectedDate === d.date ? "bg-gold text-primary-foreground font-bold shadow-md shadow-gold/20" :
-                      "hover:bg-gold/10 text-foreground border border-transparent hover:border-gold/30"
+                      selectedDate === d.date ? "bg-primary text-primary-foreground font-bold shadow-md shadow-primary/20" :
+                      "hover:bg-primary/10 text-foreground border border-transparent hover:border-primary/30"
                     }`}
                   >{d.day}</button>
                 ))}
