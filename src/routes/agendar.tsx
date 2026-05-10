@@ -11,7 +11,7 @@ export const Route = createFileRoute("/agendar")({
   component: AgendarPage,
 });
 
-type Servico = { id: string; nome: string; tempo_minutos: number; preco: number; ativo: boolean };
+type Servico = { id: string; nome: string; tempo_minutos: number; preco: number | null; ativo: boolean };
 type Profissional = { id: string; nome: string; especialidade: string; whatsapp: string; ativo: boolean };
 type Config = { hora_abre: string; hora_fecha: string; intervalo_min: number; whatsapp_contato: string | null };
 
