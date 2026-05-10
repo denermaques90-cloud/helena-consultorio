@@ -354,12 +354,12 @@ function AgendarPage() {
               {blockedDay ? (
                 <div className="py-12 text-center">
                    <p className="text-muted-foreground italic">Esta data foi bloqueada pelo profissional.</p>
-                   <button onClick={() => setStep(3)} className="mt-4 text-gold text-sm underline">Escolher outro dia</button>
+                    <button onClick={() => setStep(3)} className="mt-4 text-primary text-sm underline font-medium">Escolher outro dia</button>
                 </div>
               ) : slots.length === 0 ? (
                 <div className="py-12 text-center">
                    <p className="text-muted-foreground italic">Sem horários disponíveis para este dia.</p>
-                   <button onClick={() => setStep(3)} className="mt-4 text-gold text-sm underline">Escolher outro dia</button>
+                   <button onClick={() => setStep(3)} className="mt-4 text-primary text-sm underline font-medium">Escolher outro dia</button>
                 </div>
               ) : (
                 <div className="grid grid-cols-3 sm:grid-cols-4 gap-3">
@@ -370,8 +370,8 @@ function AgendarPage() {
                       onClick={() => setSelectedTime(s.time)}
                       className={`py-3 rounded-md text-sm font-medium transition-all border ${
                         !s.available ? "border-border/30 text-muted-foreground/30 cursor-not-allowed line-through" :
-                        selectedTime === s.time ? "border-gold bg-gold text-primary-foreground shadow-md shadow-gold/10" :
-                        "border-border text-foreground hover:border-gold/50 hover:bg-gold/5"
+                        selectedTime === s.time ? "border-primary bg-primary text-primary-foreground shadow-md shadow-primary/10" :
+                        "border-border text-foreground hover:border-primary/50 hover:bg-primary/5"
                       }`}
                     >{s.time}</button>
                   ))}
@@ -392,33 +392,33 @@ function AgendarPage() {
               <h2 className="font-serif text-2xl text-foreground mb-6">5. Confirmação de Dados</h2>
               <div className="space-y-5">
                 <div>
-                  <label className="text-[10px] text-gold uppercase tracking-[0.2em] block mb-1.5">Nome completo</label>
+                  <label className="text-[10px] text-primary uppercase tracking-[0.2em] block mb-1.5 font-bold">Nome completo</label>
                   <input
                     value={nome} onChange={e => setNome(e.target.value)}
-                    className="w-full bg-input border border-border rounded-md px-4 py-3.5 text-foreground outline-none focus:border-gold transition-colors"
+                     className="w-full bg-input border border-border rounded-md px-4 py-3.5 text-foreground outline-none focus:border-primary transition-colors"
                     placeholder="Seu nome"
                   />
                 </div>
                 <div>
-                  <label className="text-[10px] text-gold uppercase tracking-[0.2em] block mb-1.5">WhatsApp (com DDD)</label>
+                  <label className="text-[10px] text-primary uppercase tracking-[0.2em] block mb-1.5 font-bold">WhatsApp (com DDD)</label>
                   <input
                     value={whatsapp} onChange={e => setWhatsapp(e.target.value.replace(/\D/g, ""))}
-                    className="w-full bg-input border border-border rounded-md px-4 py-3.5 text-foreground outline-none focus:border-gold transition-colors"
+                    className="w-full bg-input border border-border rounded-md px-4 py-3.5 text-foreground outline-none focus:border-primary transition-colors"
                     placeholder="11999999999"
                   />
                 </div>
                 <div className="bg-card/50 border border-border/50 rounded-lg p-5 space-y-3 mt-8">
-                  <div className="text-gold text-[10px] uppercase tracking-[0.2em] font-bold mb-2">Resumo do Agendamento</div>
+                  <div className="text-primary text-[10px] uppercase tracking-[0.2em] font-bold mb-2">Resumo do Agendamento</div>
                   <div className="flex items-center gap-3 text-sm">
-                    <User size={16} className="text-gold" />
+                    <User size={16} className="text-primary" />
                     <span className="text-foreground">{selectedProf?.nome}</span>
                   </div>
                   <div className="flex items-center gap-3 text-sm">
-                    <Calendar size={16} className="text-gold" />
+                    <Calendar size={16} className="text-primary" />
                     <span className="text-foreground">{fmtDateBR(selectedDate)} às {selectedTime}</span>
                   </div>
                   <div className="flex items-center gap-3 text-sm">
-                    <CheckCircle2 size={16} className="text-gold" />
+                    <CheckCircle2 size={16} className="text-primary" />
                     <span className="text-foreground">{selectedSvcs.map(id => servicos.find(s => s.id === id)?.nome).join(", ")}</span>
                   </div>
                 </div>
