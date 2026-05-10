@@ -187,9 +187,9 @@ function HomePage() {
       <section className="py-24 px-5 bg-card/30">
         <div className="mx-auto max-w-6xl">
           <div className="text-center mb-14">
-            <p className="text-xs uppercase tracking-[0.3em] text-gold">Galeria</p>
+            <p className="text-xs uppercase tracking-[0.3em] text-primary font-bold">Galeria</p>
             <h2 className="mt-3 font-serif text-3xl md:text-4xl text-foreground">Espaço Terapêutico</h2>
-            <div className="gold-rule w-24 mt-4 mx-auto" />
+            <div className="h-1 w-20 bg-primary/20 mt-4 mx-auto" />
           </div>
           <div className="grid gap-6 md:grid-cols-2">
             <figure>
@@ -213,16 +213,16 @@ function HomePage() {
         <div className="mx-auto max-w-6xl grid gap-12 md:grid-cols-2 items-center">
           <img src={certificado} alt="Certificado de registro profissional" className="rounded-lg w-full object-cover aspect-[4/3]" />
           <div>
-            <p className="text-xs uppercase tracking-[0.3em] text-gold">Formação</p>
+            <p className="text-xs uppercase tracking-[0.3em] text-primary font-bold">Formação</p>
             <h2 className="mt-3 font-serif text-3xl md:text-4xl text-foreground">
               Compromisso profissional
             </h2>
-            <div className="gold-rule w-24 mt-4" />
+            <div className="h-1 w-20 bg-primary/20 mt-6" />
             <p className="mt-6 text-muted-foreground leading-relaxed">
               Formação contínua, atuação ética e compromisso com um atendimento psicológico responsável.
             </p>
             <div className="mt-6 inline-flex items-center gap-3 px-4 py-3 premium-card">
-              <CheckCircle2 size={18} className="text-gold" />
+              <CheckCircle2 size={18} className="text-primary" />
               <span className="text-sm text-foreground">Registro ativo no Conselho Regional de Psicologia · CRP 06/123456</span>
             </div>
           </div>
@@ -233,9 +233,9 @@ function HomePage() {
       <section id="como-funciona" className="py-24 px-5 bg-card/30">
         <div className="mx-auto max-w-5xl">
           <div className="text-center mb-14">
-            <p className="text-xs uppercase tracking-[0.3em] text-gold">Processo</p>
+            <p className="text-xs uppercase tracking-[0.3em] text-primary font-bold">Processo</p>
             <h2 className="mt-3 font-serif text-3xl md:text-4xl text-foreground">Como funciona</h2>
-            <div className="gold-rule w-24 mt-4 mx-auto" />
+            <div className="h-1 w-20 bg-primary/20 mt-4 mx-auto" />
             <p className="mt-6 text-muted-foreground max-w-2xl mx-auto">
               O agendamento online facilita o primeiro contato e permite que você escolha um horário disponível com mais praticidade.
             </p>
@@ -247,7 +247,7 @@ function HomePage() {
               { n: "03", t: "Receba a confirmação", d: "A confirmação será feita diretamente pelo WhatsApp." },
             ].map((s) => (
               <div key={s.n} className="premium-card p-7 text-center">
-                <div className="font-serif text-4xl text-gold">{s.n}</div>
+                <div className="font-serif text-4xl text-primary">{s.n}</div>
                 <h3 className="mt-3 font-serif text-xl text-foreground">{s.t}</h3>
                 <p className="mt-2 text-sm text-muted-foreground">{s.d}</p>
               </div>
@@ -268,9 +268,9 @@ function HomePage() {
       <section id="faq" className="py-24 px-5">
         <div className="mx-auto max-w-3xl">
           <div className="text-center mb-12">
-            <p className="text-xs uppercase tracking-[0.3em] text-gold">Dúvidas</p>
+            <p className="text-xs uppercase tracking-[0.3em] text-primary font-bold">Dúvidas</p>
             <h2 className="mt-3 font-serif text-3xl md:text-4xl text-foreground">Perguntas frequentes</h2>
-            <div className="gold-rule w-24 mt-4 mx-auto" />
+            <div className="h-1 w-20 bg-primary/20 mt-4 mx-auto" />
           </div>
           <div className="space-y-3">
             {faqs.map((f, i) => <FaqItem key={i} q={f.q} a={f.a} />)}
@@ -281,7 +281,7 @@ function HomePage() {
       {/* CTA final */}
       <section className="py-20 px-5">
         <div className="mx-auto max-w-4xl premium-card p-10 md:p-14 text-center">
-          <MessageCircle size={28} className="text-gold mx-auto" />
+          <MessageCircle size={32} className="text-primary mx-auto" />
           <h2 className="mt-5 font-serif text-3xl md:text-4xl text-foreground">
             Pronto para dar o primeiro passo?
           </h2>
@@ -310,8 +310,8 @@ function FaqItem({ q, a }: { q: string; a: string }) {
         onClick={() => setOpen(!open)}
         className="w-full flex items-center justify-between p-5 text-left"
       >
-        <span className="font-serif text-lg text-foreground pr-4">{q}</span>
-        <ChevronDown size={18} className={`text-gold flex-shrink-0 transition ${open ? "rotate-180" : ""}`} />
+        <span className="font-serif text-xl text-foreground pr-4 font-semibold">{q}</span>
+        <ChevronDown size={18} className={`text-primary flex-shrink-0 transition ${open ? "rotate-180" : ""}`} />
       </button>
       {open && <div className="px-5 pb-5 text-sm text-muted-foreground leading-relaxed">{a}</div>}
     </div>
