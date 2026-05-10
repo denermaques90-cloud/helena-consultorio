@@ -27,6 +27,7 @@ export type Database = {
           servico_id: string | null
           servico_ids: string[]
           status: string
+          valor_total: number | null
         }
         Insert: {
           cliente_nome: string
@@ -40,6 +41,7 @@ export type Database = {
           servico_id?: string | null
           servico_ids?: string[]
           status?: string
+          valor_total?: number | null
         }
         Update: {
           cliente_nome?: string
@@ -53,6 +55,7 @@ export type Database = {
           servico_id?: string | null
           servico_ids?: string[]
           status?: string
+          valor_total?: number | null
         }
         Relationships: [
           {

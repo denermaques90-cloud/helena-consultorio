@@ -28,13 +28,13 @@ export function SiteNav() {
       }`}
     >
       <div className="mx-auto flex max-w-6xl items-center justify-between px-5 py-4">
-        <Link to="/" className="flex flex-col leading-tight">
-          <span className="font-serif text-lg text-foreground">Dra. Helena Martins</span>
-          <span className="text-[10px] uppercase tracking-[0.25em] text-gold">Psicologia</span>
+        <Link to="/" className="flex flex-col leading-tight group">
+          <span className="font-serif text-xl text-foreground group-hover:text-primary transition-colors">Dra. Helena Martins</span>
+          <span className="text-[10px] uppercase tracking-[0.25em] text-primary font-bold">Psicologia</span>
         </Link>
         <nav className="hidden items-center gap-8 md:flex">
           {links.map((l) => (
-            <a key={l.href} href={l.href} className="text-sm text-muted-foreground transition hover:text-gold">
+            <a key={l.href} href={l.href} className="text-sm text-muted-foreground transition hover:text-primary font-medium">
               {l.label}
             </a>
           ))}

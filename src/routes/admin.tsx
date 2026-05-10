@@ -69,7 +69,7 @@ function AdminPage() {
       <div className="min-h-screen bg-background flex items-center justify-center px-5">
         <form onSubmit={handleLogin} className="premium-card p-8 w-full max-w-sm">
           <div className="text-center mb-6">
-            <Lock className="text-gold mx-auto" size={28} />
+            <Lock className="text-primary mx-auto" size={28} />
             <h1 className="mt-3 font-serif text-2xl text-foreground">Painel Profissional</h1>
             <p className="text-xs text-muted-foreground mt-1">Acesso Restrito</p>
           </div>
@@ -78,12 +78,12 @@ function AdminPage() {
             value={pass}
             onChange={e => setPass(e.target.value)}
             placeholder="Senha de Acesso"
-            className="w-full bg-input border border-border rounded-md px-4 py-3 text-foreground outline-none focus:border-gold"
+            className="w-full bg-input border border-border rounded-md px-4 py-3 text-foreground outline-none focus:border-primary"
           />
           <button className="mt-4 w-full rounded-md bg-primary py-3 text-sm font-medium text-primary-foreground">
             Entrar
           </button>
-          <Link to="/" className="mt-4 block text-center text-xs text-muted-foreground hover:text-gold">Voltar ao site</Link>
+          <Link to="/" className="mt-4 block text-center text-xs text-muted-foreground hover:text-primary transition-colors">Voltar ao site</Link>
         </form>
       </div>
     );
@@ -95,11 +95,11 @@ function AdminPage() {
         <div className="mx-auto max-w-6xl px-5 py-4 flex items-center justify-between">
           <div>
             <h1 className="font-serif text-lg text-foreground">Painel Profissional</h1>
-            <p className="text-xs text-gold tracking-wider">{user?.nome}</p>
+            <p className="text-xs text-primary tracking-wider font-bold">{user?.nome}</p>
           </div>
           <div className="flex items-center gap-2">
-            <Link to="/" className="p-2 text-muted-foreground hover:text-gold" title="Site"><Home size={18} /></Link>
-            <button onClick={handleLogout} className="p-2 text-muted-foreground hover:text-gold" title="Sair"><LogOut size={18} /></button>
+            <Link to="/" className="p-2 text-muted-foreground hover:text-primary transition-colors" title="Site"><Home size={18} /></Link>
+            <button onClick={handleLogout} className="p-2 text-muted-foreground hover:text-primary transition-colors" title="Sair"><LogOut size={18} /></button>
           </div>
         </div>
         <nav className="mx-auto max-w-6xl px-5 flex gap-1 overflow-x-auto">
@@ -114,7 +114,7 @@ function AdminPage() {
               key={t.id}
               onClick={() => setTab(t.id as any)}
               className={`flex items-center gap-2 px-4 py-3 text-sm border-b-2 transition whitespace-nowrap ${
-                tab === t.id ? "border-gold text-gold" : "border-transparent text-muted-foreground hover:text-foreground"
+                tab === t.id ? "border-primary text-primary" : "border-transparent text-muted-foreground hover:text-foreground"
               }`}
             >
               <t.icon size={15} /> {t.label}
@@ -191,7 +191,7 @@ function AgendaTab({ user }: { user: Profissional | null }) {
 function Section({ title, items, servicos, setStatus, remove, muted }: any) {
   if (items.length === 0) return (
     <div className="mb-8">
-      <h3 className="text-xs uppercase tracking-wider text-gold mb-3">{title}</h3>
+      <h3 className="text-xs uppercase tracking-wider text-primary font-bold mb-3">{title}</h3>
       <p className="text-sm text-muted-foreground">Nenhum agendamento.</p>
     </div>
   );
@@ -206,25 +206,25 @@ function Section({ title, items, servicos, setStatus, remove, muted }: any) {
                 <div className="flex items-center gap-3 flex-wrap">
                   <span className="font-medium text-foreground">{a.cliente_nome}</span>
                   <span className={`text-xs px-2 py-0.5 rounded-full ${
-                    a.status === "confirmado" ? "bg-gold/20 text-gold" :
+                    a.status === "confirmado" ? "bg-primary/20 text-primary" :
                     a.status === "cancelado" ? "bg-destructive/20 text-destructive" :
                     "bg-accent text-accent-foreground"
                   }`}>{a.status}</span>
                   {a.profissional_nome && (
-                    <span className="text-[10px] text-gold/60 uppercase tracking-tighter">Prof: {a.profissional_nome}</span>
+                    <span className="text-[10px] text-primary/60 uppercase tracking-tighter font-bold">Prof: {a.profissional_nome}</span>
                   )}
                 </div>
                 <div className="text-sm text-muted-foreground mt-1">
                   {fmtDateBR(a.data)} às {a.hora.slice(0,5)} · {(a.servico_ids || []).map(id => servicos[id]).filter(Boolean).join(", ") || "—"}
                 </div>
                 <a href={`https://wa.me/${a.cliente_whatsapp.replace(/\D/g,"")}`} target="_blank" rel="noreferrer"
-                   className="text-xs text-gold hover:underline inline-flex items-center gap-1 mt-1">
+                   className="text-xs text-primary hover:underline inline-flex items-center gap-1 mt-1 font-medium">
                   <MessageCircle size={12} /> {a.cliente_whatsapp}
                 </a>
               </div>
               <div className="flex gap-2 flex-wrap">
                 {a.status !== "concluido" && (
-                  <button onClick={() => setStatus(a.id, "concluido")} className="text-xs px-3 py-1.5 rounded border border-border hover:border-gold">Concluir</button>
+                  <button onClick={() => setStatus(a.id, "concluido")} className="text-xs px-3 py-1.5 rounded border border-border hover:border-primary transition-colors">Concluir</button>
                 )}
                 {a.status !== "cancelado" && (
                   <button onClick={() => setStatus(a.id, "cancelado")} className="text-xs px-3 py-1.5 rounded border border-border hover:border-destructive">Cancelar</button>
@@ -282,15 +282,15 @@ function BloqueiosTab({ user }: { user: Profissional | null }) {
       <p className="text-sm text-muted-foreground mb-6">Bloqueie horários ou dias inteiros.</p>
       <form onSubmit={add} className="premium-card p-5 mb-6 grid gap-4 md:grid-cols-4">
         <div>
-          <label className="text-xs text-gold uppercase tracking-wider">Data</label>
-          <input type="date" value={data} onChange={e => setData(e.target.value)} className="mt-1 w-full bg-input border border-border rounded-md px-3 py-2 text-foreground" />
+          <label className="text-xs text-primary uppercase tracking-wider font-bold">Data</label>
+          <input type="date" value={data} onChange={e => setData(e.target.value)} className="mt-1 w-full bg-input border border-border rounded-md px-3 py-2 text-foreground focus:border-primary outline-none" />
         </div>
         <div>
-          <label className="text-xs text-gold uppercase tracking-wider">Horário</label>
-          <input type="time" value={hora} disabled={diaInteiro} onChange={e => setHora(e.target.value)} className="mt-1 w-full bg-input border border-border rounded-md px-3 py-2 text-foreground disabled:opacity-40" />
+          <label className="text-xs text-primary uppercase tracking-wider font-bold">Horário</label>
+          <input type="time" value={hora} disabled={diaInteiro} onChange={e => setHora(e.target.value)} className="mt-1 w-full bg-input border border-border rounded-md px-3 py-2 text-foreground disabled:opacity-40 focus:border-primary outline-none" />
         </div>
         <label className="flex items-end gap-2 text-sm text-foreground pb-2">
-          <input type="checkbox" checked={diaInteiro} onChange={e => setDiaInteiro(e.target.checked)} className="accent-[var(--gold)]" />
+          <input type="checkbox" checked={diaInteiro} onChange={e => setDiaInteiro(e.target.checked)} className="accent-primary" />
           Dia inteiro
         </label>
         <button className="rounded-md bg-primary py-2 text-sm text-primary-foreground self-end inline-flex items-center justify-center gap-2"><Plus size={14}/> Adicionar</button>
@@ -300,7 +300,7 @@ function BloqueiosTab({ user }: { user: Profissional | null }) {
         {items.map(b => (
           <div key={b.id} className="premium-card p-4 flex items-center justify-between">
             <div className="text-sm text-foreground">
-              {fmtDateBR(b.data)} {b.hora ? `· ${b.hora.slice(0,5)}` : <span className="text-gold">· dia inteiro</span>}
+              {fmtDateBR(b.data)} {b.hora ? `· ${b.hora.slice(0,5)}` : <span className="text-primary font-bold">· dia inteiro</span>}
             </div>
             <button onClick={() => remove(b.id)} className="text-destructive hover:text-destructive/70"><Trash2 size={14}/></button>
           </div>
@@ -344,9 +344,9 @@ function ServicosTab() {
       <h2 className="font-serif text-2xl text-foreground mb-1">Modalidades</h2>
       <p className="text-sm text-muted-foreground mb-6">Edite os tipos de atendimento oferecidos.</p>
       <form onSubmit={add} className="premium-card p-5 mb-6 grid gap-4 md:grid-cols-4">
-        <input value={nome} onChange={e => setNome(e.target.value)} placeholder="Nome da modalidade" className="md:col-span-2 bg-input border border-border rounded-md px-3 py-2 text-foreground" />
-        <input type="number" value={tempo} onChange={e => setTempo(+e.target.value)} placeholder="Minutos" className="bg-input border border-border rounded-md px-3 py-2 text-foreground" />
-        <input type="number" step="0.01" value={preco} onChange={e => setPreco(e.target.value === "" ? "" : +e.target.value)} placeholder="Preço (interno)" className="bg-input border border-border rounded-md px-3 py-2 text-foreground" />
+        <input value={nome} onChange={e => setNome(e.target.value)} placeholder="Nome da modalidade" className="md:col-span-2 bg-input border border-border rounded-md px-3 py-2 text-foreground focus:border-primary outline-none" />
+        <input type="number" value={tempo} onChange={e => setTempo(+e.target.value)} placeholder="Minutos" className="bg-input border border-border rounded-md px-3 py-2 text-foreground focus:border-primary outline-none" />
+        <input type="number" step="0.01" value={preco} onChange={e => setPreco(e.target.value === "" ? "" : +e.target.value)} placeholder="Preço (R$)" className="bg-input border border-border rounded-md px-3 py-2 text-foreground focus:border-primary outline-none" />
         <button className="md:col-span-4 rounded-md bg-primary py-2 text-sm text-primary-foreground inline-flex items-center justify-center gap-2"><Plus size={14}/> Adicionar modalidade</button>
       </form>
       <div className="space-y-2">
@@ -354,11 +354,11 @@ function ServicosTab() {
           <div key={s.id} className="premium-card p-4 flex items-center justify-between">
             <div>
               <div className="text-foreground font-medium">{s.nome}</div>
-              <div className="text-xs text-muted-foreground">{s.tempo_minutos} min · R$ {Number(s.preco || 0).toFixed(2)}</div>
+              <div className="text-xs text-muted-foreground font-medium">{s.tempo_minutos} min · <span className="text-primary font-bold">R$ {Number(s.preco || 0).toFixed(2)}</span></div>
             </div>
             <div className="flex items-center gap-3">
               <label className="flex items-center gap-2 text-xs text-muted-foreground">
-                <input type="checkbox" checked={s.ativo} onChange={() => toggle(s)} className="accent-[var(--gold)]" />
+                <input type="checkbox" checked={s.ativo} onChange={() => toggle(s)} className="accent-primary" />
                 Ativo
               </label>
               <button onClick={() => remove(s.id)} className="text-destructive hover:opacity-70"><Trash2 size={14}/></button>

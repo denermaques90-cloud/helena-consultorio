@@ -11,7 +11,7 @@ export const Route = createFileRoute("/agendar")({
   component: AgendarPage,
 });
 
-type Servico = { id: string; nome: string; tempo_minutos: number; ativo: boolean };
+type Servico = { id: string; nome: string; tempo_minutos: number; preco: number | null; ativo: boolean };
 type Profissional = { id: string; nome: string; especialidade: string; whatsapp: string; ativo: boolean };
 type Config = { hora_abre: string; hora_fecha: string; intervalo_min: number; whatsapp_contato: string | null };
 
@@ -143,6 +143,12 @@ function AgendarPage() {
   async function handleSubmit() {
     if (!nome || !whatsapp || !selectedDate || !selectedTime || !selectedProf || selectedSvcs.length === 0) return;
     setSubmitting(true);
+    
+    const valor_total = selectedSvcs.reduce((acc, id) => {
+      const svc = servicos.find(s => s.id === id);
+      return acc + (svc?.preco || 0);
+    }, 0);
+
     const { error } = await supabase.from("agendamentos").insert({
       cliente_nome: nome,
       cliente_whatsapp: whatsapp,
@@ -152,6 +158,7 @@ function AgendarPage() {
       status: "confirmado",
       profissional_id: selectedProf.id,
       profissional_nome: selectedProf.nome,
+      valor_total: valor_total,
     });
     setSubmitting(false);
     if (error) {
@@ -175,13 +182,13 @@ function AgendarPage() {
         <SiteNav />
         <div className="pt-32 pb-20 px-5">
           <div className="mx-auto max-w-xl premium-card p-10 text-center">
-            <CheckCircle2 className="text-gold mx-auto" size={48} />
+            <CheckCircle2 className="text-primary mx-auto" size={48} />
             <h1 className="mt-5 font-serif text-3xl text-foreground">Solicitação enviada</h1>
             <p className="mt-3 text-muted-foreground">
               Sua solicitação para <strong>{confirmed.profNome}</strong> foi registrada.
             </p>
             <div className="mt-6 text-left bg-background/40 rounded-md p-5 text-sm space-y-2 border border-border/50">
-              <div><span className="text-gold uppercase text-[10px] tracking-widest block mb-0.5">Nome</span> {confirmed.nome}</div>
+              <div><span className="text-primary uppercase text-[10px] tracking-widest block mb-0.5 font-bold">Nome</span> {confirmed.nome}</div>
               <div><span className="text-gold uppercase text-[10px] tracking-widest block mb-0.5">Profissional</span> {confirmed.profNome}</div>
               <div><span className="text-gold uppercase text-[10px] tracking-widest block mb-0.5">Modalidade</span> {confirmed.servicoNomes}</div>
               <div className="flex gap-4">
@@ -189,7 +196,7 @@ function AgendarPage() {
                 <div><span className="text-gold uppercase text-[10px] tracking-widest block mb-0.5">Horário</span> {confirmed.hora}</div>
               </div>
             </div>
-            <Link to="/" className="mt-8 inline-flex items-center gap-2 text-sm text-gold hover:underline">
+            <Link to="/" className="mt-8 inline-flex items-center gap-2 text-sm text-primary hover:underline font-semibold">
               <ArrowLeft size={14} /> Voltar ao início
             </Link>
           </div>
@@ -207,15 +214,15 @@ function AgendarPage() {
       <div className="pt-32 pb-20 px-5">
         <div className="mx-auto max-w-3xl">
           <div className="text-center mb-10">
-            <p className="text-xs uppercase tracking-[0.3em] text-gold">Agendamento online</p>
-            <h1 className="mt-3 font-serif text-3xl md:text-4xl text-foreground">Reserve seu horário</h1>
-            <div className="gold-rule w-24 mt-4 mx-auto" />
+            <p className="text-xs uppercase tracking-[0.3em] text-primary font-bold">Agendamento online</p>
+            <h1 className="mt-3 font-serif text-3xl md:text-5xl text-foreground">Reserve seu horário</h1>
+            <div className="h-1 w-20 bg-primary/20 mt-4 mx-auto" />
           </div>
 
           {/* Steps */}
           <div className="flex items-center justify-center gap-2 mb-10">
             {[1, 2, 3, 4, 5].map(n => (
-              <div key={n} className={`h-1.5 w-12 rounded-full ${step >= n ? "bg-gold" : "bg-border"}`} />
+              <div key={n} className={`h-1.5 w-12 rounded-full ${step >= n ? "bg-primary" : "bg-border"}`} />
             ))}
           </div>
 
@@ -233,14 +240,14 @@ function AgendarPage() {
                       key={s.id}
                       onClick={() => toggleSvc(s.id)}
                       className={`w-full text-left flex items-center justify-between p-4 rounded-md border transition-all duration-300 ${
-                        active ? "border-gold bg-gold/10 shadow-[0_0_15px_rgba(197,165,114,0.1)]" : "border-border hover:border-gold/40"
+                        active ? "border-primary bg-primary/5 shadow-sm" : "border-border hover:border-primary/40"
                       }`}
                     >
                       <div>
                         <div className="text-foreground font-medium">{s.nome}</div>
                         <div className="text-xs text-muted-foreground mt-0.5">{s.tempo_minutos} minutos de sessão</div>
                       </div>
-                      <div className={`h-6 w-6 rounded-full border flex items-center justify-center ${active ? "border-gold bg-gold text-primary-foreground" : "border-border"}`}>
+                      <div className={`h-6 w-6 rounded-full border flex items-center justify-center ${active ? "border-primary bg-primary text-primary-foreground" : "border-border"}`}>
                         {active && <CheckCircle2 size={14} />}
                       </div>
                     </button>
@@ -270,10 +277,10 @@ function AgendarPage() {
                       key={p.id}
                       onClick={() => setSelectedProf(p)}
                       className={`w-full text-left flex items-center gap-4 p-4 rounded-md border transition-all duration-300 ${
-                        active ? "border-gold bg-gold/10 shadow-[0_0_15px_rgba(197,165,114,0.1)]" : "border-border hover:border-gold/40"
+                        active ? "border-primary bg-primary/5 shadow-sm" : "border-border hover:border-primary/40"
                       }`}
                     >
-                      <div className={`h-12 w-12 rounded-full flex items-center justify-center border transition-colors ${active ? "bg-gold text-primary-foreground border-gold" : "bg-muted text-gold border-border"}`}>
+                      <div className={`h-12 w-12 rounded-full flex items-center justify-center border transition-colors ${active ? "bg-primary text-primary-foreground border-primary" : "bg-muted text-primary border-border"}`}>
                         <User size={24} />
                       </div>
                       <div className="flex-1">
@@ -302,15 +309,15 @@ function AgendarPage() {
               <div className="flex items-center justify-between mb-6">
                 <button
                   onClick={() => { const d = new Date(monthDate); d.setMonth(d.getMonth() - 1); setMonthDate(d); }}
-                  className="p-2 hover:text-gold text-muted-foreground transition-colors"
+                  className="p-2 hover:text-primary text-muted-foreground transition-colors"
                 ><ChevronLeft size={20} /></button>
                 <span className="font-serif text-xl capitalize text-foreground">{monthLabel}</span>
                 <button
                   onClick={() => { const d = new Date(monthDate); d.setMonth(d.getMonth() + 1); setMonthDate(d); }}
-                  className="p-2 hover:text-gold text-muted-foreground transition-colors"
+                  className="p-2 hover:text-primary text-muted-foreground transition-colors"
                 ><ChevronRight size={20} /></button>
               </div>
-              <div className="grid grid-cols-7 gap-1 text-center text-[10px] uppercase tracking-widest text-gold mb-3">
+              <div className="grid grid-cols-7 gap-1 text-center text-[10px] uppercase tracking-widest text-primary/60 font-bold mb-3">
                 {["Dom","Seg","Ter","Qua","Qui","Sex","Sáb"].map((d,i) => <div key={i} className="py-1">{d}</div>)}
               </div>
               <div className="grid grid-cols-7 gap-2">
@@ -322,8 +329,8 @@ function AgendarPage() {
                     className={`aspect-square rounded-md text-sm transition-all duration-300 flex items-center justify-center ${
                       !d.day ? "" :
                       d.disabled ? "text-muted-foreground/20 cursor-not-allowed" :
-                      selectedDate === d.date ? "bg-gold text-primary-foreground font-bold shadow-md shadow-gold/20" :
-                      "hover:bg-gold/10 text-foreground border border-transparent hover:border-gold/30"
+                      selectedDate === d.date ? "bg-primary text-primary-foreground font-bold shadow-md shadow-primary/20" :
+                      "hover:bg-primary/10 text-foreground border border-transparent hover:border-primary/30"
                     }`}
                   >{d.day}</button>
                 ))}
@@ -342,17 +349,17 @@ function AgendarPage() {
             <div className="premium-card p-8 animate-in fade-in duration-500">
               <h2 className="font-serif text-2xl text-foreground mb-1">4. Escolha o horário</h2>
               <div className="text-sm text-muted-foreground mb-6 flex items-center gap-2">
-                <Calendar size={14} className="text-gold" /> {fmtDateBR(selectedDate)} · <User size={14} className="text-gold ml-2" /> {selectedProf?.nome}
+                <Calendar size={14} className="text-primary" /> {fmtDateBR(selectedDate)} · <User size={14} className="text-primary ml-2" /> {selectedProf?.nome}
               </div>
               {blockedDay ? (
                 <div className="py-12 text-center">
                    <p className="text-muted-foreground italic">Esta data foi bloqueada pelo profissional.</p>
-                   <button onClick={() => setStep(3)} className="mt-4 text-gold text-sm underline">Escolher outro dia</button>
+                    <button onClick={() => setStep(3)} className="mt-4 text-primary text-sm underline font-medium">Escolher outro dia</button>
                 </div>
               ) : slots.length === 0 ? (
                 <div className="py-12 text-center">
                    <p className="text-muted-foreground italic">Sem horários disponíveis para este dia.</p>
-                   <button onClick={() => setStep(3)} className="mt-4 text-gold text-sm underline">Escolher outro dia</button>
+                   <button onClick={() => setStep(3)} className="mt-4 text-primary text-sm underline font-medium">Escolher outro dia</button>
                 </div>
               ) : (
                 <div className="grid grid-cols-3 sm:grid-cols-4 gap-3">
@@ -363,8 +370,8 @@ function AgendarPage() {
                       onClick={() => setSelectedTime(s.time)}
                       className={`py-3 rounded-md text-sm font-medium transition-all border ${
                         !s.available ? "border-border/30 text-muted-foreground/30 cursor-not-allowed line-through" :
-                        selectedTime === s.time ? "border-gold bg-gold text-primary-foreground shadow-md shadow-gold/10" :
-                        "border-border text-foreground hover:border-gold/50 hover:bg-gold/5"
+                        selectedTime === s.time ? "border-primary bg-primary text-primary-foreground shadow-md shadow-primary/10" :
+                        "border-border text-foreground hover:border-primary/50 hover:bg-primary/5"
                       }`}
                     >{s.time}</button>
                   ))}
@@ -385,33 +392,33 @@ function AgendarPage() {
               <h2 className="font-serif text-2xl text-foreground mb-6">5. Confirmação de Dados</h2>
               <div className="space-y-5">
                 <div>
-                  <label className="text-[10px] text-gold uppercase tracking-[0.2em] block mb-1.5">Nome completo</label>
+                  <label className="text-[10px] text-primary uppercase tracking-[0.2em] block mb-1.5 font-bold">Nome completo</label>
                   <input
                     value={nome} onChange={e => setNome(e.target.value)}
-                    className="w-full bg-input border border-border rounded-md px-4 py-3.5 text-foreground outline-none focus:border-gold transition-colors"
+                     className="w-full bg-input border border-border rounded-md px-4 py-3.5 text-foreground outline-none focus:border-primary transition-colors"
                     placeholder="Seu nome"
                   />
                 </div>
                 <div>
-                  <label className="text-[10px] text-gold uppercase tracking-[0.2em] block mb-1.5">WhatsApp (com DDD)</label>
+                  <label className="text-[10px] text-primary uppercase tracking-[0.2em] block mb-1.5 font-bold">WhatsApp (com DDD)</label>
                   <input
                     value={whatsapp} onChange={e => setWhatsapp(e.target.value.replace(/\D/g, ""))}
-                    className="w-full bg-input border border-border rounded-md px-4 py-3.5 text-foreground outline-none focus:border-gold transition-colors"
+                    className="w-full bg-input border border-border rounded-md px-4 py-3.5 text-foreground outline-none focus:border-primary transition-colors"
                     placeholder="11999999999"
                   />
                 </div>
                 <div className="bg-card/50 border border-border/50 rounded-lg p-5 space-y-3 mt-8">
-                  <div className="text-gold text-[10px] uppercase tracking-[0.2em] font-bold mb-2">Resumo do Agendamento</div>
+                  <div className="text-primary text-[10px] uppercase tracking-[0.2em] font-bold mb-2">Resumo do Agendamento</div>
                   <div className="flex items-center gap-3 text-sm">
-                    <User size={16} className="text-gold" />
+                    <User size={16} className="text-primary" />
                     <span className="text-foreground">{selectedProf?.nome}</span>
                   </div>
                   <div className="flex items-center gap-3 text-sm">
-                    <Calendar size={16} className="text-gold" />
+                    <Calendar size={16} className="text-primary" />
                     <span className="text-foreground">{fmtDateBR(selectedDate)} às {selectedTime}</span>
                   </div>
                   <div className="flex items-center gap-3 text-sm">
-                    <CheckCircle2 size={16} className="text-gold" />
+                    <CheckCircle2 size={16} className="text-primary" />
                     <span className="text-foreground">{selectedSvcs.map(id => servicos.find(s => s.id === id)?.nome).join(", ")}</span>
                   </div>
                 </div>

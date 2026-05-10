@@ -80,13 +80,13 @@ function ProfissionalLoginPage() {
   return (
     <div className="min-h-screen bg-background flex items-center justify-center px-5 py-10">
       <div className="w-full max-w-md">
-        <Link to="/entrada" className="inline-flex items-center gap-2 text-xs text-muted-foreground hover:text-gold mb-8 transition-colors">
+        <Link to="/entrada" className="inline-flex items-center gap-2 text-xs text-muted-foreground hover:text-primary mb-8 transition-colors font-bold uppercase tracking-widest">
           <ArrowLeft size={14} /> Voltar
         </Link>
 
         <form onSubmit={handleSubmit} className="premium-card p-8">
           <div className="text-center mb-8">
-            <div className="h-16 w-16 bg-gold/10 rounded-full flex items-center justify-center text-gold mx-auto mb-4">
+            <div className="h-16 w-16 bg-primary/10 rounded-full flex items-center justify-center text-primary mx-auto mb-4">
               <Lock size={32} />
             </div>
             <h1 className="font-serif text-2xl text-foreground">Área do Profissional</h1>
@@ -97,7 +97,7 @@ function ProfissionalLoginPage() {
 
           <div className="space-y-4">
             <div>
-              <label className="text-xs text-gold uppercase tracking-wider block mb-1.5">Nome Completo</label>
+              <label className="text-[10px] text-primary uppercase tracking-[0.2em] block mb-1.5 font-bold">Nome Completo</label>
               <div className="relative">
                 <User className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground" size={16} />
                 <input
@@ -105,7 +105,7 @@ function ProfissionalLoginPage() {
                   value={formData.nome}
                   onChange={e => setFormData({ ...formData, nome: e.target.value })}
                   placeholder="Seu nome"
-                  className="w-full bg-input border border-border rounded-md pl-10 pr-4 py-3 text-foreground outline-none focus:border-gold transition-colors"
+                  className="w-full bg-input border border-border rounded-md pl-10 pr-4 py-3 text-foreground outline-none focus:border-primary transition-colors"
                 />
               </div>
             </div>
@@ -113,30 +113,30 @@ function ProfissionalLoginPage() {
             {mode === "register" && (
               <>
                 <div>
-                  <label className="text-xs text-gold uppercase tracking-wider block mb-1.5">Especialidade</label>
+                  <label className="text-[10px] text-primary uppercase tracking-[0.2em] block mb-1.5 font-bold">Especialidade</label>
                   <input
                     required
                     value={formData.especialidade}
                     onChange={e => setFormData({ ...formData, especialidade: e.target.value })}
                     placeholder="Ex: Psicóloga Clínica"
-                    className="w-full bg-input border border-border rounded-md px-4 py-3 text-foreground outline-none focus:border-gold transition-colors"
+                     className="w-full bg-input border border-border rounded-md px-4 py-3 text-foreground outline-none focus:border-primary transition-colors"
                   />
                 </div>
                 <div>
-                  <label className="text-xs text-gold uppercase tracking-wider block mb-1.5">WhatsApp</label>
+                  <label className="text-[10px] text-primary uppercase tracking-[0.2em] block mb-1.5 font-bold">WhatsApp</label>
                   <input
                     required
                     value={formData.whatsapp}
                     onChange={e => setFormData({ ...formData, whatsapp: e.target.value.replace(/\D/g, "") })}
                     placeholder="11999999999"
-                    className="w-full bg-input border border-border rounded-md px-4 py-3 text-foreground outline-none focus:border-gold transition-colors"
+                    className="w-full bg-input border border-border rounded-md px-4 py-3 text-foreground outline-none focus:border-primary transition-colors"
                   />
                 </div>
               </>
             )}
 
             <div>
-              <label className="text-xs text-gold uppercase tracking-wider block mb-1.5">Senha</label>
+              <label className="text-[10px] text-primary uppercase tracking-[0.2em] block mb-1.5 font-bold">Senha</label>
               <div className="relative">
                 <Lock className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground" size={16} />
                 <input
@@ -145,7 +145,7 @@ function ProfissionalLoginPage() {
                   value={formData.senha}
                   onChange={e => setFormData({ ...formData, senha: e.target.value })}
                   placeholder="••••••••"
-                  className="w-full bg-input border border-border rounded-md pl-10 pr-4 py-3 text-foreground outline-none focus:border-gold transition-colors"
+                  className="w-full bg-input border border-border rounded-md pl-10 pr-4 py-3 text-foreground outline-none focus:border-primary transition-colors"
                 />
               </div>
             </div>
@@ -162,7 +162,7 @@ function ProfissionalLoginPage() {
             <button
               type="button"
               onClick={() => setMode(mode === "login" ? "register" : "login")}
-              className="text-xs text-muted-foreground hover:text-gold transition-colors"
+              className="text-xs text-muted-foreground hover:text-primary transition-colors font-medium"
             >
               {mode === "login" ? "Não tem uma conta? Cadastre-se" : "Já tem uma conta? Faça login"}
             </button>
