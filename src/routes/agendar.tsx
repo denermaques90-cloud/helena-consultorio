@@ -11,7 +11,7 @@ export const Route = createFileRoute("/agendar")({
   component: AgendarPage,
 });
 
-type Servico = { id: string; nome: string; tempo_minutos: number; ativo: boolean };
+type Servico = { id: string; nome: string; tempo_minutos: number; preco: number; ativo: boolean };
 type Profissional = { id: string; nome: string; especialidade: string; whatsapp: string; ativo: boolean };
 type Config = { hora_abre: string; hora_fecha: string; intervalo_min: number; whatsapp_contato: string | null };
 
@@ -143,6 +143,12 @@ function AgendarPage() {
   async function handleSubmit() {
     if (!nome || !whatsapp || !selectedDate || !selectedTime || !selectedProf || selectedSvcs.length === 0) return;
     setSubmitting(true);
+    
+    const valor_total = selectedSvcs.reduce((acc, id) => {
+      const svc = servicos.find(s => s.id === id);
+      return acc + (svc?.preco || 0);
+    }, 0);
+
     const { error } = await supabase.from("agendamentos").insert({
       cliente_nome: nome,
       cliente_whatsapp: whatsapp,
@@ -152,6 +158,7 @@ function AgendarPage() {
       status: "confirmado",
       profissional_id: selectedProf.id,
       profissional_nome: selectedProf.nome,
+      valor_total: valor_total,
     });
     setSubmitting(false);
     if (error) {
