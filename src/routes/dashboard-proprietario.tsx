@@ -150,8 +150,8 @@ function DashboardLayout() {
       <main className="flex-1 p-6 md:p-10 lg:p-12">
         <header className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-10">
           <div>
-            <h1 className="text-3xl font-serif text-foreground">Painel de Controle</h1>
-            <p className="text-sm text-muted-foreground mt-1">Bem-vinda de volta ao centro de operações da clínica.</p>
+            <h1 className="text-4xl font-sans font-extrabold text-foreground tracking-tighter">Painel de Controle</h1>
+            <p className="text-sm text-muted-foreground font-medium mt-1">Bem-vinda de volta ao centro de operações da clínica.</p>
           </div>
           <div className="flex items-center gap-3 bg-white px-4 py-2 rounded-full border border-border shadow-sm">
             <div className="h-2 w-2 rounded-full bg-primary animate-pulse" />
