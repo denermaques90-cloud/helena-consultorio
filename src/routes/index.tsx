@@ -81,14 +81,14 @@ function HomePage() {
         </div>
         <div className="relative mx-auto max-w-6xl px-5 pt-32 pb-20 w-full">
           <div className="max-w-2xl">
-            <p className="text-xs uppercase tracking-[0.3em] text-primary mb-5 font-semibold">Psicologia Clínica · CRP 06/123456</p>
+            <p className="text-xs uppercase tracking-[0.3em] text-primary mb-5 font-semibold">Psicóloga Clínica · CRP 06/123456</p>
             <h1 className="font-serif text-4xl sm:text-5xl md:text-7xl text-foreground leading-[1.1] mb-6">
-              Cuidado com<br />
-              <span className="text-primary italic">acolhimento</span> e<br />
+              Cuidado psicológico com <br />
+              <span className="text-primary italic">acolhimento</span>, escuta e <br />
               profissionalismo
             </h1>
             <p className="mt-6 text-base sm:text-lg text-muted-foreground max-w-xl leading-relaxed">
-              Atendimento psicológico para adultos em um espaço seguro, ético e acolhedor.
+              Atendimento psicológico para adultos, com foco em ansiedade, autoestima, relacionamentos e desenvolvimento emocional.
             </p>
             <div className="mt-3 text-sm text-foreground/80">
               <span className="font-serif text-base">Dra. Helena Martins</span> · Psicóloga Clínica
@@ -128,10 +128,10 @@ function HomePage() {
             </h2>
             <div className="h-1 w-20 bg-primary/20 mt-6" />
             <p className="mt-6 text-muted-foreground leading-relaxed">
-              Sou a Dra. Helena Martins, psicóloga clínica com mais de 10 anos de experiência no
-              atendimento de adultos. Meu trabalho é voltado para uma escuta acolhedora, ética e
-              individualizada, auxiliando pessoas em processos de autoconhecimento, ansiedade,
-              autoestima, relacionamentos e desenvolvimento emocional.
+              Sou psicóloga clínica e atuo com uma escuta acolhedora, ética e individualizada. 
+              Meu objetivo é oferecer um espaço seguro para que cada pessoa possa compreender 
+              melhor suas emoções, enfrentar desafios e desenvolver uma relação mais saudável 
+              consigo mesma.
             </p>
             <div className="mt-8 grid grid-cols-2 gap-3">
               {valores.map((v) => (
@@ -175,7 +175,7 @@ function HomePage() {
             </h2>
             <div className="h-1 w-20 bg-primary/20 mt-6" />
             <p className="mt-8 text-muted-foreground leading-relaxed text-lg">
-              Um consultório preparado para proporcionar o máximo de conforto, segurança e sigilo durante cada sessão.
+              Um espaço preparado para proporcionar conforto, privacidade e tranquilidade durante o atendimento.
             </p>
             <p className="mt-6 text-sm italic text-primary/70 font-medium">— Recepção acolhedora e reservada.</p>
           </div>
