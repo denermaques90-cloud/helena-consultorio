@@ -273,50 +273,91 @@ function DisponibilidadeTab({ prof, bloqueios, setRefreshKey }: any) {
   }
 
   return (
-    <div className="space-y-8 animate-in fade-in duration-500">
-      <div className="premium-card p-6 bg-white">
-        <h2 className="font-serif text-2xl text-foreground mb-6">Gerenciar Bloqueios</h2>
-        <form onSubmit={handleBloquear} className="grid grid-cols-1 md:grid-cols-3 gap-4">
-          <div>
-            <label className="text-[10px] uppercase font-bold text-[#6B6B6B] block mb-2 tracking-widest">Data</label>
-            <input type="date" required value={data} onChange={e => setData(e.target.value)} className="w-full bg-[#F4F1EA] border border-[#DCD9D3] rounded p-3 outline-none focus:border-[#2F8F6F]" />
+    <div className="space-y-10 animate-in fade-in duration-500">
+      <div className="premium-card p-10 bg-white shadow-sm border-primary/10">
+        <h2 className="font-serif text-2xl text-foreground mb-2">Gerenciar Disponibilidade</h2>
+        <p className="text-sm text-muted-foreground mb-8">Bloqueie datas ou horários específicos para impedir novos agendamentos.</p>
+        
+        <form onSubmit={handleBloquear} className="grid grid-cols-1 md:grid-cols-3 gap-6">
+          <div className="space-y-2">
+            <label className="text-[10px] uppercase font-black text-muted-foreground tracking-widest flex items-center gap-2">
+              <CalendarDays size={12} className="text-primary" /> Data do Bloqueio
+            </label>
+            <input 
+              type="date" 
+              required 
+              value={data} 
+              onChange={e => setData(e.target.value)} 
+              className="w-full bg-secondary/50 border border-border rounded-xl p-4 outline-none focus:border-primary focus:bg-white transition-all text-sm font-medium" 
+            />
           </div>
-          <div>
-            <label className="text-[10px] uppercase font-bold text-[#6B6B6B] block mb-2 tracking-widest">Horário (Opcional)</label>
-            <input type="time" value={hora} onChange={e => setHora(e.target.value)} className="w-full bg-[#F4F1EA] border border-[#DCD9D3] rounded p-3 outline-none focus:border-[#2F8F6F]" />
-            <p className="text-[10px] text-muted-foreground mt-1">Deixe vazio para bloquear o dia inteiro.</p>
+          <div className="space-y-2">
+            <label className="text-[10px] uppercase font-black text-muted-foreground tracking-widest flex items-center gap-2">
+              <Clock size={12} className="text-primary" /> Horário (Opcional)
+            </label>
+            <input 
+              type="time" 
+              value={hora} 
+              onChange={e => setHora(e.target.value)} 
+              className="w-full bg-secondary/50 border border-border rounded-xl p-4 outline-none focus:border-primary focus:bg-white transition-all text-sm font-medium" 
+            />
+            <p className="text-[10px] text-muted-foreground opacity-70 italic">Vazio = Bloqueia o dia inteiro</p>
           </div>
           <div className="flex items-end">
-            <button disabled={loading} className="w-full bg-[#2F8F6F] text-white py-3 rounded font-bold hover:bg-[#2F8F6F]/90 transition-all">
-              {loading ? <Loader2 className="animate-spin mx-auto" size={20} /> : "Adicionar Bloqueio"}
+            <button 
+              disabled={loading} 
+              className="w-full bg-primary text-white py-4 rounded-xl font-bold hover:bg-primary/90 transition-all shadow-md text-xs uppercase tracking-widest disabled:opacity-50"
+            >
+              {loading ? <Loader2 className="animate-spin mx-auto" size={18} /> : "Confirmar Bloqueio"}
             </button>
           </div>
         </form>
       </div>
 
-      <div className="premium-card bg-white overflow-hidden">
-        <div className="p-6 border-b border-[#DCD9D3]">
-          <h3 className="font-serif text-xl">Bloqueios Ativos</h3>
+      <div className="premium-card bg-white shadow-sm overflow-hidden border-border">
+        <div className="p-8 border-b border-border bg-secondary/10">
+          <h3 className="font-serif text-xl text-foreground">Bloqueios Ativos na Agenda</h3>
+          <p className="text-xs text-muted-foreground mt-1">Lista de períodos indisponíveis para agendamento público.</p>
         </div>
         <div className="overflow-x-auto">
           <table className="w-full text-left">
-            <thead className="bg-[#F4F1EA] text-[10px] uppercase tracking-widest font-bold text-[#6B6B6B]">
+            <thead className="bg-secondary/30 text-[10px] uppercase tracking-widest font-black text-muted-foreground">
               <tr>
-                <th className="p-4">Data</th>
-                <th className="p-4">Tipo</th>
-                <th className="p-4">Horário</th>
-                <th className="p-4">Ações</th>
+                <th className="px-8 py-5">Data do Evento</th>
+                <th className="px-8 py-5">Tipo de Bloqueio</th>
+                <th className="px-8 py-5 text-center">Horário</th>
+                <th className="px-8 py-5 text-right">Ações</th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-[#DCD9D3]">
-              {bloqueios.length === 0 && <tr><td colSpan={4} className="p-4 text-center text-muted-foreground">Nenhum bloqueio registrado.</td></tr>}
+            <tbody className="divide-y divide-border">
+              {bloqueios.length === 0 && (
+                <tr>
+                  <td colSpan={4} className="px-8 py-12 text-center text-muted-foreground italic text-sm">
+                    Nenhum bloqueio registrado no momento.
+                  </td>
+                </tr>
+              )}
               {bloqueios.map((b: Bloqueio) => (
-                <tr key={b.id} className="hover:bg-[#F7F5F0]/50 transition-colors">
-                  <td className="p-4 text-sm">{b.data.split("-").reverse().join("/")}</td>
-                  <td className="p-4 text-sm font-medium">{b.hora ? "Horário Único" : "Dia Inteiro"}</td>
-                  <td className="p-4 text-sm">{b.hora?.slice(0, 5) || "---"}</td>
-                  <td className="p-4">
-                    <button onClick={() => removeBloqueio(b.id)} className="text-red-500 hover:text-red-700 transition-colors"><Trash2 size={18} /></button>
+                <tr key={b.id} className="hover:bg-secondary/10 transition-colors group">
+                  <td className="px-8 py-6 text-sm font-bold text-foreground">
+                    {b.data.split("-").reverse().join("/")}
+                  </td>
+                  <td className="px-8 py-6">
+                    <span className={`text-[10px] font-black uppercase px-2.5 py-1 rounded-full ${b.hora ? "bg-amber-100 text-amber-700" : "bg-primary/10 text-primary"}`}>
+                      {b.hora ? "Horário Específico" : "Indisponibilidade Total"}
+                    </span>
+                  </td>
+                  <td className="px-8 py-6 text-sm text-center font-medium text-muted-foreground">
+                    {b.hora?.slice(0, 5) || "O dia todo"}
+                  </td>
+                  <td className="px-8 py-6 text-right">
+                    <button 
+                      onClick={() => removeBloqueio(b.id)} 
+                      className="p-2 text-muted-foreground hover:text-destructive hover:bg-destructive/10 rounded-lg transition-all"
+                      title="Remover bloqueio"
+                    >
+                      <Trash2 size={18} />
+                    </button>
                   </td>
                 </tr>
               ))}
@@ -349,26 +390,48 @@ function PacientesTab({ agendamentos }: any) {
 
   return (
     <div className="space-y-6 animate-in fade-in duration-500">
-      <h2 className="font-serif text-2xl text-foreground">Sua Lista de Pacientes</h2>
-      <div className="premium-card bg-white overflow-hidden">
+      <div className="mb-4">
+        <h2 className="font-serif text-2xl text-foreground">Meus Pacientes</h2>
+        <p className="text-sm text-muted-foreground">Base de contatos e histórico de atendimentos realizados.</p>
+      </div>
+
+      <div className="premium-card bg-white shadow-sm overflow-hidden border-border">
         <div className="overflow-x-auto">
           <table className="w-full text-left">
-            <thead className="bg-[#F4F1EA] text-[10px] uppercase tracking-widest font-bold text-[#6B6B6B]">
+            <thead className="bg-secondary/30 text-[10px] uppercase tracking-widest font-black text-muted-foreground">
               <tr>
-                <th className="p-4">Nome</th>
-                <th className="p-4">Consultas</th>
-                <th className="p-4">Último Atendimento</th>
-                <th className="p-4">Contato</th>
+                <th className="px-8 py-5">Identificação</th>
+                <th className="px-8 py-5 text-center">Frequência</th>
+                <th className="px-8 py-5">Última Sessão</th>
+                <th className="px-8 py-5 text-right">Comunicação</th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-[#DCD9D3]">
+            <tbody className="divide-y divide-border">
               {pacientes.map((p: any) => (
-                <tr key={p.nome} className="hover:bg-[#F7F5F0]/50 transition-colors">
-                  <td className="p-4 font-medium">{p.nome}</td>
-                  <td className="p-4 text-sm">{p.consultas} sessões</td>
-                  <td className="p-4 text-sm">{p.ultima.split("-").reverse().join("/")}</td>
-                  <td className="p-4">
-                    <a href={`https://wa.me/${p.whatsapp.replace(/\D/g,"")}`} className="text-[#2F8F6F] hover:underline font-bold text-xs uppercase tracking-widest">WhatsApp</a>
+                <tr key={p.nome} className="hover:bg-secondary/10 transition-colors">
+                  <td className="px-8 py-6">
+                    <div className="flex items-center gap-3">
+                      <div className="h-10 w-10 rounded-full bg-primary/10 flex items-center justify-center text-primary font-bold text-xs">
+                        {p.nome.slice(0, 2).toUpperCase()}
+                      </div>
+                      <div className="text-sm font-bold text-foreground">{p.nome}</div>
+                    </div>
+                  </td>
+                  <td className="px-8 py-6 text-sm text-center font-medium">
+                    {p.consultas} {p.consultas === 1 ? 'sessão' : 'sessões'}
+                  </td>
+                  <td className="px-8 py-6 text-sm text-muted-foreground font-medium">
+                    {p.ultima.split("-").reverse().join("/")}
+                  </td>
+                  <td className="px-8 py-6 text-right">
+                    <a 
+                      href={`https://wa.me/${p.whatsapp.replace(/\D/g,"")}`} 
+                      target="_blank"
+                      rel="noreferrer"
+                      className="inline-flex items-center gap-2 text-primary hover:text-primary/80 font-bold text-[10px] uppercase tracking-widest bg-primary/5 px-4 py-2 rounded-lg transition-all"
+                    >
+                      <MessageCircle size={14} /> WhatsApp
+                    </a>
                   </td>
                 </tr>
               ))}
