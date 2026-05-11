@@ -280,7 +280,7 @@ function DisponibilidadeTab({ prof, bloqueios, setRefreshKey }: any) {
         
         <form onSubmit={handleBloquear} className="grid grid-cols-1 md:grid-cols-3 gap-6">
           <div className="space-y-2">
-            <label className="text-[10px] uppercase font-black text-muted-foreground tracking-widest flex items-center gap-2">
+            <label className="text-[11px] uppercase font-bold text-muted-foreground tracking-widest flex items-center gap-2">
               <CalendarDays size={12} className="text-primary" /> Data do Bloqueio
             </label>
             <input 
