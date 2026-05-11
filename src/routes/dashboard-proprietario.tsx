@@ -4,7 +4,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
 import { ShieldAlert, Users, Briefcase, Calendar, Plus, Trash2, Edit2, Lock, Home, Loader2, Save, X, User, MessageCircle, TrendingUp } from "lucide-react";
 
-export const Route = createFileRoute("/admin-master")({
+export const Route = createFileRoute("/dashboard-proprietario")({
   head: () => ({ meta: [{ title: "Dashboard Proprietário — Dra. Helena Martins" }] }),
   component: AdminMasterPage,
 });
