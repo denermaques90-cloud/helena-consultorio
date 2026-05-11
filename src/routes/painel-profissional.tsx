@@ -154,17 +154,17 @@ function DashboardTab({ agendamentos }: any) {
 
 function MetricCard({ label, value, icon: Icon, trend }: any) {
   return (
-    <div className="bg-white p-8 rounded-2xl border border-border shadow-sm hover:border-primary transition-all duration-300 group">
+    <div className="bg-white p-7 rounded-2xl border border-border shadow-sm hover:border-primary transition-all duration-300 group">
       <div className="flex justify-between items-start mb-6">
-        <div className="h-12 w-12 bg-secondary rounded-xl flex items-center justify-center text-primary group-hover:bg-primary/10 transition-colors">
-          <Icon size={24} />
+        <div className="h-11 w-11 bg-secondary/50 rounded-xl flex items-center justify-center text-primary group-hover:bg-primary/10 transition-colors">
+          <Icon size={22} />
         </div>
         <div className="flex items-center gap-1.5 px-3 py-1 bg-primary/5 text-primary text-[10px] font-black uppercase tracking-wider rounded-full">
           {trend}
         </div>
       </div>
-      <p className="text-[10px] text-muted-foreground uppercase tracking-[0.2em] font-black mb-1">{label}</p>
-      <p className="text-3xl font-serif text-foreground font-bold">{value}</p>
+      <p className="text-[11px] text-muted-foreground uppercase tracking-widest font-semibold mb-1">{label}</p>
+      <p className="text-3xl font-sans font-extrabold text-foreground tracking-tighter">{value}</p>
     </div>
   );
 }
