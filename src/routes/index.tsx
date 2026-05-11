@@ -128,10 +128,10 @@ function HomePage() {
             </h2>
             <div className="h-1 w-20 bg-primary/20 mt-6" />
             <p className="mt-6 text-muted-foreground leading-relaxed">
-              Sou a Dra. Helena Martins, psicóloga clínica com mais de 10 anos de experiência no
-              atendimento de adultos. Meu trabalho é voltado para uma escuta acolhedora, ética e
-              individualizada, auxiliando pessoas em processos de autoconhecimento, ansiedade,
-              autoestima, relacionamentos e desenvolvimento emocional.
+              Sou psicóloga clínica e atuo com uma escuta acolhedora, ética e individualizada. 
+              Meu objetivo é oferecer um espaço seguro para que cada pessoa possa compreender 
+              melhor suas emoções, enfrentar desafios e desenvolver uma relação mais saudável 
+              consigo mesma.
             </p>
             <div className="mt-8 grid grid-cols-2 gap-3">
               {valores.map((v) => (
