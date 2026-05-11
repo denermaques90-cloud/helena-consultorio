@@ -113,7 +113,7 @@ function ProfissionalLoginPage() {
             {mode === "register" && (
               <>
                 <div>
-                  <label className="text-[10px] text-primary uppercase tracking-[0.2em] block mb-1.5 font-bold">Especialidade</label>
+                  <label className="text-[11px] text-primary uppercase tracking-widest block mb-1.5 font-bold">Especialidade</label>
                   <input
                     required
                     value={formData.especialidade}
