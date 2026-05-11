@@ -314,7 +314,7 @@ function DashboardLayout() {
                         </span>
                       </td>
                       <td className="px-8 py-6 text-right font-bold text-foreground text-sm">
-                        R$ {a.valor_total?.toFixed(2)}
+                        R$ {a.valor_total?.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}
                       </td>
                     </tr>
                   ))}
