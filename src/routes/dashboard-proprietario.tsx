@@ -16,7 +16,7 @@ export const Route = createFileRoute("/dashboard-proprietario")({
 });
 
 type Agendamento = { id: string; cliente_nome: string; cliente_whatsapp: string; data: string; hora: string; servico_ids: string[]; status: string; profissional_id: string | null; profissional_nome: string | null; valor_total: number | null };
-type Profissional = { id: string; nome: string; especialidade: string; whatsapp: string; senha: string; ativo: boolean; role: string };
+type Profissional = { id: string; nome: string; especialidade: string | null; whatsapp: string | null; senha: string; ativo: boolean; role: string | null };
 
 function DashboardProprietario() {
   const [logged, setLogged] = useState(false);
