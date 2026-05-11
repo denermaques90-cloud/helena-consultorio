@@ -175,7 +175,7 @@ function HomePage() {
             </h2>
             <div className="h-1 w-20 bg-primary/20 mt-6" />
             <p className="mt-8 text-muted-foreground leading-relaxed text-lg">
-              Um consultório preparado para proporcionar o máximo de conforto, segurança e sigilo durante cada sessão.
+              Um espaço preparado para proporcionar conforto, privacidade e tranquilidade durante o atendimento.
             </p>
             <p className="mt-6 text-sm italic text-primary/70 font-medium">— Recepção acolhedora e reservada.</p>
           </div>
