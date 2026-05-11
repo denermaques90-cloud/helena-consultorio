@@ -19,6 +19,7 @@ export function SiteNav() {
     { href: "#ambiente", label: "Ambiente" },
     { href: "#como-funciona", label: "Como funciona" },
     { href: "#faq", label: "FAQ" },
+    { href: "#contato", label: "Contato" },
   ];
 
   return (
