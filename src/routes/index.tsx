@@ -7,11 +7,13 @@ import recepcao from "@/assets/recepcao.png";
 import sala1 from "@/assets/sala-1.png";
 import sala2 from "@/assets/sala-2.png";
 import certificado from "@/assets/certificado.png";
+import { motion } from "framer-motion";
 import {
   Calendar, MessageCircle, CheckCircle2, Heart, Ear, Shield, Sparkles,
   Brain, Users, Activity, Leaf, ChevronDown, ArrowRight,
 } from "lucide-react";
 import { useState } from "react";
+
 
 export const Route = createFileRoute("/")({
   head: () => ({
