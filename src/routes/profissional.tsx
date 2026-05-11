@@ -10,7 +10,7 @@ export const Route = createFileRoute("/profissional")({
 });
 
 function ProfissionalLoginPage() {
-  const [mode, setMode] = useState<"login" | "register">("login");
+  const [mode] = useState<"login" | "register">("login");
   const [loading, setLoading] = useState(false);
   const [formData, setFormData] = useState({
     nome: "",
@@ -158,15 +158,6 @@ function ProfissionalLoginPage() {
             {loading ? <Loader2 size={18} className="animate-spin" /> : mode === "login" ? "Entrar no Painel" : "Criar Conta Profissional"}
           </button>
 
-          <div className="mt-6 text-center">
-            <button
-              type="button"
-              onClick={() => setMode(mode === "login" ? "register" : "login")}
-              className="text-xs text-muted-foreground hover:text-primary transition-colors font-medium"
-            >
-              {mode === "login" ? "Não tem uma conta? Cadastre-se" : "Já tem uma conta? Faça login"}
-            </button>
-          </div>
         </form>
       </div>
     </div>

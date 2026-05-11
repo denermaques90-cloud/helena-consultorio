@@ -138,7 +138,7 @@ function DashboardLayout() {
         
         <div className="pt-8 border-t border-border">
           <button 
-            onClick={() => {sessionStorage.clear(); window.location.reload();}} 
+            onClick={() => {sessionStorage.clear(); window.location.href = "/entrada";}} 
             className="flex items-center gap-3 w-full p-4 text-sm font-semibold text-muted-foreground hover:text-destructive transition-colors"
           >
             <LogOut size={18} /> Sair do Painel
