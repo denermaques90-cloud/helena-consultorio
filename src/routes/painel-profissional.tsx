@@ -92,8 +92,8 @@ function PainelProfissionalPage() {
           <div className="flex items-center gap-4">
             <button onClick={() => setSidebarOpen(true)} className="lg:hidden p-2 hover:bg-secondary rounded-md transition-colors"><Menu size={20} /></button>
             <div>
-              <h1 className="font-serif text-2xl text-foreground">Olá, {prof.nome.split(" ")[0]}</h1>
-              <p className="text-[10px] text-muted-foreground uppercase tracking-widest font-black mt-0.5">Gestão de Atendimentos</p>
+              <h1 className="font-sans font-extrabold text-3xl text-foreground tracking-tighter">Olá, {prof.nome.split(" ")[0]}</h1>
+              <p className="text-xs text-muted-foreground font-medium mt-0.5">Gestão de Atendimentos</p>
             </div>
           </div>
           <div className="flex items-center gap-3 bg-secondary/50 px-4 py-2 rounded-full border border-border">
