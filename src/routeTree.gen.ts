@@ -12,9 +12,8 @@ import { Route as rootRouteImport } from './routes/__root'
 import { Route as ProfissionalRouteImport } from './routes/profissional'
 import { Route as PainelProfissionalRouteImport } from './routes/painel-profissional'
 import { Route as EntradaRouteImport } from './routes/entrada'
+import { Route as DashboardProprietarioRouteImport } from './routes/dashboard-proprietario'
 import { Route as AgendarRouteImport } from './routes/agendar'
-import { Route as AdminMasterRouteImport } from './routes/admin-master'
-import { Route as AdminRouteImport } from './routes/admin'
 import { Route as IndexRouteImport } from './routes/index'
 
 const ProfissionalRoute = ProfissionalRouteImport.update({
@@ -32,19 +31,14 @@ const EntradaRoute = EntradaRouteImport.update({
   path: '/entrada',
   getParentRoute: () => rootRouteImport,
 } as any)
+const DashboardProprietarioRoute = DashboardProprietarioRouteImport.update({
+  id: '/dashboard-proprietario',
+  path: '/dashboard-proprietario',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const AgendarRoute = AgendarRouteImport.update({
   id: '/agendar',
   path: '/agendar',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const AdminMasterRoute = AdminMasterRouteImport.update({
-  id: '/admin-master',
-  path: '/admin-master',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const AdminRoute = AdminRouteImport.update({
-  id: '/admin',
-  path: '/admin',
   getParentRoute: () => rootRouteImport,
 } as any)
 const IndexRoute = IndexRouteImport.update({
@@ -55,18 +49,16 @@ const IndexRoute = IndexRouteImport.update({
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
-  '/admin': typeof AdminRoute
-  '/admin-master': typeof AdminMasterRoute
   '/agendar': typeof AgendarRoute
+  '/dashboard-proprietario': typeof DashboardProprietarioRoute
   '/entrada': typeof EntradaRoute
   '/painel-profissional': typeof PainelProfissionalRoute
   '/profissional': typeof ProfissionalRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
-  '/admin': typeof AdminRoute
-  '/admin-master': typeof AdminMasterRoute
   '/agendar': typeof AgendarRoute
+  '/dashboard-proprietario': typeof DashboardProprietarioRoute
   '/entrada': typeof EntradaRoute
   '/painel-profissional': typeof PainelProfissionalRoute
   '/profissional': typeof ProfissionalRoute
@@ -74,9 +66,8 @@ export interface FileRoutesByTo {
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
-  '/admin': typeof AdminRoute
-  '/admin-master': typeof AdminMasterRoute
   '/agendar': typeof AgendarRoute
+  '/dashboard-proprietario': typeof DashboardProprietarioRoute
   '/entrada': typeof EntradaRoute
   '/painel-profissional': typeof PainelProfissionalRoute
   '/profissional': typeof ProfissionalRoute
@@ -85,27 +76,24 @@ export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
     | '/'
-    | '/admin'
-    | '/admin-master'
     | '/agendar'
+    | '/dashboard-proprietario'
     | '/entrada'
     | '/painel-profissional'
     | '/profissional'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
-    | '/admin'
-    | '/admin-master'
     | '/agendar'
+    | '/dashboard-proprietario'
     | '/entrada'
     | '/painel-profissional'
     | '/profissional'
   id:
     | '__root__'
     | '/'
-    | '/admin'
-    | '/admin-master'
     | '/agendar'
+    | '/dashboard-proprietario'
     | '/entrada'
     | '/painel-profissional'
     | '/profissional'
@@ -113,9 +101,8 @@ export interface FileRouteTypes {
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
-  AdminRoute: typeof AdminRoute
-  AdminMasterRoute: typeof AdminMasterRoute
   AgendarRoute: typeof AgendarRoute
+  DashboardProprietarioRoute: typeof DashboardProprietarioRoute
   EntradaRoute: typeof EntradaRoute
   PainelProfissionalRoute: typeof PainelProfissionalRoute
   ProfissionalRoute: typeof ProfissionalRoute
@@ -144,25 +131,18 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof EntradaRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/dashboard-proprietario': {
+      id: '/dashboard-proprietario'
+      path: '/dashboard-proprietario'
+      fullPath: '/dashboard-proprietario'
+      preLoaderRoute: typeof DashboardProprietarioRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/agendar': {
       id: '/agendar'
       path: '/agendar'
       fullPath: '/agendar'
       preLoaderRoute: typeof AgendarRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/admin-master': {
-      id: '/admin-master'
-      path: '/admin-master'
-      fullPath: '/admin-master'
-      preLoaderRoute: typeof AdminMasterRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/admin': {
-      id: '/admin'
-      path: '/admin'
-      fullPath: '/admin'
-      preLoaderRoute: typeof AdminRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/': {
@@ -177,9 +157,8 @@ declare module '@tanstack/react-router' {
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
-  AdminRoute: AdminRoute,
-  AdminMasterRoute: AdminMasterRoute,
   AgendarRoute: AgendarRoute,
+  DashboardProprietarioRoute: DashboardProprietarioRoute,
   EntradaRoute: EntradaRoute,
   PainelProfissionalRoute: PainelProfissionalRoute,
   ProfissionalRoute: ProfissionalRoute,
@@ -187,3 +166,13 @@ const rootRouteChildren: RootRouteChildren = {
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
+
+import type { getRouter } from './router.tsx'
+import type { startInstance } from './start.ts'
+declare module '@tanstack/react-start' {
+  interface Register {
+    ssr: true
+    router: Awaited<ReturnType<typeof getRouter>>
+    config: Awaited<ReturnType<typeof startInstance.getOptions>>
+  }
+}
