@@ -275,8 +275,8 @@ function DisponibilidadeTab({ prof, bloqueios, setRefreshKey }: any) {
   return (
     <div className="space-y-10 animate-in fade-in duration-500">
       <div className="premium-card p-10 bg-white shadow-sm border-primary/10">
-        <h2 className="font-serif text-2xl text-foreground mb-2">Gerenciar Disponibilidade</h2>
-        <p className="text-sm text-muted-foreground mb-8">Bloqueie datas ou horários específicos para impedir novos agendamentos.</p>
+        <h2 className="font-sans font-extrabold text-2xl text-foreground mb-2 tracking-tighter">Gerenciar Disponibilidade</h2>
+        <p className="text-sm text-muted-foreground mb-8 font-medium">Bloqueie datas ou horários específicos para impedir novos agendamentos.</p>
         
         <form onSubmit={handleBloquear} className="grid grid-cols-1 md:grid-cols-3 gap-6">
           <div className="space-y-2">
