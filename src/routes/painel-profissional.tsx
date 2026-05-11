@@ -69,7 +69,7 @@ function PainelProfissionalPage() {
             <button 
               key={item.id} 
               onClick={() => { setTab(item.id); setSidebarOpen(false); }} 
-              className={`w-full flex items-center gap-3 px-4 py-3 rounded-lg text-sm font-medium transition-all duration-200 ${
+              className={`w-full flex items-center gap-4 px-4 py-3 rounded-xl text-sm transition-all duration-200 ${
                 tab === item.id 
                   ? "bg-primary/10 text-primary shadow-sm font-semibold" 
                   : "text-muted-foreground hover:bg-secondary/80 hover:text-foreground"
