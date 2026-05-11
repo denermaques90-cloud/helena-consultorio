@@ -44,7 +44,7 @@ function ProfissionalLoginPage() {
         toast.success(`Bem-vindo(a), ${data.nome}`);
         if ((data as { role?: string }).role === "owner") {
           sessionStorage.setItem("master_auth", "true");
-          navigate({ to: "/admin-master" });
+          navigate({ to: "/dashboard-proprietario" });
         } else {
           navigate({ to: "/painel-profissional" });
         }
