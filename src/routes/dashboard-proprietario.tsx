@@ -67,6 +67,8 @@ function DashboardLayout() {
   const [profissionais, setProfissionais] = useState<Profissional[]>([]);
   const [deleteConfirmOpen, setDeleteConfirmOpen] = useState(false);
   const [professionalToDelete, setProfessionalToDelete] = useState<Profissional | null>(null);
+  const [bookingDeleteConfirmOpen, setBookingDeleteConfirmOpen] = useState(false);
+  const [bookingToDelete, setBookingToDelete] = useState<Agendamento | null>(null);
   
   const fetchInitialData = async () => {
     const [{ data: ags }, { data: prfs }] = await Promise.all([
@@ -104,6 +106,22 @@ function DashboardLayout() {
     }
     setDeleteConfirmOpen(false);
     setProfessionalToDelete(null);
+  };
+
+  const handleDeleteBooking = async () => {
+    if (!bookingToDelete) return;
+
+    const { error } = await supabase.from("agendamentos").delete().eq("id", bookingToDelete.id);
+
+    if (error) {
+      toast.error("Erro ao excluir agendamento");
+    } else {
+      toast.success("Agendamento excluído com sucesso");
+      setAgendamentos((prev) => prev.filter((agendamento) => agendamento.id !== bookingToDelete.id));
+    }
+
+    setBookingDeleteConfirmOpen(false);
+    setBookingToDelete(null);
   };
 
   return (
@@ -289,6 +307,7 @@ function DashboardLayout() {
                     <th className="px-8 py-5">Especialista</th>
                     <th className="px-8 py-5 text-center">Status</th>
                     <th className="px-8 py-5 text-right">Faturamento</th>
+                    <th className="px-8 py-5 text-right">Ações</th>
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-border">
@@ -315,6 +334,18 @@ function DashboardLayout() {
                       </td>
                       <td className="px-8 py-6 text-right font-bold text-foreground text-sm">
                         R$ {a.valor_total?.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}
+                      </td>
+                      <td className="px-8 py-6 text-right">
+                        <button
+                          onClick={() => {
+                            setBookingToDelete(a);
+                            setBookingDeleteConfirmOpen(true);
+                          }}
+                          className="inline-flex items-center gap-2 px-3 py-2 rounded-lg text-[10px] font-bold uppercase bg-destructive/5 text-destructive hover:bg-destructive/10 transition-all"
+                        >
+                          <Trash2 size={12} />
+                          Excluir
+                        </button>
                       </td>
                     </tr>
                   ))}
@@ -344,6 +375,33 @@ function DashboardLayout() {
             </AlertDialogCancel>
             <AlertDialogAction 
               onClick={handleDelete}
+              className="w-full sm:flex-1 rounded-xl bg-destructive hover:bg-destructive/90 text-white font-bold h-12 uppercase text-xs tracking-widest transition-all"
+            >
+              Confirmar Exclusão
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
+
+      <AlertDialog open={bookingDeleteConfirmOpen} onOpenChange={setBookingDeleteConfirmOpen}>
+        <AlertDialogContent className="bg-white rounded-2xl border-none shadow-2xl p-8">
+          <AlertDialogHeader>
+            <div className="h-16 w-16 bg-destructive/10 rounded-full flex items-center justify-center text-destructive mb-6 mx-auto">
+              <AlertCircle size={32} />
+            </div>
+            <AlertDialogTitle className="font-sans font-extrabold text-2xl text-center text-foreground tracking-tighter">
+              Excluir Agendamento?
+            </AlertDialogTitle>
+            <AlertDialogDescription className="text-center text-muted-foreground mt-2 text-base">
+              Tem certeza que deseja excluir o agendamento de <strong>{bookingToDelete?.cliente_nome}</strong>? Essa ação não poderá ser desfeita.
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter className="flex-col sm:flex-row gap-3 mt-8">
+            <AlertDialogCancel className="w-full sm:flex-1 rounded-xl border-border bg-secondary hover:bg-accent text-foreground font-bold h-12 uppercase text-xs tracking-widest">
+              Cancelar
+            </AlertDialogCancel>
+            <AlertDialogAction
+              onClick={handleDeleteBooking}
               className="w-full sm:flex-1 rounded-xl bg-destructive hover:bg-destructive/90 text-white font-bold h-12 uppercase text-xs tracking-widest transition-all"
             >
               Confirmar Exclusão
