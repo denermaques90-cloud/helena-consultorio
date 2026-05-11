@@ -97,7 +97,7 @@ function ProfissionalLoginPage() {
 
           <div className="space-y-4">
             <div>
-              <label className="text-[10px] text-primary uppercase tracking-[0.2em] block mb-1.5 font-bold">Nome Completo</label>
+              <label className="text-[11px] text-primary uppercase tracking-widest block mb-1.5 font-bold">Nome Completo</label>
               <div className="relative">
                 <User className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground" size={16} />
                 <input
