@@ -119,30 +119,52 @@ function DashboardTab({ agendamentos }: any) {
   const revenue = confirmed.reduce((acc: number, a: any) => acc + (a.valor_total || 0), 0);
 
   return (
-    <div className="space-y-8 animate-in fade-in duration-500">
+    <div className="space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-700">
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-        <div className="bg-white p-6 rounded-lg border border-[#DCD9D3] shadow-sm">
-          <div className="flex justify-between items-start mb-4">
-            <div className="h-10 w-10 bg-[#2F8F6F]/10 rounded flex items-center justify-center text-[#2F8F6F]"><DollarSign size={20} /></div>
-          </div>
-          <p className="text-[#6B6B6B] text-xs uppercase tracking-widest font-bold mb-1">Faturamento Estimado</p>
-          <p className="font-serif text-3xl text-foreground">R$ {revenue.toFixed(2)}</p>
-        </div>
-        <div className="bg-white p-6 rounded-lg border border-[#DCD9D3] shadow-sm">
-          <div className="flex justify-between items-start mb-4">
-            <div className="h-10 w-10 bg-[#2F8F6F]/10 rounded flex items-center justify-center text-[#2F8F6F]"><Calendar size={20} /></div>
-          </div>
-          <p className="text-[#6B6B6B] text-xs uppercase tracking-widest font-bold mb-1">Total de Consultas</p>
-          <p className="font-serif text-3xl text-foreground">{agendamentos.length}</p>
-        </div>
-        <div className="bg-white p-6 rounded-lg border border-[#DCD9D3] shadow-sm">
-          <div className="flex justify-between items-start mb-4">
-            <div className="h-10 w-10 bg-[#2F8F6F]/10 rounded flex items-center justify-center text-[#2F8F6F]"><Users size={20} /></div>
-          </div>
-          <p className="text-[#6B6B6B] text-xs uppercase tracking-widest font-bold mb-1">Pacientes Únicos</p>
-          <p className="font-serif text-3xl text-foreground">{new Set(agendamentos.map((a:any) => a.cliente_nome)).size}</p>
+        <MetricCard label="Faturamento Estimado" value={`R$ ${revenue.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}`} icon={DollarSign} trend="Mensal" />
+        <MetricCard label="Total de Consultas" value={agendamentos.length} icon={Calendar} trend="+2.5%" />
+        <MetricCard label="Pacientes Ativos" value={new Set(agendamentos.map((a:any) => a.cliente_nome)).size} icon={Users} trend="Fidelizados" />
+      </div>
+      
+      <div className="premium-card p-8 bg-white">
+        <h3 className="font-serif text-xl text-foreground mb-6">Próximos Atendimentos</h3>
+        <div className="space-y-4">
+          {agendamentos.filter((a:any) => a.status === 'confirmado').slice(0, 3).map((a:any) => (
+            <div key={a.id} className="flex items-center justify-between p-4 rounded-xl border border-border bg-secondary/30 hover:bg-secondary/50 transition-colors">
+              <div className="flex items-center gap-4">
+                <div className="h-10 w-10 rounded-full bg-primary/10 flex items-center justify-center text-primary font-bold">
+                  {a.cliente_nome.charAt(0)}
+                </div>
+                <div>
+                  <div className="text-sm font-bold text-foreground">{a.cliente_nome}</div>
+                  <div className="text-xs text-muted-foreground">{a.data.split("-").reverse().join("/")} às {a.hora.slice(0,5)}</div>
+                </div>
+              </div>
+              <ChevronRight size={16} className="text-muted-foreground" />
+            </div>
+          ))}
+          {agendamentos.filter((a:any) => a.status === 'confirmado').length === 0 && (
+            <p className="text-center py-10 text-muted-foreground italic text-sm">Sem novos agendamentos confirmados.</p>
+          )}
         </div>
       </div>
+    </div>
+  );
+}
+
+function MetricCard({ label, value, icon: Icon, trend }: any) {
+  return (
+    <div className="bg-white p-8 rounded-2xl border border-border shadow-sm hover:border-primary transition-all duration-300 group">
+      <div className="flex justify-between items-start mb-6">
+        <div className="h-12 w-12 bg-secondary rounded-xl flex items-center justify-center text-primary group-hover:bg-primary/10 transition-colors">
+          <Icon size={24} />
+        </div>
+        <div className="flex items-center gap-1.5 px-3 py-1 bg-primary/5 text-primary text-[10px] font-black uppercase tracking-wider rounded-full">
+          {trend}
+        </div>
+      </div>
+      <p className="text-[10px] text-muted-foreground uppercase tracking-[0.2em] font-black mb-1">{label}</p>
+      <p className="text-3xl font-serif text-foreground font-bold">{value}</p>
     </div>
   );
 }
@@ -152,30 +174,62 @@ function AgendaTab({ agendamentos, setRefreshKey }: any) {
     const { error } = await supabase.from("agendamentos").update({ status }).eq("id", id);
     if (error) toast.error("Erro ao atualizar");
     else {
-      toast.success("Status atualizado");
+      toast.success("Status atualizado com sucesso");
       setRefreshKey((k: number) => k + 1);
     }
   }
 
   return (
     <div className="space-y-6 animate-in fade-in duration-500">
-      <h2 className="font-serif text-2xl text-foreground">Agenda de Atendimentos</h2>
+      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-2">
+        <div>
+          <h2 className="font-serif text-2xl text-foreground">Agenda de Atendimentos</h2>
+          <p className="text-sm text-muted-foreground">Gerencie suas consultas e acompanhe o status dos pacientes.</p>
+        </div>
+      </div>
+
       <div className="grid gap-4">
-        {agendamentos.length === 0 && <p className="text-muted-foreground italic">Nenhum agendamento encontrado.</p>}
+        {agendamentos.length === 0 && (
+          <div className="premium-card p-20 text-center bg-white">
+            <Calendar size={48} className="text-muted-foreground/20 mx-auto mb-4" />
+            <p className="text-muted-foreground italic">Nenhum agendamento encontrado.</p>
+          </div>
+        )}
         {agendamentos.map((a: any) => (
-          <div key={a.id} className="bg-white p-6 rounded-lg border border-[#DCD9D3] flex flex-col md:flex-row md:items-center justify-between gap-4">
-            <div>
-              <p className="font-serif text-xl text-foreground">{a.cliente_nome}</p>
-              <div className="flex flex-wrap gap-x-4 gap-y-1 mt-1">
-                <p className="text-sm text-[#6B6B6B] flex items-center gap-1"><Calendar size={14} /> {a.data.split("-").reverse().join("/")}</p>
-                <p className="text-sm text-[#6B6B6B] flex items-center gap-1"><Clock size={14} /> {a.hora.slice(0,5)}</p>
-                <p className="text-sm text-[#2F8F6F] font-medium">{a.status.toUpperCase()}</p>
+          <div key={a.id} className="bg-white p-6 rounded-2xl border border-border shadow-sm flex flex-col md:flex-row md:items-center justify-between gap-6 hover:border-primary transition-all group">
+            <div className="flex items-center gap-5">
+              <div className={`h-14 w-14 rounded-2xl flex flex-col items-center justify-center border transition-colors ${
+                a.status === 'confirmado' ? "bg-primary/5 border-primary/20 text-primary" : "bg-secondary border-border text-muted-foreground"
+              }`}>
+                <span className="text-xs font-black uppercase">{a.data.split("-")[2]}</span>
+                <span className="text-[10px] uppercase opacity-60 font-bold">{a.data.split("-")[1] === '05' ? 'MAI' : 'MÊS'}</span>
+              </div>
+              <div>
+                <p className="font-serif text-xl text-foreground group-hover:text-primary transition-colors">{a.cliente_nome}</p>
+                <div className="flex flex-wrap gap-x-4 gap-y-1 mt-1">
+                  <p className="text-xs text-muted-foreground font-medium flex items-center gap-1.5"><Clock size={12} className="text-primary" /> {a.hora.slice(0,5)}</p>
+                  <p className={`text-[10px] font-black uppercase tracking-wider px-2 py-0.5 rounded ${
+                    a.status === 'confirmado' ? 'bg-primary/10 text-primary' : 
+                    a.status === 'concluido' ? 'bg-amber-100 text-amber-700' : 'bg-muted text-muted-foreground'
+                  }`}>{a.status}</p>
+                </div>
               </div>
             </div>
-            <div className="flex items-center gap-2">
-              <button onClick={() => updateStatus(a.id, 'concluido')} className="text-xs uppercase font-bold px-3 py-2 rounded bg-[#2F8F6F]/10 text-[#2F8F6F] hover:bg-[#2F8F6F] hover:text-white transition-all">Concluir</button>
-              <button onClick={() => updateStatus(a.id, 'cancelado')} className="text-xs uppercase font-bold px-3 py-2 rounded bg-red-50 text-red-500 hover:bg-red-500 hover:text-white transition-all">Cancelar</button>
-              <a href={`https://wa.me/${a.cliente_whatsapp.replace(/\D/g,"")}`} className="h-10 w-10 flex items-center justify-center rounded-full bg-[#2F8F6F] text-white hover:opacity-80 transition-opacity"><MessageCircle size={20} /></a>
+            <div className="flex items-center gap-3">
+              {a.status === 'confirmado' && (
+                <>
+                  <button onClick={() => updateStatus(a.id, 'concluido')} className="flex-1 md:flex-none text-[10px] uppercase font-black tracking-widest px-5 py-2.5 rounded-lg bg-primary text-white hover:bg-primary/90 transition-all shadow-sm">Concluir</button>
+                  <button onClick={() => updateStatus(a.id, 'cancelado')} className="flex-1 md:flex-none text-[10px] uppercase font-black tracking-widest px-5 py-2.5 rounded-lg bg-destructive/5 text-destructive hover:bg-destructive/10 transition-all">Cancelar</button>
+                </>
+              )}
+              <a 
+                href={`https://wa.me/${a.cliente_whatsapp.replace(/\D/g,"")}`} 
+                target="_blank"
+                rel="noreferrer"
+                className="h-10 w-10 flex items-center justify-center rounded-xl bg-secondary text-primary hover:bg-primary hover:text-white transition-all shadow-sm border border-border group/wa"
+              >
+                <MessageCircle size={18} />
+              </a>
             </div>
           </div>
         ))}
@@ -183,6 +237,7 @@ function AgendaTab({ agendamentos, setRefreshKey }: any) {
     </div>
   );
 }
+
 
 function DisponibilidadeTab({ prof, bloqueios, setRefreshKey }: any) {
   const [data, setData] = useState("");
