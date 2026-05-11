@@ -89,8 +89,8 @@ function ProfissionalLoginPage() {
             <div className="h-16 w-16 bg-primary/10 rounded-full flex items-center justify-center text-primary mx-auto mb-4">
               <Lock size={32} />
             </div>
-            <h1 className="font-serif text-2xl text-foreground">Área do Profissional</h1>
-            <p className="text-xs text-muted-foreground mt-2 uppercase tracking-widest">
+            <h1 className="font-sans font-extrabold text-3xl text-foreground tracking-tighter">Área do Profissional</h1>
+            <p className="text-xs text-muted-foreground mt-2 font-medium">
               {mode === "login" ? "Acesse seu painel" : "Crie sua conta"}
             </p>
           </div>
