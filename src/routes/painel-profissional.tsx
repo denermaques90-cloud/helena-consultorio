@@ -56,8 +56,8 @@ function PainelProfissionalPage() {
       {/* Sidebar */}
       <aside className={`fixed lg:sticky top-0 left-0 z-40 h-screen w-72 bg-white border-r border-border transition-transform lg:translate-x-0 ${sidebarOpen ? "translate-x-0" : "-translate-x-full"}`}>
         <div className="p-8 mb-4">
-          <h2 className="font-serif text-2xl text-primary leading-tight">Dra. Helena Martins</h2>
-          <p className="text-[10px] uppercase tracking-[0.2em] text-muted-foreground font-bold mt-1">Painel Profissional</p>
+          <h2 className="font-sans font-extrabold text-2xl text-primary leading-tight tracking-tighter">Dra. Helena Martins</h2>
+          <p className="text-[10px] uppercase tracking-[0.2em] text-muted-foreground font-black mt-1">Painel Profissional</p>
         </div>
         <nav className="px-4 space-y-1">
           {[
