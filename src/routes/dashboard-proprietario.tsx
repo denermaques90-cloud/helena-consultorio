@@ -111,8 +111,8 @@ function DashboardLayout() {
       {/* Sidebar */}
       <aside className="w-72 bg-white border-r border-border p-8 hidden lg:flex flex-col h-screen sticky top-0">
         <div className="mb-12">
-          <h2 className="font-serif text-2xl text-primary leading-tight">Dra. Helena Martins</h2>
-          <p className="text-[10px] uppercase tracking-[0.2em] text-muted-foreground font-bold mt-1">Gestão Clínica</p>
+          <h2 className="font-sans font-extrabold text-2xl text-primary leading-tight tracking-tighter">Dra. Helena Martins</h2>
+          <p className="text-[10px] uppercase tracking-[0.2em] text-muted-foreground font-black mt-1">Gestão Clínica</p>
         </div>
         
         <nav className="space-y-2 flex-1">
