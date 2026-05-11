@@ -237,7 +237,7 @@ function DisponibilidadeTab({ prof, bloqueios, setRefreshKey }: any) {
             </thead>
             <tbody className="divide-y divide-[#DCD9D3]">
               {bloqueios.length === 0 && <tr><td colSpan={4} className="p-4 text-center text-muted-foreground">Nenhum bloqueio registrado.</td></tr>}
-              {bloqueios.map(b => (
+              {bloqueios.map((b: Bloqueio) => (
                 <tr key={b.id} className="hover:bg-[#F7F5F0]/50 transition-colors">
                   <td className="p-4 text-sm">{b.data.split("-").reverse().join("/")}</td>
                   <td className="p-4 text-sm font-medium">{b.hora ? "Horário Único" : "Dia Inteiro"}</td>
