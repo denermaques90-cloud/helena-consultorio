@@ -331,7 +331,7 @@ function DashboardLayout() {
             <div className="h-16 w-16 bg-destructive/10 rounded-full flex items-center justify-center text-destructive mb-6 mx-auto">
               <AlertCircle size={32} />
             </div>
-            <AlertDialogTitle className="font-serif text-2xl text-center text-foreground">
+            <AlertDialogTitle className="font-sans font-extrabold text-2xl text-center text-foreground tracking-tighter">
               Excluir Profissional?
             </AlertDialogTitle>
             <AlertDialogDescription className="text-center text-muted-foreground mt-2 text-base">
