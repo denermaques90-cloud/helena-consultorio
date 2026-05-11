@@ -50,7 +50,7 @@ function DashboardProprietario() {
     return (
       <div className="min-h-screen bg-background flex items-center justify-center p-5">
         <form onSubmit={handleLogin} className="premium-card p-10 w-full max-w-sm text-center bg-white shadow-xl">
-          <h1 className="font-serif text-2xl text-primary mb-6">Acesso Proprietário</h1>
+          <h1 className="font-sans font-extrabold text-3xl text-primary mb-6 tracking-tighter">Acesso Proprietário</h1>
           <input type="password" value={pass} onChange={e => setPass(e.target.value)} placeholder="Senha Master" className="w-full bg-secondary border border-border rounded p-3 text-center outline-none focus:border-primary" />
           <button className="mt-4 w-full bg-primary text-white py-3 rounded font-bold hover:bg-primary/90 transition-colors">Acessar</button>
         </form>
