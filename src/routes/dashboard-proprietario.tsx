@@ -282,7 +282,7 @@ function DashboardLayout() {
             </div>
             <div className="overflow-x-auto">
               <table className="w-full text-left">
-                <thead className="bg-secondary/50 text-[10px] uppercase tracking-widest font-bold text-muted-foreground">
+                <thead className="bg-secondary/40 text-[11px] uppercase tracking-widest font-bold text-muted-foreground border-b border-border">
                   <tr>
                     <th className="px-8 py-5">Data e Horário</th>
                     <th className="px-8 py-5">Paciente</th>
