@@ -127,7 +127,7 @@ function DashboardTab({ agendamentos }: any) {
       </div>
       
       <div className="premium-card p-8 bg-white">
-        <h3 className="font-serif text-xl text-foreground mb-6">Próximos Atendimentos</h3>
+        <h3 className="font-sans font-bold text-xl text-foreground mb-6 tracking-tight">Próximos Atendimentos</h3>
         <div className="space-y-4">
           {agendamentos.filter((a:any) => a.status === 'confirmado').slice(0, 3).map((a:any) => (
             <div key={a.id} className="flex items-center justify-between p-4 rounded-xl border border-border bg-secondary/30 hover:bg-secondary/50 transition-colors">
