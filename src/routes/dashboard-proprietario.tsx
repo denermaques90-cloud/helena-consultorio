@@ -63,6 +63,7 @@ function DashboardProprietario() {
 
 function DashboardLayout() {
   const [tab, setTab] = useState("dashboard");
+  const [sidebarOpen, setSidebarOpen] = useState(false);
   const [agendamentos, setAgendamentos] = useState<Agendamento[]>([]);
   const [profissionais, setProfissionais] = useState<Profissional[]>([]);
   const [deleteConfirmOpen, setDeleteConfirmOpen] = useState(false);
