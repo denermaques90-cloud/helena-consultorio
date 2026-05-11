@@ -76,10 +76,11 @@ function HomePage() {
       <SiteNav />
 
       {/* HERO */}
-      <section className="relative min-h-[95vh] flex items-center overflow-hidden">
+      <section className="relative min-h-[100svh] flex items-center overflow-hidden">
         <div className="absolute inset-0 z-0">
-          <div className="absolute inset-0 bg-black/40 z-10" />
-          <div className="absolute inset-0 bg-gradient-to-r from-black/80 via-black/40 to-transparent z-10" />
+          <div className="absolute inset-0 bg-black/55 z-10" />
+          <div className="absolute inset-0 bg-gradient-to-r from-black/85 via-black/55 to-black/30 z-10" />
+          <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-transparent to-black/20 z-10" />
           <img 
             src={heroCollage} 
             alt="Consultório Helena Martins" 
@@ -87,25 +88,25 @@ function HomePage() {
           />
         </div>
         
-        <div className="relative z-20 mx-auto max-w-6xl px-5 pt-32 pb-20 w-full">
+        <div className="relative z-20 mx-auto max-w-6xl px-5 pt-28 pb-16 sm:pt-32 sm:pb-20 w-full">
           <motion.div 
             initial={{ opacity: 0, x: -30 }}
             animate={{ opacity: 1, x: 0 }}
             transition={{ duration: 1, ease: "easeOut" }}
             className="max-w-3xl"
           >
-            <div className="flex items-center gap-3 mb-6">
+            <div className="flex items-center gap-3 mb-5 sm:mb-6">
               <div className="h-px w-8 bg-primary" />
-              <p className="text-[10px] sm:text-xs uppercase tracking-[0.4em] text-white/90 font-bold">Psicóloga Clínica · CRP 06/123456</p>
+              <p className="text-[10px] sm:text-xs uppercase tracking-[0.3em] sm:tracking-[0.4em] text-white font-bold drop-shadow">Psicóloga Clínica · CRP 06/123456</p>
             </div>
             
-            <h1 className="font-serif text-5xl sm:text-6xl md:text-8xl text-white leading-[1.05] mb-8 drop-shadow-sm">
+            <h1 className="font-serif text-4xl sm:text-6xl md:text-8xl text-white leading-[1.05] mb-6 sm:mb-8 drop-shadow-[0_2px_8px_rgba(0,0,0,0.5)]">
               Cuidado psicológico com <br />
-              <span className="text-primary italic">acolhimento</span> e <br />
+              <span className="text-primary italic" style={{ textShadow: '0 2px 12px rgba(0,0,0,0.4)' }}>acolhimento</span> e <br />
               profissionalismo
             </h1>
             
-            <p className="mt-8 text-lg sm:text-xl text-white/80 max-w-xl leading-relaxed font-light">
+            <p className="mt-6 sm:mt-8 text-base sm:text-xl text-white/95 max-w-xl leading-relaxed font-light drop-shadow">
               Espaço dedicado ao autoconhecimento e equilíbrio emocional. Atendimento individual especializado para adultos em busca de qualidade de vida.
             </p>
             
