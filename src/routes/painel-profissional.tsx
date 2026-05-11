@@ -69,10 +69,10 @@ function PainelProfissionalPage() {
             <button 
               key={item.id} 
               onClick={() => { setTab(item.id); setSidebarOpen(false); }} 
-              className={`w-full flex items-center gap-3 px-4 py-3.5 rounded-lg text-sm font-semibold transition-all ${
+              className={`w-full flex items-center gap-3 px-4 py-3 rounded-lg text-sm font-medium transition-all duration-200 ${
                 tab === item.id 
-                  ? "bg-primary/5 text-primary shadow-sm" 
-                  : "text-muted-foreground hover:bg-secondary hover:text-foreground"
+                  ? "bg-primary/10 text-primary shadow-sm font-semibold" 
+                  : "text-muted-foreground hover:bg-secondary/80 hover:text-foreground"
               }`}
             >
               <item.icon size={18} className={tab === item.id ? "text-primary" : "text-muted-foreground"} /> 
