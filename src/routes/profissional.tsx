@@ -123,7 +123,7 @@ function ProfissionalLoginPage() {
                   />
                 </div>
                 <div>
-                  <label className="text-[10px] text-primary uppercase tracking-[0.2em] block mb-1.5 font-bold">WhatsApp</label>
+                  <label className="text-[11px] text-primary uppercase tracking-widest block mb-1.5 font-bold">WhatsApp</label>
                   <input
                     required
                     value={formData.whatsapp}
