@@ -202,7 +202,7 @@ function DashboardLayout() {
           <div className="premium-card bg-white shadow-sm overflow-hidden animate-in fade-in duration-500">
             <div className="p-8 border-b border-border flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
               <div>
-                <h3 className="font-serif text-xl text-foreground">Gestão da Equipe</h3>
+                <h3 className="font-sans font-bold text-xl text-foreground tracking-tight">Gestão da Equipe</h3>
                 <p className="text-sm text-muted-foreground mt-1">Gerencie profissionais e controle permissões de acesso.</p>
               </div>
             </div>
