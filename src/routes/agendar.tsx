@@ -53,7 +53,7 @@ function AgendarPage() {
     (async () => {
       const [{ data: svc }, { data: prfs }, { data: cfg }] = await Promise.all([
         supabase.from("servicos").select("*").eq("ativo", true).order("nome"),
-        supabase.from("profissionais").select("*").eq("ativo", true).order("nome"),
+        supabase.from("profissionais").select("*").eq("ativo", true).is("deleted_at", null).order("nome"),
         supabase.from("config").select("*").limit(1).maybeSingle(),
       ]);
       if (svc) setServicos(svc as Servico[]);

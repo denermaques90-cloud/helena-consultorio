@@ -32,7 +32,7 @@
   --color-gold-soft: var(--gold-soft);
   --color-petrol: var(--petrol);
   --font-serif: 'Cormorant Garamond', Georgia, serif;
-  --font-sans: 'Inter', system-ui, sans-serif;
+  --font-sans: 'Plus Jakarta Sans', 'Inter', system-ui, sans-serif;
 }
 
 :root {

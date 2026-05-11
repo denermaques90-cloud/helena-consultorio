@@ -1,5 +1,8 @@
 import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { User, ShieldCheck } from "lucide-react";
+import { useState, useEffect } from "react";
+import { SplashScreen } from "@/components/SplashScreen";
+import { motion } from "framer-motion";
 
 export const Route = createFileRoute("/entrada")({
   head: () => ({ meta: [{ title: "Clínica Dra. Helena Martins — Bem-vinda" }] }),
@@ -8,14 +11,25 @@ export const Route = createFileRoute("/entrada")({
 
 function EntradaPage() {
   const navigate = useNavigate();
+  const [showSplash, setShowSplash] = useState(true);
 
   const handleClientClick = (e: React.MouseEvent) => {
     e.preventDefault();
     sessionStorage.setItem("seen_entrada", "true");
     navigate({ to: "/" });
   };
+
+  if (showSplash) {
+    return <SplashScreen onComplete={() => setShowSplash(false)} />;
+  }
+
   return (
-    <div className="min-h-screen bg-background flex flex-col items-center justify-center p-5 relative overflow-hidden">
+    <motion.div 
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      transition={{ duration: 0.8 }}
+      className="min-h-screen bg-background flex flex-col items-center justify-center p-5 relative overflow-hidden"
+    >
       {/* Background Decor */}
       <div className="absolute top-[-10%] left-[-10%] w-[40%] h-[40%] bg-primary/5 rounded-full blur-[120px]" />
       <div className="absolute bottom-[-10%] right-[-10%] w-[40%] h-[40%] bg-primary/10 rounded-full blur-[120px]" />
@@ -63,6 +77,7 @@ function EntradaPage() {
           Excelência em Saúde Mental · Cuidado & Ética
         </p>
       </div>
-    </div>
+    </motion.div>
   );
 }
+

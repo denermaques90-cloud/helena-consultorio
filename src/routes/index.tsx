@@ -7,11 +7,13 @@ import recepcao from "@/assets/recepcao.png";
 import sala1 from "@/assets/sala-1.png";
 import sala2 from "@/assets/sala-2.png";
 import certificado from "@/assets/certificado.png";
+import { motion } from "framer-motion";
 import {
   Calendar, MessageCircle, CheckCircle2, Heart, Ear, Shield, Sparkles,
   Brain, Users, Activity, Leaf, ChevronDown, ArrowRight,
 } from "lucide-react";
 import { useState } from "react";
+
 
 export const Route = createFileRoute("/")({
   head: () => ({
@@ -74,42 +76,73 @@ function HomePage() {
       <SiteNav />
 
       {/* HERO */}
-      <section className="relative min-h-[90vh] flex items-center overflow-hidden">
-        <div className="absolute inset-0 bg-[#F4F1EA]/50">
-          <div className="absolute inset-0 bg-gradient-to-r from-[#F7F5F0] via-[#F7F5F0]/80 to-transparent z-10" />
-          <img src={heroCollage} alt="" className="h-full w-full object-cover opacity-30 mix-blend-multiply" />
+      <section className="relative min-h-[95vh] flex items-center overflow-hidden">
+        <div className="absolute inset-0 z-0">
+          <div className="absolute inset-0 bg-black/40 z-10" />
+          <div className="absolute inset-0 bg-gradient-to-r from-black/80 via-black/40 to-transparent z-10" />
+          <img 
+            src={heroCollage} 
+            alt="Consultório Helena Martins" 
+            className="h-full w-full object-cover object-center scale-105" 
+          />
         </div>
-        <div className="relative mx-auto max-w-6xl px-5 pt-32 pb-20 w-full">
-          <div className="max-w-2xl">
-            <p className="text-xs uppercase tracking-[0.3em] text-primary mb-5 font-semibold">Psicóloga Clínica · CRP 06/123456</p>
-            <h1 className="font-serif text-4xl sm:text-5xl md:text-7xl text-foreground leading-[1.1] mb-6">
+        
+        <div className="relative z-20 mx-auto max-w-6xl px-5 pt-32 pb-20 w-full">
+          <motion.div 
+            initial={{ opacity: 0, x: -30 }}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{ duration: 1, ease: "easeOut" }}
+            className="max-w-3xl"
+          >
+            <div className="flex items-center gap-3 mb-6">
+              <div className="h-px w-8 bg-primary" />
+              <p className="text-[10px] sm:text-xs uppercase tracking-[0.4em] text-white/90 font-bold">Psicóloga Clínica · CRP 06/123456</p>
+            </div>
+            
+            <h1 className="font-serif text-5xl sm:text-6xl md:text-8xl text-white leading-[1.05] mb-8 drop-shadow-sm">
               Cuidado psicológico com <br />
-              <span className="text-primary italic">acolhimento</span>, escuta e <br />
+              <span className="text-primary italic">acolhimento</span> e <br />
               profissionalismo
             </h1>
-            <p className="mt-6 text-base sm:text-lg text-muted-foreground max-w-xl leading-relaxed">
-              Atendimento psicológico para adultos, com foco em ansiedade, autoestima, relacionamentos e desenvolvimento emocional.
+            
+            <p className="mt-8 text-lg sm:text-xl text-white/80 max-w-xl leading-relaxed font-light">
+              Espaço dedicado ao autoconhecimento e equilíbrio emocional. Atendimento individual especializado para adultos em busca de qualidade de vida.
             </p>
-            <div className="mt-3 text-sm text-foreground/80">
-              <span className="font-serif text-base">Dra. Helena Martins</span> · Psicóloga Clínica
-            </div>
-            <div className="mt-9 flex flex-wrap gap-3">
+            
+            <div className="mt-12 flex flex-wrap gap-4 items-center">
               <Link
                 to="/agendar"
-                className="inline-flex items-center gap-2 rounded-md bg-primary px-6 py-3.5 text-sm font-medium text-primary-foreground transition hover:opacity-90"
+                className="group relative inline-flex items-center gap-2 overflow-hidden rounded-md bg-primary px-8 py-4 text-sm font-semibold text-white transition-all hover:pr-10"
               >
-                <Calendar size={16} /> Agendar consulta
+                <span className="relative z-10 flex items-center gap-2">
+                  <Calendar size={18} /> Agendar consulta
+                </span>
+                <ArrowRight size={16} className="absolute right-4 opacity-0 transition-all group-hover:opacity-100" />
               </Link>
+              
               <a
                 href="#sobre"
-                className="inline-flex items-center gap-2 rounded-md border border-primary/20 px-6 py-3.5 text-sm font-medium text-foreground transition hover:bg-primary/5"
+                className="inline-flex items-center gap-2 rounded-md border border-white/20 bg-white/5 backdrop-blur-sm px-8 py-4 text-sm font-semibold text-white transition-all hover:bg-white/10"
               >
-                Conhecer atendimento <ArrowRight size={14} />
+                Conhecer atendimento
               </a>
             </div>
-          </div>
+
+            <div className="mt-16 flex items-center gap-4 text-white/60">
+              <div className="h-10 w-px bg-white/20" />
+              <div className="text-sm font-medium">
+                <span className="text-white">Dra. Helena Martins</span> <br />
+                Psicóloga Especialista
+              </div>
+            </div>
+          </motion.div>
+        </div>
+        
+        <div className="absolute bottom-10 left-1/2 -translate-x-1/2 z-20 animate-bounce text-white/30 hidden md:block">
+          <ChevronDown size={32} />
         </div>
       </section>
+
 
       {/* SOBRE */}
       <section id="sobre" className="py-24 px-5">

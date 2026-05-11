@@ -4,7 +4,8 @@ import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
 import {
   LogOut, Calendar, Ban, Settings, Plus, MessageCircle, Home, User, Loader2,
-  LayoutDashboard, Users, Menu, X, DollarSign, TrendingUp, CalendarDays, Clock, Trash2
+  LayoutDashboard, Users, Menu, X, DollarSign, TrendingUp, CalendarDays, Clock, Trash2,
+  ChevronRight, ArrowLeft
 } from "lucide-react";
 
 export const Route = createFileRoute("/painel-profissional")({
@@ -40,52 +41,68 @@ function PainelProfissionalPage() {
   useEffect(() => {
     if (!prof) return;
     Promise.all([
-      supabase.from("agendamentos").select("*").eq("profissional_id", prof.id).order("data").order("hora"),
-      supabase.from("horarios_bloqueados").select("*").eq("profissional_id", prof.id).order("data")
+      supabase.from("agendamentos").select("*").eq("profissional_id", prof.id).order("data", { ascending: false }).order("hora", { ascending: false }),
+      supabase.from("horarios_bloqueados").select("*").eq("profissional_id", prof.id).order("data", { ascending: false })
     ]).then(([ags, blks]) => {
       if (ags.data) setAgendamentos(ags.data as Agendamento[]);
       if (blks.data) setBloqueios(blks.data as Bloqueio[]);
     });
   }, [prof, refreshKey]);
 
-  if (loading || !prof) return <div className="min-h-screen bg-[#F7F5F0] flex items-center justify-center"><Loader2 className="animate-spin text-[#2F8F6F]" /></div>;
+  if (loading || !prof) return <div className="min-h-screen bg-background flex items-center justify-center"><Loader2 className="animate-spin text-primary" /></div>;
 
   return (
-    <div className="min-h-screen bg-[#F7F5F0] flex">
+    <div className="min-h-screen bg-background flex">
       {/* Sidebar */}
-      <aside className={`fixed lg:sticky top-0 left-0 z-40 h-screen w-64 bg-white border-r border-[#DCD9D3] transition-transform lg:translate-x-0 ${sidebarOpen ? "translate-x-0" : "-translate-x-full"}`}>
-        <div className="p-6 border-b border-[#DCD9D3]">
-          <h2 className="font-serif text-xl text-[#2F8F6F]">Dra. Helena Martins</h2>
+      <aside className={`fixed lg:sticky top-0 left-0 z-40 h-screen w-72 bg-white border-r border-border transition-transform lg:translate-x-0 ${sidebarOpen ? "translate-x-0" : "-translate-x-full"}`}>
+        <div className="p-8 mb-4">
+          <h2 className="font-serif text-2xl text-primary leading-tight">Dra. Helena Martins</h2>
+          <p className="text-[10px] uppercase tracking-[0.2em] text-muted-foreground font-bold mt-1">Painel Profissional</p>
         </div>
-        <nav className="p-4 space-y-2">
+        <nav className="px-4 space-y-1">
           {[
             { id: "dashboard", label: "Dashboard", icon: LayoutDashboard },
-            { id: "agenda", label: "Agenda", icon: Calendar },
+            { id: "agenda", label: "Minha Agenda", icon: Calendar },
             { id: "disponibilidade", label: "Disponibilidade", icon: Ban },
-            { id: "pacientes", label: "Pacientes", icon: Users },
+            { id: "pacientes", label: "Meus Pacientes", icon: Users },
           ].map(item => (
-            <button key={item.id} onClick={() => { setTab(item.id); setSidebarOpen(false); }} className={`w-full flex items-center gap-3 px-4 py-3 rounded text-sm font-medium transition-colors ${tab === item.id ? "bg-[#2F8F6F]/10 text-[#2F8F6F]" : "text-[#6B6B6B] hover:text-[#2F8F6F]"}`}>
-              <item.icon size={18} /> {item.label}
+            <button 
+              key={item.id} 
+              onClick={() => { setTab(item.id); setSidebarOpen(false); }} 
+              className={`w-full flex items-center gap-3 px-4 py-3.5 rounded-lg text-sm font-semibold transition-all ${
+                tab === item.id 
+                  ? "bg-primary/5 text-primary shadow-sm" 
+                  : "text-muted-foreground hover:bg-secondary hover:text-foreground"
+              }`}
+            >
+              <item.icon size={18} className={tab === item.id ? "text-primary" : "text-muted-foreground"} /> 
+              {item.label}
             </button>
           ))}
         </nav>
-        <div className="absolute bottom-0 w-full p-4 border-t border-[#DCD9D3] space-y-2">
-           <Link to="/" className="w-full flex items-center gap-3 px-4 py-3 text-sm text-[#6B6B6B] hover:text-[#2F8F6F]"><Home size={18} /> Ver Site</Link>
-           <button onClick={() => {sessionStorage.clear(); navigate({to: "/entrada"});}} className="w-full flex items-center gap-3 px-4 py-3 text-sm text-[#6B6B6B] hover:text-red-500"><LogOut size={18} /> Sair</button>
+        <div className="absolute bottom-0 w-full p-4 border-t border-border bg-white space-y-1">
+           <Link to="/" className="w-full flex items-center gap-3 px-4 py-3.5 text-sm font-semibold text-muted-foreground hover:text-primary transition-colors"><Home size={18} /> Ver Site Público</Link>
+           <button onClick={() => {sessionStorage.clear(); navigate({to: "/entrada"});}} className="w-full flex items-center gap-3 px-4 py-3.5 text-sm font-semibold text-muted-foreground hover:text-destructive transition-colors"><LogOut size={18} /> Sair do Painel</button>
         </div>
       </aside>
 
       {/* Main Content */}
       <div className="flex-1 min-w-0">
-        <header className="bg-white border-b border-[#DCD9D3] p-6 flex items-center justify-between sticky top-0 z-10">
-          <button onClick={() => setSidebarOpen(true)} className="lg:hidden"><Menu /></button>
-          <div>
-            <h1 className="font-serif text-2xl">Olá, {prof.nome.split(" ")[0]}</h1>
-            <p className="text-xs text-[#6B6B6B] uppercase tracking-widest font-bold mt-1">Bem-vindo ao seu painel profissional</p>
+        <header className="bg-white/80 backdrop-blur-md border-b border-border p-6 flex items-center justify-between sticky top-0 z-30">
+          <div className="flex items-center gap-4">
+            <button onClick={() => setSidebarOpen(true)} className="lg:hidden p-2 hover:bg-secondary rounded-md transition-colors"><Menu size={20} /></button>
+            <div>
+              <h1 className="font-serif text-2xl text-foreground">Olá, {prof.nome.split(" ")[0]}</h1>
+              <p className="text-[10px] text-muted-foreground uppercase tracking-widest font-black mt-0.5">Gestão de Atendimentos</p>
+            </div>
+          </div>
+          <div className="flex items-center gap-3 bg-secondary/50 px-4 py-2 rounded-full border border-border">
+            <div className="h-2 w-2 rounded-full bg-primary animate-pulse" />
+            <span className="text-[10px] font-bold uppercase tracking-widest text-primary">Status Online</span>
           </div>
         </header>
 
-        <main className="p-8 max-w-7xl mx-auto">
+        <main className="p-6 md:p-10 lg:p-12 max-w-7xl mx-auto">
           {tab === "dashboard" && <DashboardTab agendamentos={agendamentos} />}
           {tab === "agenda" && <AgendaTab agendamentos={agendamentos} setRefreshKey={setRefreshKey} />}
           {tab === "disponibilidade" && <DisponibilidadeTab prof={prof} bloqueios={bloqueios} setRefreshKey={setRefreshKey} />}
@@ -96,35 +113,58 @@ function PainelProfissionalPage() {
   );
 }
 
+
 function DashboardTab({ agendamentos }: any) {
   const confirmed = agendamentos.filter((a: any) => a.status === "confirmado" || a.status === "concluido");
   const revenue = confirmed.reduce((acc: number, a: any) => acc + (a.valor_total || 0), 0);
 
   return (
-    <div className="space-y-8 animate-in fade-in duration-500">
+    <div className="space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-700">
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-        <div className="bg-white p-6 rounded-lg border border-[#DCD9D3] shadow-sm">
-          <div className="flex justify-between items-start mb-4">
-            <div className="h-10 w-10 bg-[#2F8F6F]/10 rounded flex items-center justify-center text-[#2F8F6F]"><DollarSign size={20} /></div>
-          </div>
-          <p className="text-[#6B6B6B] text-xs uppercase tracking-widest font-bold mb-1">Faturamento Estimado</p>
-          <p className="font-serif text-3xl text-foreground">R$ {revenue.toFixed(2)}</p>
-        </div>
-        <div className="bg-white p-6 rounded-lg border border-[#DCD9D3] shadow-sm">
-          <div className="flex justify-between items-start mb-4">
-            <div className="h-10 w-10 bg-[#2F8F6F]/10 rounded flex items-center justify-center text-[#2F8F6F]"><Calendar size={20} /></div>
-          </div>
-          <p className="text-[#6B6B6B] text-xs uppercase tracking-widest font-bold mb-1">Total de Consultas</p>
-          <p className="font-serif text-3xl text-foreground">{agendamentos.length}</p>
-        </div>
-        <div className="bg-white p-6 rounded-lg border border-[#DCD9D3] shadow-sm">
-          <div className="flex justify-between items-start mb-4">
-            <div className="h-10 w-10 bg-[#2F8F6F]/10 rounded flex items-center justify-center text-[#2F8F6F]"><Users size={20} /></div>
-          </div>
-          <p className="text-[#6B6B6B] text-xs uppercase tracking-widest font-bold mb-1">Pacientes Únicos</p>
-          <p className="font-serif text-3xl text-foreground">{new Set(agendamentos.map((a:any) => a.cliente_nome)).size}</p>
+        <MetricCard label="Faturamento Estimado" value={`R$ ${revenue.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}`} icon={DollarSign} trend="Mensal" />
+        <MetricCard label="Total de Consultas" value={agendamentos.length} icon={Calendar} trend="+2.5%" />
+        <MetricCard label="Pacientes Ativos" value={new Set(agendamentos.map((a:any) => a.cliente_nome)).size} icon={Users} trend="Fidelizados" />
+      </div>
+      
+      <div className="premium-card p-8 bg-white">
+        <h3 className="font-serif text-xl text-foreground mb-6">Próximos Atendimentos</h3>
+        <div className="space-y-4">
+          {agendamentos.filter((a:any) => a.status === 'confirmado').slice(0, 3).map((a:any) => (
+            <div key={a.id} className="flex items-center justify-between p-4 rounded-xl border border-border bg-secondary/30 hover:bg-secondary/50 transition-colors">
+              <div className="flex items-center gap-4">
+                <div className="h-10 w-10 rounded-full bg-primary/10 flex items-center justify-center text-primary font-bold">
+                  {a.cliente_nome.charAt(0)}
+                </div>
+                <div>
+                  <div className="text-sm font-bold text-foreground">{a.cliente_nome}</div>
+                  <div className="text-xs text-muted-foreground">{a.data.split("-").reverse().join("/")} às {a.hora.slice(0,5)}</div>
+                </div>
+              </div>
+              <ChevronRight size={16} className="text-muted-foreground" />
+            </div>
+          ))}
+          {agendamentos.filter((a:any) => a.status === 'confirmado').length === 0 && (
+            <p className="text-center py-10 text-muted-foreground italic text-sm">Sem novos agendamentos confirmados.</p>
+          )}
         </div>
       </div>
+    </div>
+  );
+}
+
+function MetricCard({ label, value, icon: Icon, trend }: any) {
+  return (
+    <div className="bg-white p-8 rounded-2xl border border-border shadow-sm hover:border-primary transition-all duration-300 group">
+      <div className="flex justify-between items-start mb-6">
+        <div className="h-12 w-12 bg-secondary rounded-xl flex items-center justify-center text-primary group-hover:bg-primary/10 transition-colors">
+          <Icon size={24} />
+        </div>
+        <div className="flex items-center gap-1.5 px-3 py-1 bg-primary/5 text-primary text-[10px] font-black uppercase tracking-wider rounded-full">
+          {trend}
+        </div>
+      </div>
+      <p className="text-[10px] text-muted-foreground uppercase tracking-[0.2em] font-black mb-1">{label}</p>
+      <p className="text-3xl font-serif text-foreground font-bold">{value}</p>
     </div>
   );
 }
@@ -134,30 +174,62 @@ function AgendaTab({ agendamentos, setRefreshKey }: any) {
     const { error } = await supabase.from("agendamentos").update({ status }).eq("id", id);
     if (error) toast.error("Erro ao atualizar");
     else {
-      toast.success("Status atualizado");
+      toast.success("Status atualizado com sucesso");
       setRefreshKey((k: number) => k + 1);
     }
   }
 
   return (
     <div className="space-y-6 animate-in fade-in duration-500">
-      <h2 className="font-serif text-2xl text-foreground">Agenda de Atendimentos</h2>
+      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-2">
+        <div>
+          <h2 className="font-serif text-2xl text-foreground">Agenda de Atendimentos</h2>
+          <p className="text-sm text-muted-foreground">Gerencie suas consultas e acompanhe o status dos pacientes.</p>
+        </div>
+      </div>
+
       <div className="grid gap-4">
-        {agendamentos.length === 0 && <p className="text-muted-foreground italic">Nenhum agendamento encontrado.</p>}
+        {agendamentos.length === 0 && (
+          <div className="premium-card p-20 text-center bg-white">
+            <Calendar size={48} className="text-muted-foreground/20 mx-auto mb-4" />
+            <p className="text-muted-foreground italic">Nenhum agendamento encontrado.</p>
+          </div>
+        )}
         {agendamentos.map((a: any) => (
-          <div key={a.id} className="bg-white p-6 rounded-lg border border-[#DCD9D3] flex flex-col md:flex-row md:items-center justify-between gap-4">
-            <div>
-              <p className="font-serif text-xl text-foreground">{a.cliente_nome}</p>
-              <div className="flex flex-wrap gap-x-4 gap-y-1 mt-1">
-                <p className="text-sm text-[#6B6B6B] flex items-center gap-1"><Calendar size={14} /> {a.data.split("-").reverse().join("/")}</p>
-                <p className="text-sm text-[#6B6B6B] flex items-center gap-1"><Clock size={14} /> {a.hora.slice(0,5)}</p>
-                <p className="text-sm text-[#2F8F6F] font-medium">{a.status.toUpperCase()}</p>
+          <div key={a.id} className="bg-white p-6 rounded-2xl border border-border shadow-sm flex flex-col md:flex-row md:items-center justify-between gap-6 hover:border-primary transition-all group">
+            <div className="flex items-center gap-5">
+              <div className={`h-14 w-14 rounded-2xl flex flex-col items-center justify-center border transition-colors ${
+                a.status === 'confirmado' ? "bg-primary/5 border-primary/20 text-primary" : "bg-secondary border-border text-muted-foreground"
+              }`}>
+                <span className="text-xs font-black uppercase">{a.data.split("-")[2]}</span>
+                <span className="text-[10px] uppercase opacity-60 font-bold">{a.data.split("-")[1] === '05' ? 'MAI' : 'MÊS'}</span>
+              </div>
+              <div>
+                <p className="font-serif text-xl text-foreground group-hover:text-primary transition-colors">{a.cliente_nome}</p>
+                <div className="flex flex-wrap gap-x-4 gap-y-1 mt-1">
+                  <p className="text-xs text-muted-foreground font-medium flex items-center gap-1.5"><Clock size={12} className="text-primary" /> {a.hora.slice(0,5)}</p>
+                  <p className={`text-[10px] font-black uppercase tracking-wider px-2 py-0.5 rounded ${
+                    a.status === 'confirmado' ? 'bg-primary/10 text-primary' : 
+                    a.status === 'concluido' ? 'bg-amber-100 text-amber-700' : 'bg-muted text-muted-foreground'
+                  }`}>{a.status}</p>
+                </div>
               </div>
             </div>
-            <div className="flex items-center gap-2">
-              <button onClick={() => updateStatus(a.id, 'concluido')} className="text-xs uppercase font-bold px-3 py-2 rounded bg-[#2F8F6F]/10 text-[#2F8F6F] hover:bg-[#2F8F6F] hover:text-white transition-all">Concluir</button>
-              <button onClick={() => updateStatus(a.id, 'cancelado')} className="text-xs uppercase font-bold px-3 py-2 rounded bg-red-50 text-red-500 hover:bg-red-500 hover:text-white transition-all">Cancelar</button>
-              <a href={`https://wa.me/${a.cliente_whatsapp.replace(/\D/g,"")}`} className="h-10 w-10 flex items-center justify-center rounded-full bg-[#2F8F6F] text-white hover:opacity-80 transition-opacity"><MessageCircle size={20} /></a>
+            <div className="flex items-center gap-3">
+              {a.status === 'confirmado' && (
+                <>
+                  <button onClick={() => updateStatus(a.id, 'concluido')} className="flex-1 md:flex-none text-[10px] uppercase font-black tracking-widest px-5 py-2.5 rounded-lg bg-primary text-white hover:bg-primary/90 transition-all shadow-sm">Concluir</button>
+                  <button onClick={() => updateStatus(a.id, 'cancelado')} className="flex-1 md:flex-none text-[10px] uppercase font-black tracking-widest px-5 py-2.5 rounded-lg bg-destructive/5 text-destructive hover:bg-destructive/10 transition-all">Cancelar</button>
+                </>
+              )}
+              <a 
+                href={`https://wa.me/${a.cliente_whatsapp.replace(/\D/g,"")}`} 
+                target="_blank"
+                rel="noreferrer"
+                className="h-10 w-10 flex items-center justify-center rounded-xl bg-secondary text-primary hover:bg-primary hover:text-white transition-all shadow-sm border border-border group/wa"
+              >
+                <MessageCircle size={18} />
+              </a>
             </div>
           </div>
         ))}
@@ -165,6 +237,7 @@ function AgendaTab({ agendamentos, setRefreshKey }: any) {
     </div>
   );
 }
+
 
 function DisponibilidadeTab({ prof, bloqueios, setRefreshKey }: any) {
   const [data, setData] = useState("");
@@ -200,50 +273,91 @@ function DisponibilidadeTab({ prof, bloqueios, setRefreshKey }: any) {
   }
 
   return (
-    <div className="space-y-8 animate-in fade-in duration-500">
-      <div className="premium-card p-6 bg-white">
-        <h2 className="font-serif text-2xl text-foreground mb-6">Gerenciar Bloqueios</h2>
-        <form onSubmit={handleBloquear} className="grid grid-cols-1 md:grid-cols-3 gap-4">
-          <div>
-            <label className="text-[10px] uppercase font-bold text-[#6B6B6B] block mb-2 tracking-widest">Data</label>
-            <input type="date" required value={data} onChange={e => setData(e.target.value)} className="w-full bg-[#F4F1EA] border border-[#DCD9D3] rounded p-3 outline-none focus:border-[#2F8F6F]" />
+    <div className="space-y-10 animate-in fade-in duration-500">
+      <div className="premium-card p-10 bg-white shadow-sm border-primary/10">
+        <h2 className="font-serif text-2xl text-foreground mb-2">Gerenciar Disponibilidade</h2>
+        <p className="text-sm text-muted-foreground mb-8">Bloqueie datas ou horários específicos para impedir novos agendamentos.</p>
+        
+        <form onSubmit={handleBloquear} className="grid grid-cols-1 md:grid-cols-3 gap-6">
+          <div className="space-y-2">
+            <label className="text-[10px] uppercase font-black text-muted-foreground tracking-widest flex items-center gap-2">
+              <CalendarDays size={12} className="text-primary" /> Data do Bloqueio
+            </label>
+            <input 
+              type="date" 
+              required 
+              value={data} 
+              onChange={e => setData(e.target.value)} 
+              className="w-full bg-secondary/50 border border-border rounded-xl p-4 outline-none focus:border-primary focus:bg-white transition-all text-sm font-medium" 
+            />
           </div>
-          <div>
-            <label className="text-[10px] uppercase font-bold text-[#6B6B6B] block mb-2 tracking-widest">Horário (Opcional)</label>
-            <input type="time" value={hora} onChange={e => setHora(e.target.value)} className="w-full bg-[#F4F1EA] border border-[#DCD9D3] rounded p-3 outline-none focus:border-[#2F8F6F]" />
-            <p className="text-[10px] text-muted-foreground mt-1">Deixe vazio para bloquear o dia inteiro.</p>
+          <div className="space-y-2">
+            <label className="text-[10px] uppercase font-black text-muted-foreground tracking-widest flex items-center gap-2">
+              <Clock size={12} className="text-primary" /> Horário (Opcional)
+            </label>
+            <input 
+              type="time" 
+              value={hora} 
+              onChange={e => setHora(e.target.value)} 
+              className="w-full bg-secondary/50 border border-border rounded-xl p-4 outline-none focus:border-primary focus:bg-white transition-all text-sm font-medium" 
+            />
+            <p className="text-[10px] text-muted-foreground opacity-70 italic">Vazio = Bloqueia o dia inteiro</p>
           </div>
           <div className="flex items-end">
-            <button disabled={loading} className="w-full bg-[#2F8F6F] text-white py-3 rounded font-bold hover:bg-[#2F8F6F]/90 transition-all">
-              {loading ? <Loader2 className="animate-spin mx-auto" size={20} /> : "Adicionar Bloqueio"}
+            <button 
+              disabled={loading} 
+              className="w-full bg-primary text-white py-4 rounded-xl font-bold hover:bg-primary/90 transition-all shadow-md text-xs uppercase tracking-widest disabled:opacity-50"
+            >
+              {loading ? <Loader2 className="animate-spin mx-auto" size={18} /> : "Confirmar Bloqueio"}
             </button>
           </div>
         </form>
       </div>
 
-      <div className="premium-card bg-white overflow-hidden">
-        <div className="p-6 border-b border-[#DCD9D3]">
-          <h3 className="font-serif text-xl">Bloqueios Ativos</h3>
+      <div className="premium-card bg-white shadow-sm overflow-hidden border-border">
+        <div className="p-8 border-b border-border bg-secondary/10">
+          <h3 className="font-serif text-xl text-foreground">Bloqueios Ativos na Agenda</h3>
+          <p className="text-xs text-muted-foreground mt-1">Lista de períodos indisponíveis para agendamento público.</p>
         </div>
         <div className="overflow-x-auto">
           <table className="w-full text-left">
-            <thead className="bg-[#F4F1EA] text-[10px] uppercase tracking-widest font-bold text-[#6B6B6B]">
+            <thead className="bg-secondary/30 text-[10px] uppercase tracking-widest font-black text-muted-foreground">
               <tr>
-                <th className="p-4">Data</th>
-                <th className="p-4">Tipo</th>
-                <th className="p-4">Horário</th>
-                <th className="p-4">Ações</th>
+                <th className="px-8 py-5">Data do Evento</th>
+                <th className="px-8 py-5">Tipo de Bloqueio</th>
+                <th className="px-8 py-5 text-center">Horário</th>
+                <th className="px-8 py-5 text-right">Ações</th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-[#DCD9D3]">
-              {bloqueios.length === 0 && <tr><td colSpan={4} className="p-4 text-center text-muted-foreground">Nenhum bloqueio registrado.</td></tr>}
+            <tbody className="divide-y divide-border">
+              {bloqueios.length === 0 && (
+                <tr>
+                  <td colSpan={4} className="px-8 py-12 text-center text-muted-foreground italic text-sm">
+                    Nenhum bloqueio registrado no momento.
+                  </td>
+                </tr>
+              )}
               {bloqueios.map((b: Bloqueio) => (
-                <tr key={b.id} className="hover:bg-[#F7F5F0]/50 transition-colors">
-                  <td className="p-4 text-sm">{b.data.split("-").reverse().join("/")}</td>
-                  <td className="p-4 text-sm font-medium">{b.hora ? "Horário Único" : "Dia Inteiro"}</td>
-                  <td className="p-4 text-sm">{b.hora?.slice(0, 5) || "---"}</td>
-                  <td className="p-4">
-                    <button onClick={() => removeBloqueio(b.id)} className="text-red-500 hover:text-red-700 transition-colors"><Trash2 size={18} /></button>
+                <tr key={b.id} className="hover:bg-secondary/10 transition-colors group">
+                  <td className="px-8 py-6 text-sm font-bold text-foreground">
+                    {b.data.split("-").reverse().join("/")}
+                  </td>
+                  <td className="px-8 py-6">
+                    <span className={`text-[10px] font-black uppercase px-2.5 py-1 rounded-full ${b.hora ? "bg-amber-100 text-amber-700" : "bg-primary/10 text-primary"}`}>
+                      {b.hora ? "Horário Específico" : "Indisponibilidade Total"}
+                    </span>
+                  </td>
+                  <td className="px-8 py-6 text-sm text-center font-medium text-muted-foreground">
+                    {b.hora?.slice(0, 5) || "O dia todo"}
+                  </td>
+                  <td className="px-8 py-6 text-right">
+                    <button 
+                      onClick={() => removeBloqueio(b.id)} 
+                      className="p-2 text-muted-foreground hover:text-destructive hover:bg-destructive/10 rounded-lg transition-all"
+                      title="Remover bloqueio"
+                    >
+                      <Trash2 size={18} />
+                    </button>
                   </td>
                 </tr>
               ))}
@@ -276,26 +390,48 @@ function PacientesTab({ agendamentos }: any) {
 
   return (
     <div className="space-y-6 animate-in fade-in duration-500">
-      <h2 className="font-serif text-2xl text-foreground">Sua Lista de Pacientes</h2>
-      <div className="premium-card bg-white overflow-hidden">
+      <div className="mb-4">
+        <h2 className="font-serif text-2xl text-foreground">Meus Pacientes</h2>
+        <p className="text-sm text-muted-foreground">Base de contatos e histórico de atendimentos realizados.</p>
+      </div>
+
+      <div className="premium-card bg-white shadow-sm overflow-hidden border-border">
         <div className="overflow-x-auto">
           <table className="w-full text-left">
-            <thead className="bg-[#F4F1EA] text-[10px] uppercase tracking-widest font-bold text-[#6B6B6B]">
+            <thead className="bg-secondary/30 text-[10px] uppercase tracking-widest font-black text-muted-foreground">
               <tr>
-                <th className="p-4">Nome</th>
-                <th className="p-4">Consultas</th>
-                <th className="p-4">Último Atendimento</th>
-                <th className="p-4">Contato</th>
+                <th className="px-8 py-5">Identificação</th>
+                <th className="px-8 py-5 text-center">Frequência</th>
+                <th className="px-8 py-5">Última Sessão</th>
+                <th className="px-8 py-5 text-right">Comunicação</th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-[#DCD9D3]">
+            <tbody className="divide-y divide-border">
               {pacientes.map((p: any) => (
-                <tr key={p.nome} className="hover:bg-[#F7F5F0]/50 transition-colors">
-                  <td className="p-4 font-medium">{p.nome}</td>
-                  <td className="p-4 text-sm">{p.consultas} sessões</td>
-                  <td className="p-4 text-sm">{p.ultima.split("-").reverse().join("/")}</td>
-                  <td className="p-4">
-                    <a href={`https://wa.me/${p.whatsapp.replace(/\D/g,"")}`} className="text-[#2F8F6F] hover:underline font-bold text-xs uppercase tracking-widest">WhatsApp</a>
+                <tr key={p.nome} className="hover:bg-secondary/10 transition-colors">
+                  <td className="px-8 py-6">
+                    <div className="flex items-center gap-3">
+                      <div className="h-10 w-10 rounded-full bg-primary/10 flex items-center justify-center text-primary font-bold text-xs">
+                        {p.nome.slice(0, 2).toUpperCase()}
+                      </div>
+                      <div className="text-sm font-bold text-foreground">{p.nome}</div>
+                    </div>
+                  </td>
+                  <td className="px-8 py-6 text-sm text-center font-medium">
+                    {p.consultas} {p.consultas === 1 ? 'sessão' : 'sessões'}
+                  </td>
+                  <td className="px-8 py-6 text-sm text-muted-foreground font-medium">
+                    {p.ultima.split("-").reverse().join("/")}
+                  </td>
+                  <td className="px-8 py-6 text-right">
+                    <a 
+                      href={`https://wa.me/${p.whatsapp.replace(/\D/g,"")}`} 
+                      target="_blank"
+                      rel="noreferrer"
+                      className="inline-flex items-center gap-2 text-primary hover:text-primary/80 font-bold text-[10px] uppercase tracking-widest bg-primary/5 px-4 py-2 rounded-lg transition-all"
+                    >
+                      <MessageCircle size={14} /> WhatsApp
+                    </a>
                   </td>
                 </tr>
               ))}
