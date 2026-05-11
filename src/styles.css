@@ -33,6 +33,8 @@
   --color-petrol: var(--petrol);
   --font-serif: 'Cormorant Garamond', Georgia, serif;
   --font-sans: 'Plus Jakarta Sans', 'Inter', system-ui, sans-serif;
+  --tracking-tight: -0.02em;
+  --tracking-tighter: -0.04em;
 }
 
 :root {
