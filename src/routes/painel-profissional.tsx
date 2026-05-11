@@ -292,7 +292,7 @@ function DisponibilidadeTab({ prof, bloqueios, setRefreshKey }: any) {
             />
           </div>
           <div className="space-y-2">
-            <label className="text-[10px] uppercase font-black text-muted-foreground tracking-widest flex items-center gap-2">
+            <label className="text-[11px] uppercase font-bold text-muted-foreground tracking-widest flex items-center gap-2">
               <Clock size={12} className="text-primary" /> Horário (Opcional)
             </label>
             <input 
