@@ -153,7 +153,7 @@ function ProfissionalLoginPage() {
 
           <button
             disabled={loading}
-            className="mt-8 w-full rounded-md bg-primary py-3.5 text-sm font-medium text-primary-foreground hover:bg-primary/90 transition-all flex items-center justify-center gap-2"
+            className="mt-8 w-full rounded-xl bg-primary py-4 text-sm font-bold text-primary-foreground hover:bg-primary/90 transition-all flex items-center justify-center gap-2 shadow-md shadow-primary/10"
           >
             {loading ? <Loader2 size={18} className="animate-spin" /> : mode === "login" ? "Entrar no Painel" : "Criar Conta Profissional"}
           </button>
