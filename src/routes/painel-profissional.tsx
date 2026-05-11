@@ -7,6 +7,16 @@ import {
   LayoutDashboard, Users, Menu, X, DollarSign, TrendingUp, CalendarDays, Clock, Trash2,
   ChevronRight, ArrowLeft
 } from "lucide-react";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from "@/components/ui/alert-dialog";
 
 export const Route = createFileRoute("/painel-profissional")({
   head: () => ({ meta: [{ title: "Painel Profissional - Dra. Helena Martins" }] }),
@@ -170,6 +180,9 @@ function MetricCard({ label, value, icon: Icon, trend }: any) {
 }
 
 function AgendaTab({ agendamentos, setRefreshKey }: any) {
+  const [deleteConfirmOpen, setDeleteConfirmOpen] = useState(false);
+  const [bookingToDelete, setBookingToDelete] = useState<Agendamento | null>(null);
+
   async function updateStatus(id: string, status: string) {
     const { error } = await supabase.from("agendamentos").update({ status }).eq("id", id);
     if (error) toast.error("Erro ao atualizar");
@@ -179,62 +192,113 @@ function AgendaTab({ agendamentos, setRefreshKey }: any) {
     }
   }
 
+  async function handleDeleteBooking() {
+    if (!bookingToDelete) return;
+
+    const { error } = await supabase.from("agendamentos").delete().eq("id", bookingToDelete.id);
+
+    if (error) toast.error("Erro ao excluir agendamento");
+    else {
+      toast.success("Agendamento excluído com sucesso");
+      setRefreshKey((k: number) => k + 1);
+    }
+
+    setDeleteConfirmOpen(false);
+    setBookingToDelete(null);
+  }
+
   return (
-    <div className="space-y-6 animate-in fade-in duration-500">
-      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-2">
-        <div>
-          <h2 className="font-sans font-extrabold text-2xl text-foreground tracking-tighter">Agenda de Atendimentos</h2>
-          <p className="text-sm text-muted-foreground font-medium">Gerencie suas consultas e acompanhe o status dos pacientes.</p>
+    <>
+      <div className="space-y-6 animate-in fade-in duration-500">
+        <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-2">
+          <div>
+            <h2 className="font-sans font-extrabold text-2xl text-foreground tracking-tighter">Agenda de Atendimentos</h2>
+            <p className="text-sm text-muted-foreground font-medium">Gerencie suas consultas e acompanhe o status dos pacientes.</p>
+          </div>
+        </div>
+
+        <div className="grid gap-4">
+          {agendamentos.length === 0 && (
+            <div className="premium-card p-20 text-center bg-white">
+              <Calendar size={48} className="text-muted-foreground/20 mx-auto mb-4" />
+              <p className="text-muted-foreground italic">Nenhum agendamento encontrado.</p>
+            </div>
+          )}
+          {agendamentos.map((a: any) => (
+            <div key={a.id} className="bg-white p-6 rounded-2xl border border-border shadow-sm flex flex-col md:flex-row md:items-center justify-between gap-6 hover:border-primary transition-all group">
+              <div className="flex items-center gap-5">
+                <div className={`h-14 w-14 rounded-2xl flex flex-col items-center justify-center border transition-colors ${
+                  a.status === 'confirmado' ? "bg-primary/5 border-primary/20 text-primary" : "bg-secondary border-border text-muted-foreground"
+                }`}>
+                  <span className="text-xs font-black uppercase">{a.data.split("-")[2]}</span>
+                  <span className="text-[10px] uppercase opacity-60 font-bold">{a.data.split("-")[1] === '05' ? 'MAI' : 'MÊS'}</span>
+                </div>
+                <div>
+                  <p className="font-sans font-bold text-xl text-foreground group-hover:text-primary transition-colors tracking-tight">{a.cliente_nome}</p>
+                  <div className="flex flex-wrap gap-x-4 gap-y-1 mt-1">
+                    <p className="text-xs text-muted-foreground font-medium flex items-center gap-1.5"><Clock size={12} className="text-primary" /> {a.hora.slice(0,5)}</p>
+                    <p className={`text-[10px] font-black uppercase tracking-wider px-2 py-0.5 rounded ${
+                      a.status === 'confirmado' ? 'bg-primary/10 text-primary' : 
+                      a.status === 'concluido' ? 'bg-amber-100 text-amber-700' : 'bg-muted text-muted-foreground'
+                    }`}>{a.status}</p>
+                  </div>
+                </div>
+              </div>
+              <div className="flex items-center gap-3">
+                {a.status === 'confirmado' && (
+                  <>
+                    <button onClick={() => updateStatus(a.id, 'concluido')} className="flex-1 md:flex-none text-[10px] uppercase font-black tracking-widest px-5 py-2.5 rounded-lg bg-primary text-white hover:bg-primary/90 transition-all shadow-sm">Concluir</button>
+                    <button onClick={() => updateStatus(a.id, 'cancelado')} className="flex-1 md:flex-none text-[10px] uppercase font-black tracking-widest px-5 py-2.5 rounded-lg bg-destructive/5 text-destructive hover:bg-destructive/10 transition-all">Cancelar</button>
+                  </>
+                )}
+                <button
+                  onClick={() => {
+                    setBookingToDelete(a);
+                    setDeleteConfirmOpen(true);
+                  }}
+                  className="h-10 w-10 flex items-center justify-center rounded-xl bg-destructive/5 text-destructive hover:bg-destructive/10 transition-all shadow-sm border border-border"
+                  title="Excluir agendamento"
+                >
+                  <Trash2 size={18} />
+                </button>
+                <a 
+                  href={`https://wa.me/${a.cliente_whatsapp.replace(/\D/g,"")}`} 
+                  target="_blank"
+                  rel="noreferrer"
+                  className="h-10 w-10 flex items-center justify-center rounded-xl bg-secondary text-primary hover:bg-primary hover:text-white transition-all shadow-sm border border-border group/wa"
+                >
+                  <MessageCircle size={18} />
+                </a>
+              </div>
+            </div>
+          ))}
         </div>
       </div>
 
-      <div className="grid gap-4">
-        {agendamentos.length === 0 && (
-          <div className="premium-card p-20 text-center bg-white">
-            <Calendar size={48} className="text-muted-foreground/20 mx-auto mb-4" />
-            <p className="text-muted-foreground italic">Nenhum agendamento encontrado.</p>
-          </div>
-        )}
-        {agendamentos.map((a: any) => (
-          <div key={a.id} className="bg-white p-6 rounded-2xl border border-border shadow-sm flex flex-col md:flex-row md:items-center justify-between gap-6 hover:border-primary transition-all group">
-            <div className="flex items-center gap-5">
-              <div className={`h-14 w-14 rounded-2xl flex flex-col items-center justify-center border transition-colors ${
-                a.status === 'confirmado' ? "bg-primary/5 border-primary/20 text-primary" : "bg-secondary border-border text-muted-foreground"
-              }`}>
-                <span className="text-xs font-black uppercase">{a.data.split("-")[2]}</span>
-                <span className="text-[10px] uppercase opacity-60 font-bold">{a.data.split("-")[1] === '05' ? 'MAI' : 'MÊS'}</span>
-              </div>
-              <div>
-                <p className="font-sans font-bold text-xl text-foreground group-hover:text-primary transition-colors tracking-tight">{a.cliente_nome}</p>
-                <div className="flex flex-wrap gap-x-4 gap-y-1 mt-1">
-                  <p className="text-xs text-muted-foreground font-medium flex items-center gap-1.5"><Clock size={12} className="text-primary" /> {a.hora.slice(0,5)}</p>
-                  <p className={`text-[10px] font-black uppercase tracking-wider px-2 py-0.5 rounded ${
-                    a.status === 'confirmado' ? 'bg-primary/10 text-primary' : 
-                    a.status === 'concluido' ? 'bg-amber-100 text-amber-700' : 'bg-muted text-muted-foreground'
-                  }`}>{a.status}</p>
-                </div>
-              </div>
-            </div>
-            <div className="flex items-center gap-3">
-              {a.status === 'confirmado' && (
-                <>
-                  <button onClick={() => updateStatus(a.id, 'concluido')} className="flex-1 md:flex-none text-[10px] uppercase font-black tracking-widest px-5 py-2.5 rounded-lg bg-primary text-white hover:bg-primary/90 transition-all shadow-sm">Concluir</button>
-                  <button onClick={() => updateStatus(a.id, 'cancelado')} className="flex-1 md:flex-none text-[10px] uppercase font-black tracking-widest px-5 py-2.5 rounded-lg bg-destructive/5 text-destructive hover:bg-destructive/10 transition-all">Cancelar</button>
-                </>
-              )}
-              <a 
-                href={`https://wa.me/${a.cliente_whatsapp.replace(/\D/g,"")}`} 
-                target="_blank"
-                rel="noreferrer"
-                className="h-10 w-10 flex items-center justify-center rounded-xl bg-secondary text-primary hover:bg-primary hover:text-white transition-all shadow-sm border border-border group/wa"
-              >
-                <MessageCircle size={18} />
-              </a>
-            </div>
-          </div>
-        ))}
-      </div>
-    </div>
+      <AlertDialog open={deleteConfirmOpen} onOpenChange={setDeleteConfirmOpen}>
+        <AlertDialogContent className="bg-white rounded-2xl border-none shadow-2xl p-8">
+          <AlertDialogHeader>
+            <AlertDialogTitle className="font-sans font-extrabold text-2xl text-center text-foreground tracking-tighter">
+              Excluir agendamento?
+            </AlertDialogTitle>
+            <AlertDialogDescription className="text-center text-muted-foreground mt-2 text-base">
+              Tem certeza que deseja excluir o agendamento de <strong>{bookingToDelete?.cliente_nome}</strong>? Essa ação não poderá ser desfeita.
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter className="flex-col sm:flex-row gap-3 mt-8">
+            <AlertDialogCancel className="w-full sm:flex-1 rounded-xl border-border bg-secondary hover:bg-accent text-foreground font-bold h-12 uppercase text-xs tracking-widest">
+              Cancelar
+            </AlertDialogCancel>
+            <AlertDialogAction
+              onClick={handleDeleteBooking}
+              className="w-full sm:flex-1 rounded-xl bg-destructive hover:bg-destructive/90 text-white font-bold h-12 uppercase text-xs tracking-widest transition-all"
+            >
+              Confirmar Exclusão
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
+    </>
   );
 }
 
