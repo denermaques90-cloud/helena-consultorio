@@ -124,7 +124,7 @@ function DashboardLayout() {
             <button 
               key={t.id} 
               onClick={() => setTab(t.id)} 
-              className={`flex items-center gap-3 w-full p-4 rounded-xl text-sm transition-all duration-200 ${
+              className={`flex items-center gap-4 w-full p-4 rounded-xl text-sm transition-all duration-200 ${
                 tab === t.id 
                   ? "bg-primary/10 text-primary shadow-sm font-semibold" 
                   : "text-muted-foreground font-medium hover:bg-secondary/80 hover:text-foreground"
