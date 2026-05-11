@@ -11,7 +11,7 @@ export function SiteFooter() {
   const wa = cfg.whatsapp_contato || "5511999999999";
   const ig = cfg.instagram || "helenamartins.psi";
   return (
-    <footer className="border-t border-border bg-background mt-24">
+    <footer id="contato" className="border-t border-border bg-background mt-24">
       <div className="mx-auto max-w-6xl px-5 py-14 grid gap-10 md:grid-cols-3">
         <div>
           <h3 className="font-serif text-xl text-foreground">Dra. Helena Martins</h3>

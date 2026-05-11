@@ -63,6 +63,7 @@ function DashboardProprietario() {
 
 function DashboardLayout() {
   const [tab, setTab] = useState("dashboard");
+  const [sidebarOpen, setSidebarOpen] = useState(false);
   const [agendamentos, setAgendamentos] = useState<Agendamento[]>([]);
   const [profissionais, setProfissionais] = useState<Profissional[]>([]);
   const [deleteConfirmOpen, setDeleteConfirmOpen] = useState(false);
@@ -126,11 +127,19 @@ function DashboardLayout() {
 
   return (
     <div className="min-h-screen bg-background flex">
+      {/* Mobile overlay */}
+      {sidebarOpen && (
+        <div onClick={() => setSidebarOpen(false)} className="fixed inset-0 bg-black/40 z-30 lg:hidden" />
+      )}
+
       {/* Sidebar */}
-      <aside className="w-72 bg-white border-r border-border p-8 hidden lg:flex flex-col h-screen sticky top-0">
-        <div className="mb-12">
-          <h2 className="font-sans font-extrabold text-2xl text-primary leading-tight tracking-tighter">Dra. Helena Martins</h2>
-          <p className="text-[10px] uppercase tracking-[0.2em] text-muted-foreground font-black mt-1">Gestão Clínica</p>
+      <aside className={`fixed lg:sticky top-0 left-0 z-40 h-screen w-72 bg-white border-r border-border p-8 flex flex-col transition-transform duration-300 lg:translate-x-0 ${sidebarOpen ? "translate-x-0" : "-translate-x-full"}`}>
+        <div className="mb-12 flex items-start justify-between">
+          <div>
+            <h2 className="font-sans font-extrabold text-2xl text-primary leading-tight tracking-tighter">Dra. Helena Martins</h2>
+            <p className="text-[10px] uppercase tracking-[0.2em] text-muted-foreground font-black mt-1">Gestão Clínica</p>
+          </div>
+          <button onClick={() => setSidebarOpen(false)} className="lg:hidden p-1 text-muted-foreground hover:text-foreground"><X size={20} /></button>
         </div>
         
         <nav className="space-y-2 flex-1">
@@ -141,7 +150,7 @@ function DashboardLayout() {
           ].map(t => (
             <button 
               key={t.id} 
-              onClick={() => setTab(t.id)} 
+              onClick={() => { setTab(t.id); setSidebarOpen(false); }} 
               className={`flex items-center gap-4 w-full p-4 rounded-xl text-sm transition-all duration-200 ${
                 tab === t.id 
                   ? "bg-primary/10 text-primary shadow-sm font-semibold" 
@@ -165,13 +174,16 @@ function DashboardLayout() {
       </aside>
 
       {/* Main Content */}
-      <main className="flex-1 p-6 md:p-10 lg:p-12">
-        <header className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-10">
-          <div>
-            <h1 className="text-4xl font-sans font-extrabold text-foreground tracking-tighter">Painel de Controle</h1>
-            <p className="text-sm text-muted-foreground font-medium mt-1">Bem-vinda de volta ao centro de operações da clínica.</p>
+      <main className="flex-1 min-w-0 p-4 sm:p-6 md:p-10 lg:p-12">
+        <header className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-8 sm:mb-10">
+          <div className="flex items-center gap-3">
+            <button onClick={() => setSidebarOpen(true)} className="lg:hidden p-2 -ml-2 hover:bg-secondary rounded-md transition-colors"><Menu size={22} /></button>
+            <div>
+              <h1 className="text-2xl sm:text-4xl font-sans font-extrabold text-foreground tracking-tighter">Painel de Controle</h1>
+              <p className="text-xs sm:text-sm text-muted-foreground font-medium mt-1">Bem-vinda de volta ao centro de operações.</p>
+            </div>
           </div>
-          <div className="flex items-center gap-3 bg-white px-4 py-2 rounded-full border border-border shadow-sm">
+          <div className="flex items-center gap-3 bg-white px-4 py-2 rounded-full border border-border shadow-sm self-start sm:self-auto">
             <div className="h-2 w-2 rounded-full bg-primary animate-pulse" />
             <span className="text-[10px] font-bold uppercase tracking-widest text-primary">Acesso Proprietária</span>
           </div>
