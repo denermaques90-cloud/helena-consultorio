@@ -4,7 +4,8 @@ import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
 import {
   LogOut, Calendar, Ban, Settings, Plus, MessageCircle, Home, User, Loader2,
-  LayoutDashboard, Users, Menu, X, DollarSign, TrendingUp, CalendarDays, Clock, Trash2
+  LayoutDashboard, Users, Menu, X, DollarSign, TrendingUp, CalendarDays, Clock, Trash2,
+  ChevronRight, ArrowLeft
 } from "lucide-react";
 
 export const Route = createFileRoute("/painel-profissional")({
@@ -40,52 +41,68 @@ function PainelProfissionalPage() {
   useEffect(() => {
     if (!prof) return;
     Promise.all([
-      supabase.from("agendamentos").select("*").eq("profissional_id", prof.id).order("data").order("hora"),
-      supabase.from("horarios_bloqueados").select("*").eq("profissional_id", prof.id).order("data")
+      supabase.from("agendamentos").select("*").eq("profissional_id", prof.id).order("data", { ascending: false }).order("hora", { ascending: false }),
+      supabase.from("horarios_bloqueados").select("*").eq("profissional_id", prof.id).order("data", { ascending: false })
     ]).then(([ags, blks]) => {
       if (ags.data) setAgendamentos(ags.data as Agendamento[]);
       if (blks.data) setBloqueios(blks.data as Bloqueio[]);
     });
   }, [prof, refreshKey]);
 
-  if (loading || !prof) return <div className="min-h-screen bg-[#F7F5F0] flex items-center justify-center"><Loader2 className="animate-spin text-[#2F8F6F]" /></div>;
+  if (loading || !prof) return <div className="min-h-screen bg-background flex items-center justify-center"><Loader2 className="animate-spin text-primary" /></div>;
 
   return (
-    <div className="min-h-screen bg-[#F7F5F0] flex">
+    <div className="min-h-screen bg-background flex">
       {/* Sidebar */}
-      <aside className={`fixed lg:sticky top-0 left-0 z-40 h-screen w-64 bg-white border-r border-[#DCD9D3] transition-transform lg:translate-x-0 ${sidebarOpen ? "translate-x-0" : "-translate-x-full"}`}>
-        <div className="p-6 border-b border-[#DCD9D3]">
-          <h2 className="font-serif text-xl text-[#2F8F6F]">Dra. Helena Martins</h2>
+      <aside className={`fixed lg:sticky top-0 left-0 z-40 h-screen w-72 bg-white border-r border-border transition-transform lg:translate-x-0 ${sidebarOpen ? "translate-x-0" : "-translate-x-full"}`}>
+        <div className="p-8 mb-4">
+          <h2 className="font-serif text-2xl text-primary leading-tight">Dra. Helena Martins</h2>
+          <p className="text-[10px] uppercase tracking-[0.2em] text-muted-foreground font-bold mt-1">Painel Profissional</p>
         </div>
-        <nav className="p-4 space-y-2">
+        <nav className="px-4 space-y-1">
           {[
             { id: "dashboard", label: "Dashboard", icon: LayoutDashboard },
-            { id: "agenda", label: "Agenda", icon: Calendar },
+            { id: "agenda", label: "Minha Agenda", icon: Calendar },
             { id: "disponibilidade", label: "Disponibilidade", icon: Ban },
-            { id: "pacientes", label: "Pacientes", icon: Users },
+            { id: "pacientes", label: "Meus Pacientes", icon: Users },
           ].map(item => (
-            <button key={item.id} onClick={() => { setTab(item.id); setSidebarOpen(false); }} className={`w-full flex items-center gap-3 px-4 py-3 rounded text-sm font-medium transition-colors ${tab === item.id ? "bg-[#2F8F6F]/10 text-[#2F8F6F]" : "text-[#6B6B6B] hover:text-[#2F8F6F]"}`}>
-              <item.icon size={18} /> {item.label}
+            <button 
+              key={item.id} 
+              onClick={() => { setTab(item.id); setSidebarOpen(false); }} 
+              className={`w-full flex items-center gap-3 px-4 py-3.5 rounded-lg text-sm font-semibold transition-all ${
+                tab === item.id 
+                  ? "bg-primary/5 text-primary shadow-sm" 
+                  : "text-muted-foreground hover:bg-secondary hover:text-foreground"
+              }`}
+            >
+              <item.icon size={18} className={tab === item.id ? "text-primary" : "text-muted-foreground"} /> 
+              {item.label}
             </button>
           ))}
         </nav>
-        <div className="absolute bottom-0 w-full p-4 border-t border-[#DCD9D3] space-y-2">
-           <Link to="/" className="w-full flex items-center gap-3 px-4 py-3 text-sm text-[#6B6B6B] hover:text-[#2F8F6F]"><Home size={18} /> Ver Site</Link>
-           <button onClick={() => {sessionStorage.clear(); navigate({to: "/entrada"});}} className="w-full flex items-center gap-3 px-4 py-3 text-sm text-[#6B6B6B] hover:text-red-500"><LogOut size={18} /> Sair</button>
+        <div className="absolute bottom-0 w-full p-4 border-t border-border bg-white space-y-1">
+           <Link to="/" className="w-full flex items-center gap-3 px-4 py-3.5 text-sm font-semibold text-muted-foreground hover:text-primary transition-colors"><Home size={18} /> Ver Site Público</Link>
+           <button onClick={() => {sessionStorage.clear(); navigate({to: "/entrada"});}} className="w-full flex items-center gap-3 px-4 py-3.5 text-sm font-semibold text-muted-foreground hover:text-destructive transition-colors"><LogOut size={18} /> Sair do Painel</button>
         </div>
       </aside>
 
       {/* Main Content */}
       <div className="flex-1 min-w-0">
-        <header className="bg-white border-b border-[#DCD9D3] p-6 flex items-center justify-between sticky top-0 z-10">
-          <button onClick={() => setSidebarOpen(true)} className="lg:hidden"><Menu /></button>
-          <div>
-            <h1 className="font-serif text-2xl">Olá, {prof.nome.split(" ")[0]}</h1>
-            <p className="text-xs text-[#6B6B6B] uppercase tracking-widest font-bold mt-1">Bem-vindo ao seu painel profissional</p>
+        <header className="bg-white/80 backdrop-blur-md border-b border-border p-6 flex items-center justify-between sticky top-0 z-30">
+          <div className="flex items-center gap-4">
+            <button onClick={() => setSidebarOpen(true)} className="lg:hidden p-2 hover:bg-secondary rounded-md transition-colors"><Menu size={20} /></button>
+            <div>
+              <h1 className="font-serif text-2xl text-foreground">Olá, {prof.nome.split(" ")[0]}</h1>
+              <p className="text-[10px] text-muted-foreground uppercase tracking-widest font-black mt-0.5">Gestão de Atendimentos</p>
+            </div>
+          </div>
+          <div className="flex items-center gap-3 bg-secondary/50 px-4 py-2 rounded-full border border-border">
+            <div className="h-2 w-2 rounded-full bg-primary animate-pulse" />
+            <span className="text-[10px] font-bold uppercase tracking-widest text-primary">Status Online</span>
           </div>
         </header>
 
-        <main className="p-8 max-w-7xl mx-auto">
+        <main className="p-6 md:p-10 lg:p-12 max-w-7xl mx-auto">
           {tab === "dashboard" && <DashboardTab agendamentos={agendamentos} />}
           {tab === "agenda" && <AgendaTab agendamentos={agendamentos} setRefreshKey={setRefreshKey} />}
           {tab === "disponibilidade" && <DisponibilidadeTab prof={prof} bloqueios={bloqueios} setRefreshKey={setRefreshKey} />}
@@ -95,6 +112,7 @@ function PainelProfissionalPage() {
     </div>
   );
 }
+
 
 function DashboardTab({ agendamentos }: any) {
   const confirmed = agendamentos.filter((a: any) => a.status === "confirmado" || a.status === "concluido");
