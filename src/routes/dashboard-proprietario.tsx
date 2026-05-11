@@ -277,7 +277,7 @@ function DashboardLayout() {
         {tab === "agendamentos" && (
           <div className="premium-card bg-white shadow-sm overflow-hidden animate-in fade-in duration-500">
             <div className="p-8 border-b border-border">
-              <h3 className="font-serif text-xl text-foreground">Controle de Agendamentos</h3>
+              <h3 className="font-sans font-bold text-xl text-foreground tracking-tight">Controle de Agendamentos</h3>
               <p className="text-sm text-muted-foreground mt-1">Histórico completo de todas as consultas da clínica.</p>
             </div>
             <div className="overflow-x-auto">
