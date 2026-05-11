@@ -170,7 +170,7 @@ function AgendarPage() {
     
     // open WhatsApp to specific professional
     const wa = selectedProf.whatsapp || config?.whatsapp_contato || "5511999999999";
-    const msg = `Olá, ${selectedProf.nome}. Gostaria de confirmar minha solicitação de agendamento:\n\nNome: ${nome}\nModalidade: ${svcNomes}\nData: ${fmtDateBR(selectedDate)}\nHorário: ${selectedTime}\n\nAguardo confirmação.`;
+    const msg = `Olá, Dra. Helena Martins. Gostaria de confirmar minha solicitação de agendamento:\n\nNome: ${nome}\nServiço: ${svcNomes}\nData: ${fmtDateBR(selectedDate)}\nHorário: ${selectedTime}\n\nAguardo confirmação. Obrigado(a).`;
     setTimeout(() => {
       window.open(`https://wa.me/${wa}?text=${encodeURIComponent(msg)}`, "_blank");
     }, 600);

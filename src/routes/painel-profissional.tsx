@@ -8,7 +8,7 @@ import {
 } from "lucide-react";
 
 export const Route = createFileRoute("/painel-profissional")({
-  head: () => ({ meta: [{ title: "Painel Profissional | Clínica Premium" }] }),
+  head: () => ({ meta: [{ title: "Painel Profissional - Dra. Helena Martins" }] }),
   component: PainelProfissionalPage,
 });
 
@@ -48,7 +48,7 @@ function PainelProfissionalPage() {
       {/* Sidebar */}
       <aside className={`fixed lg:sticky top-0 left-0 z-40 h-screen w-64 bg-white border-r border-[#DCD9D3] transition-transform lg:translate-x-0 ${sidebarOpen ? "translate-x-0" : "-translate-x-full"}`}>
         <div className="p-6 border-b border-[#DCD9D3]">
-          <h2 className="font-serif text-xl text-[#2F8F6F]">Painel Premium</h2>
+          <h2 className="font-serif text-xl text-[#2F8F6F]">Dra. Helena Martins</h2>
         </div>
         <nav className="p-4 space-y-2">
           {[

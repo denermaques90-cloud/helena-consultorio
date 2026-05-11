@@ -81,14 +81,14 @@ function HomePage() {
         </div>
         <div className="relative mx-auto max-w-6xl px-5 pt-32 pb-20 w-full">
           <div className="max-w-2xl">
-            <p className="text-xs uppercase tracking-[0.3em] text-primary mb-5 font-semibold">Psicologia Clínica · CRP 06/123456</p>
+            <p className="text-xs uppercase tracking-[0.3em] text-primary mb-5 font-semibold">Psicóloga Clínica · CRP 06/123456</p>
             <h1 className="font-serif text-4xl sm:text-5xl md:text-7xl text-foreground leading-[1.1] mb-6">
-              Cuidado com<br />
-              <span className="text-primary italic">acolhimento</span> e<br />
+              Cuidado psicológico com <br />
+              <span className="text-primary italic">acolhimento</span>, escuta e <br />
               profissionalismo
             </h1>
             <p className="mt-6 text-base sm:text-lg text-muted-foreground max-w-xl leading-relaxed">
-              Atendimento psicológico para adultos em um espaço seguro, ético e acolhedor.
+              Atendimento psicológico para adultos, com foco em ansiedade, autoestima, relacionamentos e desenvolvimento emocional.
             </p>
             <div className="mt-3 text-sm text-foreground/80">
               <span className="font-serif text-base">Dra. Helena Martins</span> · Psicóloga Clínica
