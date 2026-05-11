@@ -205,7 +205,7 @@ function AgendaTab({ agendamentos, setRefreshKey }: any) {
                 <span className="text-[10px] uppercase opacity-60 font-bold">{a.data.split("-")[1] === '05' ? 'MAI' : 'MÊS'}</span>
               </div>
               <div>
-                <p className="font-serif text-xl text-foreground group-hover:text-primary transition-colors">{a.cliente_nome}</p>
+                <p className="font-sans font-bold text-xl text-foreground group-hover:text-primary transition-colors tracking-tight">{a.cliente_nome}</p>
                 <div className="flex flex-wrap gap-x-4 gap-y-1 mt-1">
                   <p className="text-xs text-muted-foreground font-medium flex items-center gap-1.5"><Clock size={12} className="text-primary" /> {a.hora.slice(0,5)}</p>
                   <p className={`text-[10px] font-black uppercase tracking-wider px-2 py-0.5 rounded ${
