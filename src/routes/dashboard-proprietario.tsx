@@ -170,7 +170,7 @@ function DashboardLayout() {
             <div className="grid grid-cols-1 gap-6">
               <div className="premium-card p-8 bg-white shadow-sm">
                 <div className="flex items-center justify-between mb-8">
-                  <h3 className="font-serif text-xl text-foreground">Desempenho Financeiro por Profissional</h3>
+                  <h3 className="font-sans font-bold text-xl text-foreground tracking-tight">Desempenho Financeiro por Profissional</h3>
                   <div className="flex items-center gap-2 text-xs text-muted-foreground font-medium">
                     <TrendingUp size={14} className="text-primary" />
                     Atualizado em tempo real
