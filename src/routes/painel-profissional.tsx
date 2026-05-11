@@ -183,8 +183,8 @@ function AgendaTab({ agendamentos, setRefreshKey }: any) {
     <div className="space-y-6 animate-in fade-in duration-500">
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-2">
         <div>
-          <h2 className="font-serif text-2xl text-foreground">Agenda de Atendimentos</h2>
-          <p className="text-sm text-muted-foreground">Gerencie suas consultas e acompanhe o status dos pacientes.</p>
+          <h2 className="font-sans font-extrabold text-2xl text-foreground tracking-tighter">Agenda de Atendimentos</h2>
+          <p className="text-sm text-muted-foreground font-medium">Gerencie suas consultas e acompanhe o status dos pacientes.</p>
         </div>
       </div>
 
