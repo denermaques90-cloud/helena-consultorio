@@ -50,9 +50,9 @@ function DashboardProprietario() {
     return (
       <div className="min-h-screen bg-background flex items-center justify-center p-5">
         <form onSubmit={handleLogin} className="premium-card p-10 w-full max-w-sm text-center bg-white shadow-xl">
-          <h1 className="font-serif text-2xl text-primary mb-6">Acesso Proprietário</h1>
+          <h1 className="font-sans font-extrabold text-3xl text-primary mb-6 tracking-tighter">Acesso Proprietário</h1>
           <input type="password" value={pass} onChange={e => setPass(e.target.value)} placeholder="Senha Master" className="w-full bg-secondary border border-border rounded p-3 text-center outline-none focus:border-primary" />
-          <button className="mt-4 w-full bg-primary text-white py-3 rounded font-bold hover:bg-primary/90 transition-colors">Acessar</button>
+          <button className="mt-4 w-full bg-primary text-white py-4 rounded-xl font-bold hover:bg-primary/90 transition-all shadow-md shadow-primary/10 uppercase text-xs tracking-widest">Acessar</button>
         </form>
       </div>
     );
@@ -111,8 +111,8 @@ function DashboardLayout() {
       {/* Sidebar */}
       <aside className="w-72 bg-white border-r border-border p-8 hidden lg:flex flex-col h-screen sticky top-0">
         <div className="mb-12">
-          <h2 className="font-serif text-2xl text-primary leading-tight">Dra. Helena Martins</h2>
-          <p className="text-[10px] uppercase tracking-[0.2em] text-muted-foreground font-bold mt-1">Gestão Clínica</p>
+          <h2 className="font-sans font-extrabold text-2xl text-primary leading-tight tracking-tighter">Dra. Helena Martins</h2>
+          <p className="text-[10px] uppercase tracking-[0.2em] text-muted-foreground font-black mt-1">Gestão Clínica</p>
         </div>
         
         <nav className="space-y-2 flex-1">
@@ -124,10 +124,10 @@ function DashboardLayout() {
             <button 
               key={t.id} 
               onClick={() => setTab(t.id)} 
-              className={`flex items-center gap-3 w-full p-4 rounded-lg text-sm font-semibold transition-all duration-200 ${
+              className={`flex items-center gap-4 w-full p-4 rounded-xl text-sm transition-all duration-200 ${
                 tab === t.id 
-                  ? "bg-primary/5 text-primary shadow-sm" 
-                  : "text-muted-foreground hover:bg-secondary hover:text-foreground"
+                  ? "bg-primary/10 text-primary shadow-sm font-semibold" 
+                  : "text-muted-foreground font-medium hover:bg-secondary/80 hover:text-foreground"
               }`}
             >
               <t.icon size={18} className={tab === t.id ? "text-primary" : "text-muted-foreground"} /> 
@@ -150,8 +150,8 @@ function DashboardLayout() {
       <main className="flex-1 p-6 md:p-10 lg:p-12">
         <header className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-10">
           <div>
-            <h1 className="text-3xl font-serif text-foreground">Painel de Controle</h1>
-            <p className="text-sm text-muted-foreground mt-1">Bem-vinda de volta ao centro de operações da clínica.</p>
+            <h1 className="text-4xl font-sans font-extrabold text-foreground tracking-tighter">Painel de Controle</h1>
+            <p className="text-sm text-muted-foreground font-medium mt-1">Bem-vinda de volta ao centro de operações da clínica.</p>
           </div>
           <div className="flex items-center gap-3 bg-white px-4 py-2 rounded-full border border-border shadow-sm">
             <div className="h-2 w-2 rounded-full bg-primary animate-pulse" />
@@ -170,7 +170,7 @@ function DashboardLayout() {
             <div className="grid grid-cols-1 gap-6">
               <div className="premium-card p-8 bg-white shadow-sm">
                 <div className="flex items-center justify-between mb-8">
-                  <h3 className="font-serif text-xl text-foreground">Desempenho Financeiro por Profissional</h3>
+                  <h3 className="font-sans font-bold text-xl text-foreground tracking-tight">Desempenho Financeiro por Profissional</h3>
                   <div className="flex items-center gap-2 text-xs text-muted-foreground font-medium">
                     <TrendingUp size={14} className="text-primary" />
                     Atualizado em tempo real
@@ -202,13 +202,13 @@ function DashboardLayout() {
           <div className="premium-card bg-white shadow-sm overflow-hidden animate-in fade-in duration-500">
             <div className="p-8 border-b border-border flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
               <div>
-                <h3 className="font-serif text-xl text-foreground">Gestão da Equipe</h3>
+                <h3 className="font-sans font-bold text-xl text-foreground tracking-tight">Gestão da Equipe</h3>
                 <p className="text-sm text-muted-foreground mt-1">Gerencie profissionais e controle permissões de acesso.</p>
               </div>
             </div>
             <div className="overflow-x-auto">
               <table className="w-full text-left">
-                <thead className="bg-secondary/50 text-[10px] uppercase tracking-widest font-bold text-muted-foreground">
+                <thead className="bg-secondary/40 text-[11px] uppercase tracking-widest font-bold text-muted-foreground border-b border-border">
                   <tr>
                     <th className="px-8 py-5">Nome do Profissional</th>
                     <th className="px-8 py-5">Especialidade</th>
@@ -277,12 +277,12 @@ function DashboardLayout() {
         {tab === "agendamentos" && (
           <div className="premium-card bg-white shadow-sm overflow-hidden animate-in fade-in duration-500">
             <div className="p-8 border-b border-border">
-              <h3 className="font-serif text-xl text-foreground">Controle de Agendamentos</h3>
+              <h3 className="font-sans font-bold text-xl text-foreground tracking-tight">Controle de Agendamentos</h3>
               <p className="text-sm text-muted-foreground mt-1">Histórico completo de todas as consultas da clínica.</p>
             </div>
             <div className="overflow-x-auto">
               <table className="w-full text-left">
-                <thead className="bg-secondary/50 text-[10px] uppercase tracking-widest font-bold text-muted-foreground">
+                <thead className="bg-secondary/40 text-[11px] uppercase tracking-widest font-bold text-muted-foreground border-b border-border">
                   <tr>
                     <th className="px-8 py-5">Data e Horário</th>
                     <th className="px-8 py-5">Paciente</th>
@@ -314,7 +314,7 @@ function DashboardLayout() {
                         </span>
                       </td>
                       <td className="px-8 py-6 text-right font-bold text-foreground text-sm">
-                        R$ {a.valor_total?.toFixed(2)}
+                        R$ {a.valor_total?.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}
                       </td>
                     </tr>
                   ))}
@@ -331,7 +331,7 @@ function DashboardLayout() {
             <div className="h-16 w-16 bg-destructive/10 rounded-full flex items-center justify-center text-destructive mb-6 mx-auto">
               <AlertCircle size={32} />
             </div>
-            <AlertDialogTitle className="font-serif text-2xl text-center text-foreground">
+            <AlertDialogTitle className="font-sans font-extrabold text-2xl text-center text-foreground tracking-tighter">
               Excluir Profissional?
             </AlertDialogTitle>
             <AlertDialogDescription className="text-center text-muted-foreground mt-2 text-base">
@@ -357,18 +357,18 @@ function DashboardLayout() {
 
 function MetricCard({ label, value, icon: Icon, trend }: any) {
   return (
-    <div className="bg-white p-8 rounded-2xl border border-border shadow-sm hover:border-primary transition-all duration-300 group">
+    <div className="bg-white p-7 rounded-2xl border border-border shadow-sm hover:border-primary transition-all duration-300 group">
       <div className="flex justify-between items-start mb-6">
-        <div className="h-12 w-12 bg-secondary rounded-xl flex items-center justify-center text-primary group-hover:bg-primary/10 transition-colors">
-          <Icon size={24} />
+        <div className="h-11 w-11 bg-secondary/50 rounded-xl flex items-center justify-center text-primary group-hover:bg-primary/10 transition-colors">
+          <Icon size={22} />
         </div>
         <div className="flex items-center gap-1.5 px-3 py-1 bg-primary/5 text-primary text-[10px] font-black uppercase tracking-wider rounded-full">
           {trend.includes('%') && <ArrowUpRight size={10} />}
           {trend}
         </div>
       </div>
-      <p className="text-[10px] text-muted-foreground uppercase tracking-[0.2em] font-black mb-1">{label}</p>
-      <p className="text-3xl font-serif text-foreground font-bold">{value}</p>
+      <p className="text-[11px] text-muted-foreground uppercase tracking-widest font-semibold mb-1">{label}</p>
+      <p className="text-3xl font-sans font-extrabold text-foreground tracking-tighter">{value}</p>
     </div>
   );
 }

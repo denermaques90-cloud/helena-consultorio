@@ -56,8 +56,8 @@ function PainelProfissionalPage() {
       {/* Sidebar */}
       <aside className={`fixed lg:sticky top-0 left-0 z-40 h-screen w-72 bg-white border-r border-border transition-transform lg:translate-x-0 ${sidebarOpen ? "translate-x-0" : "-translate-x-full"}`}>
         <div className="p-8 mb-4">
-          <h2 className="font-serif text-2xl text-primary leading-tight">Dra. Helena Martins</h2>
-          <p className="text-[10px] uppercase tracking-[0.2em] text-muted-foreground font-bold mt-1">Painel Profissional</p>
+          <h2 className="font-sans font-extrabold text-2xl text-primary leading-tight tracking-tighter">Dra. Helena Martins</h2>
+          <p className="text-[10px] uppercase tracking-[0.2em] text-muted-foreground font-black mt-1">Painel Profissional</p>
         </div>
         <nav className="px-4 space-y-1">
           {[
@@ -69,10 +69,10 @@ function PainelProfissionalPage() {
             <button 
               key={item.id} 
               onClick={() => { setTab(item.id); setSidebarOpen(false); }} 
-              className={`w-full flex items-center gap-3 px-4 py-3.5 rounded-lg text-sm font-semibold transition-all ${
+              className={`w-full flex items-center gap-4 px-4 py-3 rounded-xl text-sm transition-all duration-200 ${
                 tab === item.id 
-                  ? "bg-primary/5 text-primary shadow-sm" 
-                  : "text-muted-foreground hover:bg-secondary hover:text-foreground"
+                  ? "bg-primary/10 text-primary shadow-sm font-semibold" 
+                  : "text-muted-foreground hover:bg-secondary/80 hover:text-foreground"
               }`}
             >
               <item.icon size={18} className={tab === item.id ? "text-primary" : "text-muted-foreground"} /> 
@@ -92,8 +92,8 @@ function PainelProfissionalPage() {
           <div className="flex items-center gap-4">
             <button onClick={() => setSidebarOpen(true)} className="lg:hidden p-2 hover:bg-secondary rounded-md transition-colors"><Menu size={20} /></button>
             <div>
-              <h1 className="font-serif text-2xl text-foreground">Olá, {prof.nome.split(" ")[0]}</h1>
-              <p className="text-[10px] text-muted-foreground uppercase tracking-widest font-black mt-0.5">Gestão de Atendimentos</p>
+              <h1 className="font-sans font-extrabold text-3xl text-foreground tracking-tighter">Olá, {prof.nome.split(" ")[0]}</h1>
+              <p className="text-xs text-muted-foreground font-medium mt-0.5">Gestão de Atendimentos</p>
             </div>
           </div>
           <div className="flex items-center gap-3 bg-secondary/50 px-4 py-2 rounded-full border border-border">
@@ -127,7 +127,7 @@ function DashboardTab({ agendamentos }: any) {
       </div>
       
       <div className="premium-card p-8 bg-white">
-        <h3 className="font-serif text-xl text-foreground mb-6">Próximos Atendimentos</h3>
+        <h3 className="font-sans font-bold text-xl text-foreground mb-6 tracking-tight">Próximos Atendimentos</h3>
         <div className="space-y-4">
           {agendamentos.filter((a:any) => a.status === 'confirmado').slice(0, 3).map((a:any) => (
             <div key={a.id} className="flex items-center justify-between p-4 rounded-xl border border-border bg-secondary/30 hover:bg-secondary/50 transition-colors">
@@ -154,17 +154,17 @@ function DashboardTab({ agendamentos }: any) {
 
 function MetricCard({ label, value, icon: Icon, trend }: any) {
   return (
-    <div className="bg-white p-8 rounded-2xl border border-border shadow-sm hover:border-primary transition-all duration-300 group">
+    <div className="bg-white p-7 rounded-2xl border border-border shadow-sm hover:border-primary transition-all duration-300 group">
       <div className="flex justify-between items-start mb-6">
-        <div className="h-12 w-12 bg-secondary rounded-xl flex items-center justify-center text-primary group-hover:bg-primary/10 transition-colors">
-          <Icon size={24} />
+        <div className="h-11 w-11 bg-secondary/50 rounded-xl flex items-center justify-center text-primary group-hover:bg-primary/10 transition-colors">
+          <Icon size={22} />
         </div>
         <div className="flex items-center gap-1.5 px-3 py-1 bg-primary/5 text-primary text-[10px] font-black uppercase tracking-wider rounded-full">
           {trend}
         </div>
       </div>
-      <p className="text-[10px] text-muted-foreground uppercase tracking-[0.2em] font-black mb-1">{label}</p>
-      <p className="text-3xl font-serif text-foreground font-bold">{value}</p>
+      <p className="text-[11px] text-muted-foreground uppercase tracking-widest font-semibold mb-1">{label}</p>
+      <p className="text-3xl font-sans font-extrabold text-foreground tracking-tighter">{value}</p>
     </div>
   );
 }
@@ -183,8 +183,8 @@ function AgendaTab({ agendamentos, setRefreshKey }: any) {
     <div className="space-y-6 animate-in fade-in duration-500">
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-2">
         <div>
-          <h2 className="font-serif text-2xl text-foreground">Agenda de Atendimentos</h2>
-          <p className="text-sm text-muted-foreground">Gerencie suas consultas e acompanhe o status dos pacientes.</p>
+          <h2 className="font-sans font-extrabold text-2xl text-foreground tracking-tighter">Agenda de Atendimentos</h2>
+          <p className="text-sm text-muted-foreground font-medium">Gerencie suas consultas e acompanhe o status dos pacientes.</p>
         </div>
       </div>
 
@@ -205,7 +205,7 @@ function AgendaTab({ agendamentos, setRefreshKey }: any) {
                 <span className="text-[10px] uppercase opacity-60 font-bold">{a.data.split("-")[1] === '05' ? 'MAI' : 'MÊS'}</span>
               </div>
               <div>
-                <p className="font-serif text-xl text-foreground group-hover:text-primary transition-colors">{a.cliente_nome}</p>
+                <p className="font-sans font-bold text-xl text-foreground group-hover:text-primary transition-colors tracking-tight">{a.cliente_nome}</p>
                 <div className="flex flex-wrap gap-x-4 gap-y-1 mt-1">
                   <p className="text-xs text-muted-foreground font-medium flex items-center gap-1.5"><Clock size={12} className="text-primary" /> {a.hora.slice(0,5)}</p>
                   <p className={`text-[10px] font-black uppercase tracking-wider px-2 py-0.5 rounded ${
@@ -275,12 +275,12 @@ function DisponibilidadeTab({ prof, bloqueios, setRefreshKey }: any) {
   return (
     <div className="space-y-10 animate-in fade-in duration-500">
       <div className="premium-card p-10 bg-white shadow-sm border-primary/10">
-        <h2 className="font-serif text-2xl text-foreground mb-2">Gerenciar Disponibilidade</h2>
-        <p className="text-sm text-muted-foreground mb-8">Bloqueie datas ou horários específicos para impedir novos agendamentos.</p>
+        <h2 className="font-sans font-extrabold text-2xl text-foreground mb-2 tracking-tighter">Gerenciar Disponibilidade</h2>
+        <p className="text-sm text-muted-foreground mb-8 font-medium">Bloqueie datas ou horários específicos para impedir novos agendamentos.</p>
         
         <form onSubmit={handleBloquear} className="grid grid-cols-1 md:grid-cols-3 gap-6">
           <div className="space-y-2">
-            <label className="text-[10px] uppercase font-black text-muted-foreground tracking-widest flex items-center gap-2">
+            <label className="text-[11px] uppercase font-bold text-muted-foreground tracking-widest flex items-center gap-2">
               <CalendarDays size={12} className="text-primary" /> Data do Bloqueio
             </label>
             <input 
@@ -292,7 +292,7 @@ function DisponibilidadeTab({ prof, bloqueios, setRefreshKey }: any) {
             />
           </div>
           <div className="space-y-2">
-            <label className="text-[10px] uppercase font-black text-muted-foreground tracking-widest flex items-center gap-2">
+            <label className="text-[11px] uppercase font-bold text-muted-foreground tracking-widest flex items-center gap-2">
               <Clock size={12} className="text-primary" /> Horário (Opcional)
             </label>
             <input 
@@ -316,12 +316,12 @@ function DisponibilidadeTab({ prof, bloqueios, setRefreshKey }: any) {
 
       <div className="premium-card bg-white shadow-sm overflow-hidden border-border">
         <div className="p-8 border-b border-border bg-secondary/10">
-          <h3 className="font-serif text-xl text-foreground">Bloqueios Ativos na Agenda</h3>
+          <h3 className="font-sans font-bold text-xl text-foreground tracking-tight">Bloqueios Ativos na Agenda</h3>
           <p className="text-xs text-muted-foreground mt-1">Lista de períodos indisponíveis para agendamento público.</p>
         </div>
         <div className="overflow-x-auto">
           <table className="w-full text-left">
-            <thead className="bg-secondary/30 text-[10px] uppercase tracking-widest font-black text-muted-foreground">
+            <thead className="bg-secondary/40 text-[11px] uppercase tracking-widest font-bold text-muted-foreground border-b border-border">
               <tr>
                 <th className="px-8 py-5">Data do Evento</th>
                 <th className="px-8 py-5">Tipo de Bloqueio</th>
@@ -391,14 +391,14 @@ function PacientesTab({ agendamentos }: any) {
   return (
     <div className="space-y-6 animate-in fade-in duration-500">
       <div className="mb-4">
-        <h2 className="font-serif text-2xl text-foreground">Meus Pacientes</h2>
-        <p className="text-sm text-muted-foreground">Base de contatos e histórico de atendimentos realizados.</p>
+        <h2 className="font-sans font-extrabold text-2xl text-foreground tracking-tighter">Meus Pacientes</h2>
+        <p className="text-sm text-muted-foreground font-medium">Base de contatos e histórico de atendimentos realizados.</p>
       </div>
 
       <div className="premium-card bg-white shadow-sm overflow-hidden border-border">
         <div className="overflow-x-auto">
           <table className="w-full text-left">
-            <thead className="bg-secondary/30 text-[10px] uppercase tracking-widest font-black text-muted-foreground">
+            <thead className="bg-secondary/40 text-[11px] uppercase tracking-widest font-bold text-muted-foreground border-b border-border">
               <tr>
                 <th className="px-8 py-5">Identificação</th>
                 <th className="px-8 py-5 text-center">Frequência</th>
