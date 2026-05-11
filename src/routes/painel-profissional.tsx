@@ -316,7 +316,7 @@ function DisponibilidadeTab({ prof, bloqueios, setRefreshKey }: any) {
 
       <div className="premium-card bg-white shadow-sm overflow-hidden border-border">
         <div className="p-8 border-b border-border bg-secondary/10">
-          <h3 className="font-serif text-xl text-foreground">Bloqueios Ativos na Agenda</h3>
+          <h3 className="font-sans font-bold text-xl text-foreground tracking-tight">Bloqueios Ativos na Agenda</h3>
           <p className="text-xs text-muted-foreground mt-1">Lista de períodos indisponíveis para agendamento público.</p>
         </div>
         <div className="overflow-x-auto">
