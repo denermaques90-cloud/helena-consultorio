@@ -391,8 +391,8 @@ function PacientesTab({ agendamentos }: any) {
   return (
     <div className="space-y-6 animate-in fade-in duration-500">
       <div className="mb-4">
-        <h2 className="font-serif text-2xl text-foreground">Meus Pacientes</h2>
-        <p className="text-sm text-muted-foreground">Base de contatos e histórico de atendimentos realizados.</p>
+        <h2 className="font-sans font-extrabold text-2xl text-foreground tracking-tighter">Meus Pacientes</h2>
+        <p className="text-sm text-muted-foreground font-medium">Base de contatos e histórico de atendimentos realizados.</p>
       </div>
 
       <div className="premium-card bg-white shadow-sm overflow-hidden border-border">
